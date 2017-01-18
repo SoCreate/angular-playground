@@ -35,7 +35,7 @@ import './polyfills.ts';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { initializePlayground, PlaygroundModule } from 'angular-playground';
 
-initializePlayground('ng-app');
+initializePlayground('app-root');
 platformBrowserDynamic().bootstrapModule(PlaygroundModule);
 ```
 
@@ -147,7 +147,7 @@ export const environment = {
   production: false
 };
 
-initializePlayground('ng-app');
+initializePlayground('app-root');
 
 ```
 
