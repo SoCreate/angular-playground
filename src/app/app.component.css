@@ -13,6 +13,7 @@
     line-height: normal; }
   :host aside {
     width: 200px;
+    min-width: 200px;
     padding: 14px;
     background-color: #ebebeb; }
     :host aside header {
@@ -23,7 +24,8 @@
       text-align: center;
       margin-bottom: 4px; }
     :host aside input[type="text"] {
-      margin-bottom: 4px; }
+      margin-bottom: 4px;
+      width: 100%; }
     :host aside a {
       cursor: pointer; }
     :host aside .sandbox.selected, :host aside .scenario.selected {

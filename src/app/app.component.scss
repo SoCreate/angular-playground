@@ -18,6 +18,7 @@
   height: 100vh;
   aside {
     width: 200px;
+    min-width: 200px;
     padding: 14px;
     background-color: #ebebeb;
     header {
@@ -30,6 +31,7 @@
     }
     input[type="text"] {
       margin-bottom: 4px;
+      width: 100%;
     }
     a {
       cursor: pointer;
