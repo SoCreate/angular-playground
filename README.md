@@ -17,7 +17,7 @@ Inspired by React Storybook.
 ### Installing
 Angular Playground is available as an npm package.
 ```
-npm i -S git+https://code.socreate.local/scm/library/angular-playground.git
+npm i -S angular-playground
 ```
 
 <a name="Bootstrapping-Angular-Playground"></a>
