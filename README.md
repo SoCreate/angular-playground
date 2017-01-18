@@ -3,6 +3,8 @@
 A drop in app module for working on Angular components in isolation (aka Scenario Driven Development). 
 Inspired by React Storybook.
 
+![Sandboxed component](docs/screenshot01.png)
+
 ## Table of Contents
 + [Installing](#installing)
 + [Bootstrapping Angular Playground](#Bootstrapping-Angular-Playground)
