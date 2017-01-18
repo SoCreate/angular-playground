@@ -213,7 +213,7 @@ You can create a file next to it named `notice.component.sandbox.ts` with the fo
 *notice.component.sandbox.ts*
 ```typescript
 import { sandboxOf } from 'angular-playground';
-import { NoticeComponent } from './notice.component`;
+import { NoticeComponent } from './notice.component';
 
 export default sandboxOf(NoticeComponent)
   .add('with simple text', {
@@ -239,7 +239,7 @@ Install dependencies for the playground source code:
 cd playground
 npm i
 ```
-FThen install dependencies for the example-app:
+Then install dependencies for the example-app:
 ```
 cd ..
 cd example-app
