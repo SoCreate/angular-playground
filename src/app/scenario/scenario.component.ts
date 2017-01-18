@@ -9,8 +9,7 @@ import { SANDBOXES } from '../shared/tokens';
 
 @Component({
   selector: 'ap-scenario',
-  templateUrl: './scenario.component.html',
-  styleUrls: ['./scenario.component.scss'],
+  template: ``,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScenarioComponent {

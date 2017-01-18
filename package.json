@@ -14,6 +14,8 @@
     "index.ts"
   ],
   "scripts": {
+    "build": "npm run sass:build && npm run cli:build",
+    "sass:build": "node-sass -r -x src/app -o src/app",
     "cli:build": "tsc -p src/cli/tsconfig.json"
   },
   "repository": {
@@ -63,9 +65,10 @@
     "@angular/forms": "2.4.1",
     "@angular/platform-browser": "2.4.1",
     "@angular/platform-browser-dynamic": "2.4.1",
-    "rxjs": "5.0.1",
-    "zone.js": "0.7.2",
     "@types/node": "6.0.42",
-    "typescript": "~2.0.3"
+    "node-sass": "^4.3.0",
+    "rxjs": "5.0.1",
+    "typescript": "~2.0.3",
+    "zone.js": "0.7.2"
   }
 }
