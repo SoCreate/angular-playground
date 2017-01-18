@@ -1,0 +1,59 @@
+:host {
+
+  input {
+    color: inherit;
+    font: inherit;
+    margin: 0;
+  }
+  input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+  input {
+    line-height: normal;
+  }
+
+  font-family: sans-serif;
+  display: flex;
+  height: 100vh;
+  aside {
+    width: 200px;
+    padding: 14px;
+    background-color: #ebebeb;
+    header {
+      border: 2px solid #666;
+      font-size: .8em;
+      text-transform: uppercase;
+      padding: 4px;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    input[type="text"] {
+      margin-bottom: 4px;
+    }
+    a {
+      cursor: pointer;
+    }
+    .sandbox, .scenario {
+      &.selected {
+        font-weight: bold;
+      }
+    }
+    .scenario {
+      font-size: .8em;
+      padding: 0 8px;
+    }
+    .help-message {
+      text-align: center;
+      font-style: italic;
+      font-size: .9em;
+      color: #999;
+      padding: 40px 10px;
+    }
+  }
+  section {
+    border: 0;
+    width: 100%;
+    background-color: white;
+  }
+}

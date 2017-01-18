@@ -1,0 +1,28 @@
+<aside>
+  <header>Angular Playground</header>
+  <input type="text" name="filter" placeholder="filter" [formControl]="filter">
+  <div *ngFor="let sandbox of filteredSandboxes">
+    <span class="sandbox"
+          [class.selected]="selectedSandboxAndScenarioKeys?.sandboxKey === sandbox.key">
+      {{sandbox.prependText}}{{sandbox.name}}</span>
+    <div *ngFor="let scenario of sandbox.scenarios"
+         (click)="selectScenario(sandbox.key, scenario.key)">
+      <a class="scenario"
+         [class.selected]="selectedSandboxAndScenarioKeys?.scenarioKey === scenario.key && selectedSandboxAndScenarioKeys?.sandboxKey === sandbox.key">
+        {{scenario.description}}</a>
+    </div>
+  </div>
+  <div *ngIf="filteredSandboxes.length === 0" class="help-message">
+    <template [ngIf]="totalSandboxes > 0">
+      <p>The app has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}} loaded.</p>
+      <p *ngIf="totalSandboxes > 1">Use the filter to find one to play in!</p>
+      <p *ngIf="totalSandboxes === 1">Use the filter to find it!</p>
+    </template>
+    <template [ngIf]="totalSandboxes === 0">
+      <p>The app does not have any sandboxed components.</p>
+    </template>
+  </div>
+</aside>
+<section>
+  <ap-scenario [selectedSandboxAndScenarioKeys]="selectedSandboxAndScenarioKeys"></ap-scenario>
+</section>
