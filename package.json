@@ -1,0 +1,33 @@
+{
+  "name": "angular-playground",
+  "version": "0.1.0",
+  "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SoCreate/angular-playground.git"
+  },
+  "keywords": [
+    "angular"
+  ],
+  "author": {
+    "name": "Justin Schwartzenberger",
+    "url": "https://twitter.com/schwarty"
+  },
+  "contributors": [
+    {
+      "name": "Jami Lurock",
+      "url": "https://twitter.com/maindg"
+    },
+    {
+      "name": "Brian Treese",
+      "url": "https://twitter.com/brianmtreese"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SoCreate/angular-playground/issues"
+  },
+  "homepage": "https://github.com/SoCreate/angular-playground#readme"
+}
