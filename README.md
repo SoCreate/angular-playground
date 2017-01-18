@@ -117,7 +117,6 @@ file to have Angular Playground make use of its `ng serve` under the hood.
 {
   "sourceRoot": "./src",
   "angularCli": {
-    "cliConfigPath": "angular-cli.json",
     "environment": "playground",
     "port": 4201
   }
@@ -127,14 +126,12 @@ file to have Angular Playground make use of its `ng serve` under the hood.
 When the `angularCli` property is present the `ng serve` command will be used when you 
 run the `angular-playground` cli command. Below is a description of the properties of that
 object:
-+ `cliConfigPath`  
-  The location of your `angular-cli.json` file relative to your `package.json` file
 + `envionment` *(optional)*  
   The environment to target for serving up Angular Playground (will tell Angular CLI to use this instead of its default)
 + `port` *(optional)*  
   The port to tell `ng serve` to use. Defaults to `4201`.
 
-You will need to create a new environment file 
+You will most likely want to create a new environment file 
 (see the [angular cli docs on GitHub](https://github.com/angular/angular-cli#build-targets-and-environment-files)
 for the playground and make some changes to your existing `main.ts` file
 and your existing environment files.
@@ -232,7 +229,7 @@ Each scenario needs a `description` (the first parameter), and a `scenarioConfig
 The `sandboxOf` function and `SandboxBuilder` are *"TypeScripted"* out so you can discover 
 the different parameters/options/etc within your IDE/editor (if it has TypeScript support).
 Or you can always explore the source code here! Or...you can contribute and add more docs to show
-how to use the api. :)
+how to use the api. 😎
 
 <a name="Working-on-the-Angular-Playground-source-code"></a>
 ## Working on the Angular Playground source code
