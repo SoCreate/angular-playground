@@ -7,11 +7,11 @@
     "angular-playground": "dist/bin/cli.js"
   },
   "files": [
-    "src/api/api.ts",
-    "src/api/playground.ts",
+    "src/api",
     "src/app",
     "dist/bin",
-    "index.ts"
+    "index.ts",
+    "index.d.ts"
   ],
   "scripts": {
     "build": "npm run sass:build && npm run cli:build && npm run tsd:build",
