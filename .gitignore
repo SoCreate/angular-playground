@@ -1,7 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/tmp
+/dist/
 
 # dependencies
 node_modules
@@ -33,5 +33,3 @@ testem.log
 .DS_Store
 Thumbs.db
 /debug.log
-/src/sandboxes.ts
-!/dist/

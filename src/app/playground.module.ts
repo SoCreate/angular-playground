@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { SANDBOXES } from './shared/tokens';
 import { StateService } from './shared/state.service';
+import { loadSandboxes } from './load-sandboxes';
 
 @NgModule({
   imports: [
@@ -19,8 +20,4 @@ import { StateService } from './shared/state.service';
   bootstrap: [AppComponent]
 })
 export class PlaygroundModule {
-}
-
-export function loadSandboxes() {
-  return require('sandboxes').default;
 }

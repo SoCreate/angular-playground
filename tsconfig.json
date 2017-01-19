@@ -2,8 +2,7 @@
   "compilerOptions": {
     "baseUrl": "",
     "declaration": true,
-    "declarationDir": "./",
-    "outDir": "dist/out-tsc",
+    "outDir": "dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["es6", "dom"],
@@ -15,10 +14,10 @@
     ]
   },
   "include": [
-    "index.ts",
-    "src/**/*"
+    "index.ts"
   ],
   "exclude": [
-    "src/cli/*"
+    "node_modules",
+    "example-app"
   ]
 }
