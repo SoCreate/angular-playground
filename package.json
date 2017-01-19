@@ -2,22 +2,20 @@
   "name": "angular-playground",
   "version": "1.0.3",
   "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
-  "typings": "index.ts",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "bin": {
     "angular-playground": "dist/bin/cli.js"
   },
   "files": [
-    "src/api",
-    "src/app",
-    "dist/bin",
-    "index.ts",
-    "index.d.ts"
+    "dist"
   ],
   "scripts": {
-    "build": "npm run sass:build && npm run cli:build && npm run tsd:build",
-    "tsd:build": "tsc -p ./ && rimraf dist/out-tsc",
-    "sass:build": "node-sass -r -x src/app -o src/app",
-    "cli:build": "tsc -p src/cli/tsconfig.json"
+    "dist:clean": "rimraf ./dist",
+    "build": "npm run dist:clean && npm run ngc:build && npm run cli:build",
+    "ngc:build": "tsc -p ./tsconfig.json",
+    "cli:build": "tsc -p ./src/cli/tsconfig.json",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -67,7 +65,6 @@
     "@angular/platform-browser": "2.4.1",
     "@angular/platform-browser-dynamic": "2.4.1",
     "@types/node": "6.0.42",
-    "node-sass": "^4.3.0",
     "rimraf": "^2.5.4",
     "rxjs": "5.0.1",
     "typescript": "~2.0.3",

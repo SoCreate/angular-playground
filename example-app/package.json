@@ -4,7 +4,8 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "playground": "npm i ../ && angular-playground angular-playground.json",
+    "playground:fresh": "npm i ../ && npm run playground",
+    "playground": "angular-playground angular-playground.json",
     "cli": "ts-node --project ../src/cli ../src/cli/cli.ts angular-playground.json",
     "start": "ng serve --progress=false",
     "lint": "tslint \"src/**/*.ts\"",
