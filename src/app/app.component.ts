@@ -1,29 +1,36 @@
-import { Component, Inject } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Sandbox, SelectedSandboxAndScenarioKeys } from './shared/app-state';
-import { SANDBOXES } from './shared/tokens';
+import {Component, Inject} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {Sandbox, SelectedSandboxAndScenarioKeys} from './shared/app-state';
+import {SANDBOXES} from './shared/tokens';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { StateService } from './shared/state.service';
+import {StateService} from './shared/state.service';
+import {EventManager} from "@angular/platform-browser";
 
 @Component({
   selector: 'ap-root',
   template: `
-    <aside>
-      <header>Angular Playground</header>
+    <div *ngIf="commandBarActive" class="command-bar">
       <input type="text" name="filter" placeholder="filter" [formControl]="filter">
-      <div *ngFor="let sandbox of filteredSandboxes">
-        <span class="sandbox"
-              [class.selected]="selectedSandboxAndScenarioKeys?.sandboxKey === sandbox.key">
-          {{sandbox.prependText}}{{sandbox.name}}</span>
-        <div *ngFor="let scenario of sandbox.scenarios"
-             (click)="selectScenario(sandbox.key, scenario.key)">
-          <a class="scenario"
-             [class.selected]="selectedSandboxAndScenarioKeys?.scenarioKey === scenario.key && selectedSandboxAndScenarioKeys?.sandboxKey === sandbox.key">
-            {{scenario.description}}</a>
+      <div>
+        <div *ngFor="let sandbox of filteredSandboxes">
+          <span class="sandbox"
+                [class.selected]="selectedSandboxAndScenarioKeys?.sandboxKey === sandbox.key">
+            {{sandbox.prependText}}{{sandbox.name}}</span>
+          <div *ngFor="let scenario of sandbox.scenarios"
+               (click)="selectScenario(sandbox.key, scenario.key); toggleCommandBar()">
+            <a class="scenario"
+               [class.selected]="selectedSandboxAndScenarioKeys?.scenarioKey === scenario.key && selectedSandboxAndScenarioKeys?.sandboxKey === sandbox.key">
+              {{scenario.description}}</a>
+          </div>
         </div>
       </div>
-      <div *ngIf="filteredSandboxes.length === 0" class="help-message">
+    </div>
+    <aside *ngIf="selectedSandboxAndScenarioKeys">
+      <header>Angular Playground</header>
+    </aside>
+    <section>
+      <div *ngIf="!selectedSandboxAndScenarioKeys" class="help-message">
         <template [ngIf]="totalSandboxes > 0">
           <p>The app has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}} loaded.</p>
           <p *ngIf="totalSandboxes > 1">Use the filter to find one to play in!</p>
@@ -33,16 +40,46 @@ import { StateService } from './shared/state.service';
           <p>The app does not have any sandboxed components.</p>
         </template>
       </div>
-    </aside>
-    <section>
-      <ap-scenario [selectedSandboxAndScenarioKeys]="selectedSandboxAndScenarioKeys"></ap-scenario>
+      <ap-scenario *ngIf="selectedSandboxAndScenarioKeys"
+        [selectedSandboxAndScenarioKeys]="selectedSandboxAndScenarioKeys"></ap-scenario>
     </section>
   `,
   styles: [`
     :host {
       font-family: sans-serif;
       display: flex;
-      height: 100vh; }
+      flex-direction: column; }
+      :host .command-bar {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+      :host .command-bar > input {
+        width: 400px;
+        z-index: 1;
+        padding: 4px;
+        margin-top: 16px;
+        border-radius: 6px;
+      }
+      :host .command-bar > input::-moz-focus-inner {
+        border: 0;
+        padding: 0; }
+      :host .command-bar > div {
+        margin-top: -38px;
+        width: 400px;
+        padding: 34px 14px 14px 14px;
+        border-radius: 8px;
+        background-color: #333;
+        color: #fff;
+      }
+      :host .command-bar > div > div:first-child {
+        padding-top: 18px;
+      }
+      :host .command-bar > div a {
+        cursor: pointer; }
       :host input {
         color: inherit;
         font: inherit;
@@ -53,10 +90,9 @@ import { StateService } from './shared/state.service';
       :host input {
         line-height: normal; }
       :host aside {
-        width: 200px;
-        min-width: 200px;
         padding: 14px;
-        background-color: #ebebeb; }
+        background-color: #ebebeb; 
+        display: flex; }
         :host aside header {
           border: 2px solid #666;
           font-size: .8em;
@@ -87,13 +123,20 @@ import { StateService } from './shared/state.service';
   `]
 })
 export class AppComponent {
+  commandBarActive = false;
   totalSandboxes: number;
   filteredSandboxes: Sandbox[];
   selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys;
   filter = new FormControl();
 
   constructor(@Inject(SANDBOXES) sandboxes: Sandbox[],
-              private stateService: StateService) {
+              private stateService: StateService,
+              private eventManager: EventManager) {
+    this.eventManager.addGlobalEventListener('window',
+      'keyup.control.p',
+      () => {
+        this.toggleCommandBar();
+      });
     this.totalSandboxes = sandboxes.length;
     this.filteredSandboxes = this.filterSandboxes(sandboxes, this.stateService.getFilter());
     let {sandboxKey, scenarioKey} = this.stateService.getSelectedSandboxAndScenarioKeys();
@@ -128,6 +171,10 @@ export class AppComponent {
         }
         return 0;
       });
+  }
+
+  private toggleCommandBar() {
+    this.commandBarActive = !this.commandBarActive;
   }
 
   selectScenario(sandboxKey, scenarioKey) {
