@@ -133,6 +133,11 @@ export class AppComponent {
               private stateService: StateService,
               private eventManager: EventManager) {
     this.eventManager.addGlobalEventListener('window',
+      'keydown.control.p',
+      (e) => {
+        e.preventDefault();
+      });
+    this.eventManager.addGlobalEventListener('window',
       'keyup.control.p',
       () => {
         this.toggleCommandBar();
