@@ -4,8 +4,12 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
   template: `
     {{person.fullName}} <template [ngIf]="person.twitterHandle">(<a href="#">{{person.twitterHandle}}</a>)</template>
     <ex-person-bio></ex-person-bio>
+    Leave a comment: <input type="text">
   `,
-  styles: [`:host{ font-weight: bold;}`],
+  styles: [`
+    :host{ font-weight: bold;}
+    :host input { width: 98%; }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PersonDetailsComponent {

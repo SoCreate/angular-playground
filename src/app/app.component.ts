@@ -47,7 +47,7 @@ import {EventManager} from "@angular/platform-browser";
         <template [ngIf]="totalSandboxes === 0">
           <p>The app does not have any sandboxed components.</p>
         </template>
-        <p>Pick sandboxed components: <strong>ctrl + p</strong></p>
+        <p>Pick sandboxed components: <strong>ctrl + o</strong></p>
       </div>
     </section>
     <section *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
@@ -135,12 +135,12 @@ export class AppComponent {
               private stateService: StateService,
               private eventManager: EventManager) {
     this.eventManager.addGlobalEventListener('window',
-      'keydown.control.p',
+      'keydown.control.o',
       (e) => {
         e.preventDefault();
       });
     this.eventManager.addGlobalEventListener('window',
-      'keyup.control.p',
+      'keyup.control.o',
       () => {
         this.toggleCommandBar();
       });
@@ -189,7 +189,7 @@ export class AppComponent {
     this.stateService.setSandboxAndScenarioKeys(this.selectedSandboxAndScenarioKeys);
   }
 
-  onScenarioClick(sandboxKey, scenarioKey, e){
+  onScenarioClick(sandboxKey, scenarioKey, e) {
     this.selectScenario(sandboxKey, scenarioKey);
     e.preventDefault();
   }
