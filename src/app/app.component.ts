@@ -26,11 +26,8 @@ import {EventManager} from "@angular/platform-browser";
         </div>
       </div>
     </div>
-    <aside *ngIf="selectedSandboxAndScenarioKeys">
-      <header>Angular Playground</header>
-    </aside>
     <section>
-      <div *ngIf="!selectedSandboxAndScenarioKeys" class="help-message">
+      <div *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey" class="help-message">
         <template [ngIf]="totalSandboxes > 0">
           <p>The app has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}} loaded.</p>
           <p *ngIf="totalSandboxes > 1">Use the filter to find one to play in!</p>
@@ -40,7 +37,7 @@ import {EventManager} from "@angular/platform-browser";
           <p>The app does not have any sandboxed components.</p>
         </template>
       </div>
-      <ap-scenario *ngIf="selectedSandboxAndScenarioKeys"
+      <ap-scenario *ngIf="selectedSandboxAndScenarioKeys.sandboxKey"
         [selectedSandboxAndScenarioKeys]="selectedSandboxAndScenarioKeys"></ap-scenario>
     </section>
   `,
@@ -61,8 +58,9 @@ import {EventManager} from "@angular/platform-browser";
         width: 400px;
         z-index: 1;
         padding: 4px;
-        margin-top: 16px;
-        border-radius: 6px;
+        margin-top: 6px;
+        border: 1px solid cornflowerblue;
+        line-height: normal;
       }
       :host .command-bar > input::-moz-focus-inner {
         border: 0;
@@ -71,8 +69,7 @@ import {EventManager} from "@angular/platform-browser";
         margin-top: -38px;
         width: 400px;
         padding: 34px 14px 14px 14px;
-        border-radius: 8px;
-        background-color: #333;
+        background-color: #3a3a3a;
         color: #fff;
       }
       :host .command-bar > div > div:first-child {
@@ -80,42 +77,12 @@ import {EventManager} from "@angular/platform-browser";
       }
       :host .command-bar > div a {
         cursor: pointer; }
-      :host input {
-        color: inherit;
-        font: inherit;
-        margin: 0; }
-      :host input::-moz-focus-inner {
-        border: 0;
-        padding: 0; }
-      :host input {
-        line-height: normal; }
-      :host aside {
-        padding: 14px;
-        background-color: #ebebeb; 
-        display: flex; }
-        :host aside header {
-          border: 2px solid #666;
-          font-size: .8em;
-          text-transform: uppercase;
-          padding: 4px;
-          text-align: center;
-          margin-bottom: 4px; }
-        :host aside input[type="text"] {
-          margin-bottom: 4px;
-          width: 196px; }
-        :host aside a {
-          cursor: pointer; }
-        :host aside .sandbox.selected, :host aside .scenario.selected {
-          font-weight: bold; }
-        :host aside .scenario {
-          font-size: .8em;
-          padding: 0 8px; }
-        :host aside .help-message {
-          text-align: center;
-          font-style: italic;
-          font-size: .9em;
-          color: #999;
-          padding: 40px 10px; }
+      :host .command-bar .sandbox.selected, :host .command-bar .scenario.selected {
+        font-weight: bold; }
+      :host .command-bar .scenario {
+        font-size: .8em;
+        padding: 0 8px; }
+       
       :host section {
         border: 0;
         width: 100%;
