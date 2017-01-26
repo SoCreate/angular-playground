@@ -21,12 +21,12 @@
     "@angular/platform-browser": "2.4.1",
     "@angular/platform-browser-dynamic": "2.4.1",
     "@angular/router": "3.4.1",
+    "angular-playground": "../",
     "core-js": "^2.4.1",
     "rxjs": "5.0.1",
     "ts-helpers": "^1.1.1",
     "yargs": "^6.5.0",
-    "zone.js": "^0.7.2",
-    "angular-playground": "file:../"
+    "zone.js": "^0.7.2"
   },
   "devDependencies": {
     "@angular/compiler-cli": "2.4.1",
