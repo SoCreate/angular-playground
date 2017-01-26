@@ -24,7 +24,7 @@ import {EventManager} from "@angular/platform-browser";
   template: `
     <div class="command-bar-shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
     <div *ngIf="commandBarActive" class="command-bar" [@flyInOut]="commandBarActive">
-      <input type="text" name="filter" placeholder="filter" [formControl]="filter">
+      <input type="text" name="filter" placeholder="filter" [formControl]="filter" [apFocus]="commandBarActive">
       <div>
         <div *ngFor="let sandbox of filteredSandboxes">
           <span class="sandbox"
@@ -67,6 +67,10 @@ import {EventManager} from "@angular/platform-browser";
       :host .command-bar {
         font-family: Menlo,Monaco,monospace;
         position: absolute;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
         left: 50%;
       }
       :host .command-bar > input {

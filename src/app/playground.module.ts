@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { SANDBOXES } from './shared/tokens';
 import { StateService } from './shared/state.service';
 import { loadSandboxes } from './load-sandboxes';
+import {FocusDirective} from "./shared/focus.directive";
 
 @NgModule({
   imports: [
@@ -16,7 +17,7 @@ import { loadSandboxes } from './load-sandboxes';
     {provide: SANDBOXES, useFactory: loadSandboxes},
     StateService
   ],
-  declarations: [AppComponent, ScenarioComponent],
+  declarations: [AppComponent, ScenarioComponent, FocusDirective],
   bootstrap: [AppComponent]
 })
 export class PlaygroundModule {
