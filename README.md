@@ -3,6 +3,8 @@
 A drop in app module for working on Angular components in isolation (aka Scenario Driven Development). 
 Inspired by React Storybook.
 
+> For Angular version 2.x and up
+
 Visit <http://www.angularplayground.it> for setup and documentation.
 
 
