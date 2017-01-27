@@ -23,19 +23,21 @@ import {EventManager} from "@angular/platform-browser";
   ],
   template: `
     <div class="command-bar-shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
-    <div *ngIf="commandBarActive" class="command-bar" [@flyInOut]="commandBarActive">
+    <div class="command-bar" *ngIf="commandBarActive" [@flyInOut]="commandBarActive">
       <input type="text" name="filter" placeholder="filter" [formControl]="filter" [apFocus]="commandBarActive">
       <div>
         <div *ngFor="let sandbox of filteredSandboxes">
-          <span class="sandbox"
-                [class.selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
-            {{sandbox.prependText}}{{sandbox.name}}</span>
-          <div *ngFor="let scenario of sandbox.scenarios">
-            <a class="scenario"
-               (click)="onScenarioClick(sandbox.key, scenario.key, $event); toggleCommandBar()"
-               [class.selected]="selectedSandboxAndScenarioKeys.scenarioKey === scenario.key && selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
-              {{scenario.description}}</a>
-          </div>
+          <div class="sandbox"
+               [class.selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
+            {{sandbox.prependText}}{{sandbox.name}}</div>
+          <a *ngFor="let scenario of sandbox.scenarios"
+             #scenarioElement
+             class="scenario"
+             [tabindex]="scenario.tabIndex"
+             (keyup.enter)="scenarioElement.click()"
+             (click)="onScenarioClick(sandbox.key, scenario.key, $event); toggleCommandBar()"
+             [class.selected]="selectedSandboxAndScenarioKeys.scenarioKey === scenario.key && selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
+            {{scenario.description}}</a>
         </div>
       </div>
     </div>
@@ -92,7 +94,7 @@ import {EventManager} from "@angular/platform-browser";
       :host .command-bar > div {
         margin-top: -39px;
         width: 400px;
-        padding: 34px 14px 14px 14px;
+        padding: 34px 14px 10px 14px;
         background-color: #252526;
         color: #fff;
         box-shadow: 0 3px 8px 5px black;
@@ -102,7 +104,14 @@ import {EventManager} from "@angular/platform-browser";
         padding-top: 18px;
       }
       :host .command-bar > div a {
-        cursor: pointer; }
+        cursor: pointer; 
+        display: block; }
+      :host .command-bar > div a:hover,
+      :host .command-bar > div a:focus {
+        background-color: #0097fb;
+        color: #fff;
+        outline-style: none;
+      }
       :host .command-bar .sandbox.selected, :host .command-bar .scenario.selected {
         color: #0097fb; }
       :host .command-bar .scenario {
@@ -165,6 +174,7 @@ export class AppComponent {
     if (!filter) {
       return [];
     }
+    let tabIndex = 0;
     return sandboxes
       .filter((sandbox: Sandbox) => sandbox.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
       .sort((a: Sandbox, b: Sandbox) => {
@@ -177,7 +187,8 @@ export class AppComponent {
           return 1;
         }
         return 0;
-      });
+      })
+      .map(sandbox => Object.assign({}, sandbox, {tabIndex: tabIndex++}));
   }
 
   private toggleCommandBar() {
