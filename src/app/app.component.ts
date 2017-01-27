@@ -1,4 +1,4 @@
-import {Component, Inject, trigger, style, state, transition, animate} from '@angular/core';
+import { Component, Inject, trigger, style, state, transition, animate, ViewChildren, ElementRef } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Sandbox, SelectedSandboxAndScenarioKeys} from './shared/app-state';
 import {SANDBOXES} from './shared/tokens';
@@ -21,41 +21,6 @@ import {EventManager} from "@angular/platform-browser";
       ])
     ])
   ],
-  template: `
-    <div class="command-bar-shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
-    <div class="command-bar" *ngIf="commandBarActive" [@flyInOut]="commandBarActive">
-      <input type="text" name="filter" placeholder="filter" [formControl]="filter" [apFocus]="commandBarActive">
-      <div>
-        <div *ngFor="let sandbox of filteredSandboxes">
-          <div class="sandbox"
-               [class.selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
-            {{sandbox.prependText}}{{sandbox.name}}</div>
-          <a *ngFor="let scenario of sandbox.scenarios"
-             #scenarioElement
-             class="scenario"
-             [tabindex]="scenario.tabIndex"
-             (keyup.enter)="scenarioElement.click()"
-             (click)="onScenarioClick(sandbox.key, scenario.key, $event); toggleCommandBar()"
-             [class.selected]="selectedSandboxAndScenarioKeys.scenarioKey === scenario.key && selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
-            {{scenario.description}}</a>
-        </div>
-      </div>
-    </div>
-    <section *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey" class="help-message">
-      <div>
-        <template [ngIf]="totalSandboxes > 0">
-          <p>The app has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}} loaded.</p>
-        </template>
-        <template [ngIf]="totalSandboxes === 0">
-          <p>The app does not have any sandboxed components.</p>
-        </template>
-        <p>Pick sandboxed components: <strong>ctrl + o</strong></p>
-      </div>
-    </section>
-    <section *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
-      <ap-scenario [selectedSandboxAndScenarioKeys]="selectedSandboxAndScenarioKeys"></ap-scenario>
-    </section>
-  `,
   styles: [`
     :host {
       font-family: sans-serif;
@@ -131,7 +96,47 @@ import {EventManager} from "@angular/platform-browser";
       :host section.help-message > div {
         max-width: 50%;
         font-family: Menlo,Monaco,monospace; }
-  `]
+  `],
+  template: `
+    <div class="command-bar-shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
+    <div class="command-bar" *ngIf="commandBarActive" [@flyInOut]="commandBarActive">
+      <input type="text" name="filter" placeholder="filter" 
+        [formControl]="filter" 
+        [apFocus]="commandBarActive"
+        (keydown.ArrowDown)="goToFirstScenario($event)">
+      <div>
+        <div *ngFor="let sandbox of filteredSandboxes">
+          <div class="sandbox"
+               [class.selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
+            {{sandbox.prependText}}{{sandbox.name}}</div>
+          <a *ngFor="let scenario of sandbox.scenarios"
+             class="scenario"
+             #scenarioElement
+             (keydown.ArrowUp)="goUp(scenarioElement, $event)"
+             (keydown.ArrowDown)="goDown(scenarioElement, $event)"
+             [tabindex]="scenario.tabIndex"
+             (keyup.enter)="scenarioElement.click()"
+             (click)="onScenarioClick(sandbox.key, scenario.key, $event); toggleCommandBar()"
+             [class.selected]="selectedSandboxAndScenarioKeys.scenarioKey === scenario.key && selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
+            {{scenario.description}}</a>
+        </div>
+      </div>
+    </div>
+    <section *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey" class="help-message">
+      <div>
+        <template [ngIf]="totalSandboxes > 0">
+          <p>The app has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}} loaded.</p>
+        </template>
+        <template [ngIf]="totalSandboxes === 0">
+          <p>The app does not have any sandboxed components.</p>
+        </template>
+        <p>Pick sandboxed components: <strong>ctrl + o</strong></p>
+      </div>
+    </section>
+    <section *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
+      <ap-scenario [selectedSandboxAndScenarioKeys]="selectedSandboxAndScenarioKeys"></ap-scenario>
+    </section>
+  `
 })
 export class AppComponent {
   commandBarActive = false;
@@ -139,6 +144,48 @@ export class AppComponent {
   filteredSandboxes: Sandbox[];
   selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys;
   filter = new FormControl();
+  @ViewChildren('scenarioElement') scenarioLinkElements;
+
+  goToFirstScenario(event) {
+    event.preventDefault();
+    this.focusScenarioLinkElement(0);
+  }
+
+  goUp(scenarioElement, event) {
+    event.preventDefault();
+    let currentIndex = -1;
+    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index) => {
+      if(scenarioElementRef.nativeElement === scenarioElement) {
+        currentIndex = index;
+      }
+    });
+    if(currentIndex === 0) {
+      this.focusScenarioLinkElement(this.scenarioLinkElements.length - 1);
+    } else {
+      this.focusScenarioLinkElement(currentIndex +- 1);
+    }
+  }
+
+  goDown(scenarioElement, event) {
+    event.preventDefault();
+    let currentIndex = -1;
+    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index) => {
+      if(scenarioElementRef.nativeElement === scenarioElement) {
+        currentIndex = index;
+      }
+    });
+    if(currentIndex === this.scenarioLinkElements.length - 1) {
+      this.focusScenarioLinkElement(0);
+    } else {
+      this.focusScenarioLinkElement(currentIndex + 1);
+    }
+  }
+
+  private focusScenarioLinkElement(index) {
+    if(this.scenarioLinkElements.toArray()[index]) {
+      this.scenarioLinkElements.toArray()[index].nativeElement.focus();
+    }
+  }
 
   constructor(@Inject(SANDBOXES) sandboxes: Sandbox[],
               private stateService: StateService,
