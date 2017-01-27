@@ -102,7 +102,9 @@ import {EventManager} from "@angular/platform-browser";
     <div class="command-bar" *ngIf="commandBarActive" [@flyInOut]="commandBarActive">
       <input type="text" name="filter" placeholder="filter" 
         [formControl]="filter" 
+        #filterElement
         [apFocus]="commandBarActive"
+        (keyup.Esc)="commandBarActive = false"
         (keydown.ArrowDown)="goToFirstScenario($event)">
       <div>
         <div *ngFor="let sandbox of filteredSandboxes">
@@ -112,10 +114,9 @@ import {EventManager} from "@angular/platform-browser";
           <a *ngFor="let scenario of sandbox.scenarios"
              class="scenario"
              #scenarioElement
-             (keydown.ArrowUp)="goUp(scenarioElement, $event)"
-             (keydown.ArrowDown)="goDown(scenarioElement, $event)"
              [tabindex]="scenario.tabIndex"
-             (keyup.enter)="scenarioElement.click()"
+             (keydown)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
+             (keyup)="onScenarioLinkKeyUp(scenarioElement, $event)"
              (click)="onScenarioClick(sandbox.key, scenario.key, $event); toggleCommandBar()"
              [class.selected]="selectedSandboxAndScenarioKeys.scenarioKey === scenario.key && selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
             {{scenario.description}}</a>
@@ -145,47 +146,6 @@ export class AppComponent {
   selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys;
   filter = new FormControl();
   @ViewChildren('scenarioElement') scenarioLinkElements;
-
-  goToFirstScenario(event) {
-    event.preventDefault();
-    this.focusScenarioLinkElement(0);
-  }
-
-  goUp(scenarioElement, event) {
-    event.preventDefault();
-    let currentIndex = -1;
-    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index) => {
-      if(scenarioElementRef.nativeElement === scenarioElement) {
-        currentIndex = index;
-      }
-    });
-    if(currentIndex === 0) {
-      this.focusScenarioLinkElement(this.scenarioLinkElements.length - 1);
-    } else {
-      this.focusScenarioLinkElement(currentIndex +- 1);
-    }
-  }
-
-  goDown(scenarioElement, event) {
-    event.preventDefault();
-    let currentIndex = -1;
-    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index) => {
-      if(scenarioElementRef.nativeElement === scenarioElement) {
-        currentIndex = index;
-      }
-    });
-    if(currentIndex === this.scenarioLinkElements.length - 1) {
-      this.focusScenarioLinkElement(0);
-    } else {
-      this.focusScenarioLinkElement(currentIndex + 1);
-    }
-  }
-
-  private focusScenarioLinkElement(index) {
-    if(this.scenarioLinkElements.toArray()[index]) {
-      this.scenarioLinkElements.toArray()[index].nativeElement.focus();
-    }
-  }
 
   constructor(@Inject(SANDBOXES) sandboxes: Sandbox[],
               private stateService: StateService,
@@ -217,6 +177,82 @@ export class AppComponent {
       });
   }
 
+  goToFirstScenario(event) {
+    event.preventDefault();
+    this.focusScenarioLinkElement(0);
+  }
+
+  onScenarioLinkKeyDown(scenarioElement, filterElement, event) {
+    event.preventDefault();
+    switch(event.key) {
+      case 'ArrowUp':
+        this.goUp(scenarioElement);
+        break;
+      case 'ArrowDown':
+        this.goDown(scenarioElement);
+        break;
+      default:
+        if (event.key !== 'Escape' && event.key !== 'Enter') {
+          if(event.key.length === 1) {
+            this.filter.setValue(`${this.filter.value}${event.key}`);
+          }
+          filterElement.focus();
+        }
+        break;
+    }
+  }
+
+  onScenarioLinkKeyUp(scenarioElement, event) {
+    event.preventDefault();
+    switch(event.key) {
+      case 'Escape':
+        this.commandBarActive = false;
+        break;
+      case 'Enter':
+        scenarioElement.click();
+        break;
+    }
+  }
+
+  onScenarioClick(sandboxKey, scenarioKey, e) {
+    this.selectScenario(sandboxKey, scenarioKey);
+    e.preventDefault();
+  }
+
+  private goUp(scenarioElement) {
+    let currentIndex = -1;
+    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index) => {
+      if(scenarioElementRef.nativeElement === scenarioElement) {
+        currentIndex = index;
+      }
+    });
+    if(currentIndex === 0) {
+      this.focusScenarioLinkElement(this.scenarioLinkElements.length - 1);
+    } else {
+      this.focusScenarioLinkElement(currentIndex +- 1);
+    }
+  }
+
+  private goDown(scenarioElement) {
+    let currentIndex = -1;
+    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index) => {
+      if(scenarioElementRef.nativeElement === scenarioElement) {
+        currentIndex = index;
+      }
+    });
+    if(currentIndex === this.scenarioLinkElements.length - 1) {
+      this.focusScenarioLinkElement(0);
+    } else {
+      this.focusScenarioLinkElement(currentIndex + 1);
+    }
+  }
+
+  private focusScenarioLinkElement(index) {
+    if(this.scenarioLinkElements.toArray()[index]) {
+      this.scenarioLinkElements.toArray()[index].nativeElement.focus();
+    }
+  }
+
   private filterSandboxes(sandboxes, filter) {
     if (!filter) {
       return [];
@@ -245,10 +281,5 @@ export class AppComponent {
   private selectScenario(sandboxKey, scenarioKey) {
     this.selectedSandboxAndScenarioKeys = {sandboxKey, scenarioKey};
     this.stateService.setSandboxAndScenarioKeys(this.selectedSandboxAndScenarioKeys);
-  }
-
-  onScenarioClick(sandboxKey, scenarioKey, e) {
-    this.selectScenario(sandboxKey, scenarioKey);
-    e.preventDefault();
   }
 }
