@@ -31,3 +31,6 @@ but you will need to stop the playground from running and re-run it (which will
 handle re-installing the latest changes for the package).
 If you need to work on the `cli.ts` code you will need to 
 run `npm run build` from the project root after your changes.
+
+### Kudos
+Thanks goes out for the push pin icon from <http://svg.tools/free-icons/other/push-pin/>
