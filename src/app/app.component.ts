@@ -22,6 +22,9 @@ import {EventManager} from "@angular/platform-browser";
     ])
   ],
   styles: [`
+    :host * {
+      box-sizing: border-box;
+    }
     :host {
       font-family: sans-serif;
       display: flex;
@@ -35,17 +38,15 @@ import {EventManager} from "@angular/platform-browser";
         font-family: Menlo,Monaco,monospace;
         position: absolute;
         display: flex;
-        justify-content: center;
         flex-direction: column;
-        align-items: center;
         left: 50%;
       }
       :host .command-bar > input {
         font-family: Menlo,Monaco,monospace;
-        width: 400px;
+        width: 365px;
         z-index: 1;
         padding: 4px;
-        margin-top: 6px;
+        margin: 6px 0 0 5px;
         border: 1px solid #174a6c;
         background-color: #3c3c3c;
         font-size: 14pt;
@@ -58,15 +59,16 @@ import {EventManager} from "@angular/platform-browser";
         padding: 0; }
       :host .command-bar > div {
         margin-top: -39px;
-        width: 400px;
-        padding: 34px 14px 10px 14px;
+        width: 376px;
+        padding: 34px 0 11px 0;
         background-color: #252526;
         color: #fff;
         box-shadow: 0 3px 8px 5px black;
-        font-size: 14pt;
       }
       :host .command-bar > div > div:first-child {
-        padding-top: 18px;
+        margin-top: 12px;
+        padding-top: 4px;
+        border-top: 1px solid black;
       }
       :host .command-bar > div a {
         cursor: pointer; 
@@ -77,11 +79,22 @@ import {EventManager} from "@angular/platform-browser";
         color: #fff;
         outline-style: none;
       }
-      :host .command-bar .sandbox.selected, :host .command-bar .scenario.selected {
-        color: #0097fb; }
+      :host .command-bar .scenario:before {
+        content: '📌'; 
+        opacity: .3;
+        }
+      :host .command-bar .scenario.selected:before {
+        opacity: 1;
+        }
+      :host .command-bar .sandbox {
+        font-style: italic;
+        color: rgba(255, 255, 255, .5);
+        padding: 2px 8px;
+      }
       :host .command-bar .scenario {
-        font-size: .8em;
-        padding: 0 8px; }
+        padding: 2px 3px;
+        margin: 0 5px;
+      }
        
       :host section {
         border: 0;
