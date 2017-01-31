@@ -7,7 +7,7 @@ export interface SandboxOfConfig {
 
 export interface ScenarioConfig {
   template: string;
-  description?: string,
+  description?: string;
   styles?: string[];
   context?: any;
   providers?: any[];

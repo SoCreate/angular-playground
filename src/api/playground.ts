@@ -1,9 +1,10 @@
 
-export const initializePlayground = (elementNameToReplace: string) => {
+export const initializePlayground = (elementNameToReplace?: string) => {
   document.getElementsByTagName('title')[0].innerHTML = 'Angular Playground';
-  let appNode = document.getElementsByTagName(elementNameToReplace)[0];
-  appNode.parentNode.replaceChild(document.createElement('ap-root'), appNode);
-
+  if(elementNameToReplace && elementNameToReplace.length > 0) {
+    let appNode = document.getElementsByTagName(elementNameToReplace)[0];
+    appNode.parentNode.replaceChild(document.createElement('ap-root'), appNode);
+  }
   let resetStyles = `
     // Angular Playground reset styles
     html {
