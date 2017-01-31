@@ -36,13 +36,21 @@
     {
       "name": "Brian Treese",
       "url": "https://twitter.com/brianmtreese"
+    },
+    {
+      "name": "Greg Arroyo",
+      "url": "https://twitter.com/arroyocode"
+    },
+    {
+      "name": "Rich McCluskey",
+      "url": "https://twitter.com/rich_code"
     }
   ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/SoCreate/angular-playground/issues"
   },
-  "homepage": "https://github.com/SoCreate/angular-playground#readme",
+  "homepage": "http://www.angularplayground.it",
   "peerDependencies": {
     "@angular/common": "^2.4.1",
     "@angular/compiler": "^2.4.1",
