@@ -5,9 +5,9 @@ in isolation (aka Scenario Driven Development).
 
 > For Angular version 2.x and up
 
-It is designed to run within your existing application, and takes advantage of 
+Angular Playground is designed to run within your existing application, and takes advantage of 
 your build system to build your components, directives and pipes.
 
-## For setup and documentation visit:
+### For setup and documentation visit:
 
-## <http://www.angularplayground.it>
+### <http://www.angularplayground.it>
