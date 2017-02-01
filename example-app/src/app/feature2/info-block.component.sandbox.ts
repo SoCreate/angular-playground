@@ -6,20 +6,20 @@ export default sandboxOf(InfoBlockComponent)
     template: `
       <ex-info-block state="info">
         This is a general info block example component
-        in Angular Playground
+        in Playground
       </ex-info-block>`
     })
   .add('A warning example', {
     template: `
       <ex-info-block state="warning">
         This is a "warning" info block example 
-        component in Angular Playground
+        component in Playground
       </ex-info-block>`
     })
   .add('An error example', {
     template: `
       <ex-info-block state="error">
         This is an "error" info block example 
-        component in Angular Playground
+        component in Playground
       </ex-info-block>`
     });

@@ -1,1 +1,1 @@
-# Angular Playground
+# Example App for Playground

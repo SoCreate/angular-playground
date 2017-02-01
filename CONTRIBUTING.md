@@ -1,4 +1,4 @@
-# Contributing to Angular Playground
+# Contributing to Playground for Angular
 
  - [Issues and Bugs](#issue)
  - [Request/Add a Feature](#feature)
@@ -51,7 +51,7 @@ Before you submit your Pull Request (PR) consider the following guidelines:
 
 That's it! Thank you for your contribution!
 
-## <a name="dev"></a> Working on the Angular Playground source code
+## <a name="dev"></a> Working on the Playground source code
 ### Initial setup
 Install dependencies for the playground source code:
 ```
@@ -69,7 +69,7 @@ From the `/example-app` dir:
 ```
 npm run playground:fresh
 ```
-From this point you can work on the Angular Playground `app` and `api` code,
+From this point you can work on the Playground `app` and `api` code,
 but you will need to stop the playground from running and re-run it (which will
 handle re-installing the latest changes for the package).
 If you need to work on the `cli.ts` code you will need to 
