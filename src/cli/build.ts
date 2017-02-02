@@ -3,12 +3,17 @@ const fs = require('fs');
 
 export const build = (rootPath) => {
   let home = path.resolve(rootPath);
-  StringBuilder.addLine(`let sandboxes = [];`);
+  let sandboxCount = 0;
   let sandboxes = [];
   fromDir(home, /\.sandbox.ts$/, (filename) => {
     let filePathToUse = filename.replace(home, '.').replace(/.ts$/, '').replace(/\\/g, '/');
-    sandboxes.push(filename);
-    StringBuilder.addLine(`sandboxes.push(require('${filePathToUse}').default.serialize());`);
+    let importName = `s${++sandboxCount}`;
+    sandboxes.push(importName);
+    StringBuilder.addLine(`import { default as ${importName} } from '${filePathToUse}';`);
+  });
+  StringBuilder.addLine(`let sandboxes = [];`);
+  sandboxes.forEach(importName => {
+    StringBuilder.addLine(`sandboxes.push(${importName}.serialize());`);
   });
   StringBuilder.addLine(`export default sandboxes;`);
 
