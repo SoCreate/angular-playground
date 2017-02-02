@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@angular/compiler-cli": "2.4.1",
+    "@ngtools/webpack": "1.2.4",
     "@types/jasmine": "2.5.38",
     "@types/node": "^6.0.42",
     "angular-cli": "1.0.0-beta.24",
