@@ -8,6 +8,7 @@
     "outDir": "../../dist/bin",
     "sourceMap": false,
     "target": "es5",
+    "newLine": "LF",
     "typeRoots": [
       "../../node_modules/@types"
     ]

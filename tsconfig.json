@@ -9,6 +9,7 @@
     "module": "es6",
     "moduleResolution": "node",
     "target": "es5",
+    "newLine": "LF",
     "typeRoots": [
       "node_modules/@types"
     ]
