@@ -1,3 +1,18 @@
+<a name="1.1.7"></a>
+# 1.1.7  (2017-02-02)
+
+### Fixes
+
+* **build:** Added newLine compiler option to force LF for tsc
+([#3](https://github.com/socreate/angular-playground/issues/3))
+([bd90e84](https://github.com/SoCreate/angular-playground/commit/bd90e84))
+
+### Notes
+
+* **angular-cli:** **@ngtools/webpack** (1.2.7) is out and fixes
+the error on rebuild so no need to pin that package anymore!
+
+
 <a name="1.1.6"></a>
 # 1.1.6  (2017-02-02)
 
