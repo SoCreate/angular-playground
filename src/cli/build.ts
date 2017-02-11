@@ -11,7 +11,7 @@ export const build = (rootPath) => {
     sandboxes.push(importName);
     StringBuilder.addLine(`import { default as ${importName} } from '${filePathToUse}';`);
   });
-  StringBuilder.addLine(`let sandboxes = [];`);
+  StringBuilder.addLine(`let sandboxes: any[] = [];`);
   sandboxes.forEach(importName => {
     StringBuilder.addLine(`sandboxes.push(${importName}.serialize());`);
   });
