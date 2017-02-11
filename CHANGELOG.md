@@ -3,6 +3,13 @@
 
 ### Fixes
 * **build** Added `any[]` type to `sandboxes` variable to support environments using `noImplicitAny` for their TypeScript builds.
+* **app** Added z-index for command bar to always overlay even if sandboxed components contain absolute positioned content.
+([#6](https://github.com/SoCreate/angular-playground/issues/6))
+([3c258de](https://github.com/SoCreate/angular-playground/commit/3c258de))
+
+### Notes
+
+* **example apps** The source code for angular-playground now has an example app using webpack.
 
 
 <a name="1.1.7"></a>
