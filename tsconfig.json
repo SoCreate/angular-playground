@@ -19,6 +19,7 @@
   ],
   "exclude": [
     "node_modules",
-    "example-app"
+    "example-app-angular-cli",
+    "example-app-webpack"
   ]
 }
