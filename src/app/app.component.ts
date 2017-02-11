@@ -35,6 +35,7 @@ import {EventManager} from "@angular/platform-browser";
         height: 100vh;
         opacity: 0; }
       :host .command-bar {
+        z-index: 1;
         font-family: Menlo,Monaco,monospace;
         position: absolute;
         display: flex;

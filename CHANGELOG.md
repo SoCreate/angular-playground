@@ -1,3 +1,10 @@
+<a name="1.1.8"></a>
+# 1.1.8  (2017-02-11)
+
+### Fixes
+* **build** Added `any[]` type to `sandboxes` variable to support environments using `noImplicitAny` for their TypeScript builds.
+
+
 <a name="1.1.7"></a>
 # 1.1.7  (2017-02-02)
 

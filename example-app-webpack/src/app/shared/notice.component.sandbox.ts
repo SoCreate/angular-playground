@@ -24,4 +24,7 @@ export default sandboxOf(NoticeComponent, {providers: [CounterService], })
   })
   .add('with inner html', {
     template: `<ex-notice><h1>A heading in a notice</h1></ex-notice>`
+  })
+  .add('position absolute test', {
+    template: '<ex-notice style="position: absolute;">Notice that is absolute positioned</ex-notice>'
   });

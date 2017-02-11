@@ -21,4 +21,7 @@ export default sandboxOf(NoticeComponent, {providers: [CounterService], })
   .add('with custom provider', {
     template: '<ex-notice>Notice one hundred</ex-notice>',
     providers: [{provide: CounterService, useClass: MockCounterService}]
+  })
+  .add('position absolute test', {
+    template: '<ex-notice style="position: absolute;">Notice that is absolute positioned</ex-notice>'
   });
