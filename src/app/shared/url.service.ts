@@ -1,22 +1,40 @@
+import {Injectable, Inject} from "@angular/core";
+import {SANDBOXES} from "./tokens";
+import {Sandbox} from "./app-state";
+
+@Injectable()
 export class UrlService {
-  private _sandbox;
-  private _scenario;
+  private _embed = null;
+  private _select = null;
 
-  get sandbox() {
-    return this._sandbox;
+  get embed() {
+    return this._embed;
   }
 
-  get scenario() {
-    return this._scenario;
+  get select() {
+    return this._select;
   }
 
-  constructor() {
-    let match = /\?embed=([^&#]*)/g.exec(window.location.href);
+  constructor(@Inject(SANDBOXES) sandboxes: Sandbox[]) {
+    this._embed = this.parse('embed', sandboxes);
+    this._select = this.parse('select', sandboxes);
+    if (this._select) {
+      window.location.href.replace(window.location.search, '');
+    }
+  }
+
+  private parse(key, sandboxes) {
+    let match = new RegExp('\\?' + key + '=([^&#]*)').exec(window.location.href);
     if (match !== null) {
-      let embed = decodeURIComponent(match[1]);
-      let firstSlash = embed.indexOf('/');
-      this._sandbox = embed.substr(0, firstSlash);
-      this._scenario = embed.substr(firstSlash+1, embed.length);
+      let value = decodeURIComponent(match[1]);
+      let firstSlash = value.indexOf('/');
+
+      let sandboxKey = `${value.substr(0, firstSlash)}Component`;
+      let scenarioKey = sandboxes
+          .find(sandbox => sandbox.key.toLowerCase() === sandboxKey.toLowerCase())
+          .scenarios.findIndex(scenario => scenario.description.toLowerCase() === value.substr(firstSlash + 1, value.length).toLowerCase()) + 1;
+
+      return { sandboxKey, scenarioKey };
     }
   }
 }

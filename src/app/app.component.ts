@@ -186,11 +186,8 @@ export class AppComponent {
               private stateService: StateService,
               private urlService: UrlService,
               private eventManager: EventManager) {
-    if(this.urlService.scenario && this.urlService.sandbox) {
-      let scenarioKey = sandboxes
-        .find(sandbox => `${sandbox.prependText}${sandbox.name}`.toLowerCase() === this.urlService.sandbox.toLowerCase())
-        .scenarios.findIndex(scenario => scenario.description.toLowerCase() === this.urlService.scenario.toLowerCase()) + 1;
-      this.selectScenario(`${this.urlService.sandbox}Component`, scenarioKey);
+    if(this.urlService.embed) {
+      this.selectScenario(this.urlService.embed.sandboxKey, this.urlService.embed.scenarioKey);
     } else {
       this.eventManager.addGlobalEventListener('window',
         'keydown.control.o',
@@ -204,7 +201,7 @@ export class AppComponent {
         });
       this.totalSandboxes = sandboxes.length;
       this.filteredSandboxes = this.filterSandboxes(sandboxes, this.stateService.getFilter());
-      let {sandboxKey, scenarioKey} = this.stateService.getSelectedSandboxAndScenarioKeys();
+      let {sandboxKey, scenarioKey} = this.urlService.select || this.stateService.getSelectedSandboxAndScenarioKeys();
       this.selectScenario(sandboxKey, scenarioKey);
       this.filter.setValue(this.stateService.getFilter());
       this.filter.valueChanges
@@ -324,5 +321,11 @@ export class AppComponent {
   private selectScenario(sandboxKey, scenarioKey) {
     this.selectedSandboxAndScenarioKeys = {sandboxKey, scenarioKey};
     this.stateService.setSandboxAndScenarioKeys(this.selectedSandboxAndScenarioKeys);
+  }
+
+  private getScenarioKeyFromDescription(sandbox, scenario, sandboxes) {
+    return sandboxes
+      .find(sandbox => `${sandbox.prependText}${sandbox.name}`.toLowerCase() === sandbox.toLowerCase())
+      .scenarios.findIndex(scenario => scenario.description.toLowerCase() === scenario.toLowerCase()) + 1;
   }
 }
