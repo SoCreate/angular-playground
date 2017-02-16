@@ -16,7 +16,7 @@ export class ScenarioComponent {
   @Input() set selectedSandboxAndScenarioKeys(selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys) {
     this.view.clear();
     if (selectedSandboxAndScenarioKeys) {
-      let sandbox: Sandbox = this.sandboxes.find((sandbox: Sandbox) => sandbox.key === selectedSandboxAndScenarioKeys.sandboxKey);
+      let sandbox: Sandbox = this.sandboxes.find((sandbox: Sandbox) => sandbox.key.toLowerCase() === selectedSandboxAndScenarioKeys.sandboxKey.toLowerCase());
       if (sandbox) {
         let scenario = sandbox.scenarios.find((scenario: Scenario) => scenario.key === selectedSandboxAndScenarioKeys.scenarioKey);
         if (scenario) {

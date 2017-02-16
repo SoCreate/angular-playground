@@ -29,7 +29,7 @@ export class SandboxBuilder {
   }
 
   add(description: string, config: ScenarioConfig) {
-    let key = `${++this._scenarioCounter}`;
+    let key = ++this._scenarioCounter;
     this._scenarios.push(Object.assign({}, config, {key, description}));
     return this;
   }
@@ -40,10 +40,10 @@ export class SandboxBuilder {
       name: this._type.name.replace(/Component$/, ''),
       type: this._type,
       scenarios: this._scenarios,
-      prependText: this._config.prependText,
-      imports: this._config.imports,
-      declarations: this._config.declarations,
-      providers: this._config.providers
+      prependText: this._config.prependText || '',
+      imports: this._config.imports || null,
+      declarations: this._config.declarations || null,
+      providers: this._config.providers || null
     };
   }
 }

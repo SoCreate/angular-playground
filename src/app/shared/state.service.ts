@@ -8,7 +8,7 @@ export class StateService {
     this.filter = sessionStorage.getItem('angularPlayground.filter');
     this.selectedSandboxAndScenarioKeys = {
       sandboxKey: sessionStorage.getItem('angularPlayground.sandboxKey'),
-      scenarioKey: sessionStorage.getItem('angularPlayground.scenarioKey')
+      scenarioKey: parseInt(sessionStorage.getItem('angularPlayground.scenarioKey'))
     };
 
     const beforeUnload = () => {

@@ -1,19 +1,20 @@
 export interface SelectedSandboxAndScenarioKeys {
   sandboxKey: string;
-  scenarioKey: string;
+  scenarioKey: number;
 }
 
 export interface Sandbox {
   key: string;
   name: string;
   type: any,
-  modules?: any[],
+  prependText?: string,
+  imports?: any[],
   declarations?: any[],
   scenarios: Scenario[]
 }
 
 export interface Scenario {
-  key: string;
+  key: number;
   description: string,
   template: string,
   styles?: string[],

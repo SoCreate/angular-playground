@@ -6,6 +6,7 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import {StateService} from './shared/state.service';
 import {EventManager} from "@angular/platform-browser";
+import {UrlService} from "./shared/url.service";
 
 @Component({
   selector: 'ap-root',
@@ -183,32 +184,40 @@ export class AppComponent {
 
   constructor(@Inject(SANDBOXES) sandboxes: Sandbox[],
               private stateService: StateService,
+              private urlService: UrlService,
               private eventManager: EventManager) {
-    this.eventManager.addGlobalEventListener('window',
-      'keydown.control.o',
-      (e) => {
-        e.preventDefault();
-      });
-    this.eventManager.addGlobalEventListener('window',
-      'keyup.control.o',
-      () => {
-        this.toggleCommandBar();
-      });
-    this.totalSandboxes = sandboxes.length;
-    this.filteredSandboxes = this.filterSandboxes(sandboxes, this.stateService.getFilter());
-    let {sandboxKey, scenarioKey} = this.stateService.getSelectedSandboxAndScenarioKeys();
-    this.selectScenario(sandboxKey, scenarioKey);
-    this.filter.setValue(this.stateService.getFilter());
-    this.filter.valueChanges
-      .debounceTime(300)
-      .distinctUntilChanged()
-      .subscribe(value => {
-        this.filteredSandboxes = this.filterSandboxes(sandboxes, value);
-        this.stateService.setFilter(value);
-        if (!value) {
-          this.selectScenario(null, null);
-        }
-      });
+    if(this.urlService.scenario && this.urlService.sandbox) {
+      let scenarioKey = sandboxes
+        .find(sandbox => `${sandbox.prependText}${sandbox.name}`.toLowerCase() === this.urlService.sandbox.toLowerCase())
+        .scenarios.findIndex(scenario => scenario.description.toLowerCase() === this.urlService.scenario.toLowerCase()) + 1;
+      this.selectScenario(`${this.urlService.sandbox}Component`, scenarioKey);
+    } else {
+      this.eventManager.addGlobalEventListener('window',
+        'keydown.control.o',
+        (e) => {
+          e.preventDefault();
+        });
+      this.eventManager.addGlobalEventListener('window',
+        'keyup.control.o',
+        () => {
+          this.toggleCommandBar();
+        });
+      this.totalSandboxes = sandboxes.length;
+      this.filteredSandboxes = this.filterSandboxes(sandboxes, this.stateService.getFilter());
+      let {sandboxKey, scenarioKey} = this.stateService.getSelectedSandboxAndScenarioKeys();
+      this.selectScenario(sandboxKey, scenarioKey);
+      this.filter.setValue(this.stateService.getFilter());
+      this.filter.valueChanges
+        .debounceTime(300)
+        .distinctUntilChanged()
+        .subscribe(value => {
+          this.filteredSandboxes = this.filterSandboxes(sandboxes, value);
+          this.stateService.setFilter(value);
+          if (!value) {
+            this.selectScenario(null, null);
+          }
+        });
+    }
   }
 
   goToFirstScenario(event) {
