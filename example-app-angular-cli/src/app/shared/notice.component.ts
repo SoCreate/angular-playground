@@ -3,7 +3,10 @@ import { CounterService } from './counter.service';
 @Component({
   selector: 'ex-notice',
   template: `<ng-content></ng-content> [notice #{{count}}]`,
-  styles: [`:host { display: block; color: green; font-style: italic; }`],
+  styles: [`
+    :host { display: block; color: green; font-style: italic; }
+    :host-context(.green) { color: gray; }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoticeComponent {
