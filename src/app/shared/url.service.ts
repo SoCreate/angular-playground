@@ -1,6 +1,7 @@
-import {Injectable, Inject} from "@angular/core";
-import {SANDBOXES} from "./tokens";
-import {Sandbox} from "./app-state";
+import {Injectable, Inject} from '@angular/core';
+import {Location} from '@angular/common';
+import {SANDBOXES} from './tokens';
+import {Sandbox} from './app-state';
 
 @Injectable()
 export class UrlService {
@@ -15,26 +16,29 @@ export class UrlService {
     return this._select;
   }
 
-  constructor(@Inject(SANDBOXES) sandboxes: Sandbox[]) {
-    this._embed = this.parse('embed', sandboxes);
-    this._select = this.parse('select', sandboxes);
+  constructor(@Inject(SANDBOXES) sandboxes: Sandbox[],
+              location: Location) {
+    let urlPath = location.path();
+    this._embed = this.parse('embed', sandboxes, urlPath);
+    this._select = this.parse('select', sandboxes, urlPath);
     if (this._select) {
-      window.location.href.replace(window.location.search, '');
+      location.replaceState('');
     }
   }
 
-  private parse(key, sandboxes) {
-    let match = new RegExp('\\?' + key + '=([^&#]*)').exec(window.location.href);
+  private parse(key, sandboxes, urlPath) {
+    let match = new RegExp('\\?' + key + '=([^&#]*)').exec(urlPath);
     if (match !== null) {
       let value = decodeURIComponent(match[1]);
       let firstSlash = value.indexOf('/');
 
-      let sandboxKey = `${value.substr(0, firstSlash)}Component`;
+      let filter = value.substr(0, firstSlash);
+      let sandboxKey = `${filter}Component`;
       let scenarioKey = sandboxes
           .find(sandbox => sandbox.key.toLowerCase() === sandboxKey.toLowerCase())
           .scenarios.findIndex(scenario => scenario.description.toLowerCase() === value.substr(firstSlash + 1, value.length).toLowerCase()) + 1;
 
-      return { sandboxKey, scenarioKey };
+      return {filter, sandboxKey, scenarioKey};
     }
   }
 }

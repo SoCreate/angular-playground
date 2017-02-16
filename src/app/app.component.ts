@@ -142,7 +142,7 @@ import {UrlService} from "./shared/url.service";
                [class.selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
             {{sandbox.prependText}}{{sandbox.name}}</div>
           <div *ngFor="let scenario of sandbox.scenarios" class="scenarios">
-            <svg class="scenario-icon" [class.selected]="selectedSandboxAndScenarioKeys.scenarioKey === scenario.key && selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
+            <svg class="scenario-icon" [class.selected]="isSelected(sandbox, scenario)">
               <use xlink:href="#icon-pin"/>
             </svg>
             <a
@@ -152,7 +152,7 @@ import {UrlService} from "./shared/url.service";
                (keydown)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
                (keyup)="onScenarioLinkKeyUp(scenarioElement, $event)"
                (click)="onScenarioClick(sandbox.key, scenario.key, $event); toggleCommandBar()"
-               [class.selected]="selectedSandboxAndScenarioKeys.scenarioKey === scenario.key && selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
+               [class.selected]="isSelected(sandbox, scenario)">
               {{scenario.description}}</a>
           </div>
         </div>
@@ -189,6 +189,10 @@ export class AppComponent {
     if(this.urlService.embed) {
       this.selectScenario(this.urlService.embed.sandboxKey, this.urlService.embed.scenarioKey);
     } else {
+      if (this.urlService.select) {
+        this.stateService.setFilter(this.urlService.select.filter);
+        this.stateService.setSandboxAndScenarioKeys({sandboxKey: this.urlService.select.sandboxKey, scenarioKey: this.urlService.select.scenarioKey});
+      }
       this.eventManager.addGlobalEventListener('window',
         'keydown.control.o',
         (e) => {
@@ -200,10 +204,10 @@ export class AppComponent {
           this.toggleCommandBar();
         });
       this.totalSandboxes = sandboxes.length;
-      this.filteredSandboxes = this.filterSandboxes(sandboxes, this.stateService.getFilter());
-      let {sandboxKey, scenarioKey} = this.urlService.select || this.stateService.getSelectedSandboxAndScenarioKeys();
-      this.selectScenario(sandboxKey, scenarioKey);
-      this.filter.setValue(this.stateService.getFilter());
+      this.selectedSandboxAndScenarioKeys = this.stateService.getSelectedSandboxAndScenarioKeys();
+      let filterValue = this.stateService.getFilter();
+      this.filteredSandboxes = this.filterSandboxes(sandboxes, filterValue);
+      this.filter.setValue(filterValue);
       this.filter.valueChanges
         .debounceTime(300)
         .distinctUntilChanged()
@@ -259,6 +263,11 @@ export class AppComponent {
     e.preventDefault();
   }
 
+  isSelected(sandbox, scenario) {
+    return this.selectedSandboxAndScenarioKeys.scenarioKey === scenario.key
+      && this.selectedSandboxAndScenarioKeys.sandboxKey.toLowerCase() === sandbox.key.toLowerCase();
+  }
+
   private goUp(scenarioElement) {
     let currentIndex = -1;
     this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index) => {
@@ -299,7 +308,7 @@ export class AppComponent {
     }
     let tabIndex = 0;
     return sandboxes
-      .filter((sandbox: Sandbox) => sandbox.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
+      .filter((sandbox: Sandbox) => sandbox.key.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
       .sort((a: Sandbox, b: Sandbox) => {
         let nameA = a.name.toUpperCase();
         let nameB = b.name.toUpperCase();
@@ -321,11 +330,5 @@ export class AppComponent {
   private selectScenario(sandboxKey, scenarioKey) {
     this.selectedSandboxAndScenarioKeys = {sandboxKey, scenarioKey};
     this.stateService.setSandboxAndScenarioKeys(this.selectedSandboxAndScenarioKeys);
-  }
-
-  private getScenarioKeyFromDescription(sandbox, scenario, sandboxes) {
-    return sandboxes
-      .find(sandbox => `${sandbox.prependText}${sandbox.name}`.toLowerCase() === sandbox.toLowerCase())
-      .scenarios.findIndex(scenario => scenario.description.toLowerCase() === scenario.toLowerCase()) + 1;
   }
 }

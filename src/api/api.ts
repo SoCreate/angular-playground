@@ -24,7 +24,7 @@ export class SandboxBuilder {
 
   constructor(private _type: any,
               private _config: SandboxOfConfig = {}) {
-    let prependTextAsKey = this._config.prependText ? this._config.prependText.replace(/ /g, '') : '';
+    let prependTextAsKey = this._config.prependText || '';
     this._key = `${prependTextAsKey}${this._type.name}`;
   }
 

@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {ScenarioComponent} from './scenario/scenario.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -15,6 +16,8 @@ import {UrlService} from "./shared/url.service";
     ReactiveFormsModule
   ],
   providers: [
+    Location,
+    {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: SANDBOXES, useFactory: loadSandboxes},
     StateService,
     UrlService
