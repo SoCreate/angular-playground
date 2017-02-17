@@ -183,14 +183,15 @@ export class AppComponent {
   @ViewChildren('scenarioElement') scenarioLinkElements;
 
   constructor(@Inject(SANDBOXES) sandboxes: Sandbox[],
+              private stateService: StateService,
               private urlService: UrlService,
               private eventManager: EventManager) {
     if(this.urlService.embed) {
       this.selectedSandboxAndScenarioKeys = {sandboxKey: this.urlService.select.sandboxKey, scenarioKey: this.urlService.select.scenarioKey};
     } else {
-      let filterValue;
+      let filterValue = this.stateService.getFilter();
       if (this.urlService.select) {
-        filterValue = this.urlService.select.filter;
+        filterValue = (filterValue && this.urlService.select.filter.toLowerCase().includes(filterValue.toLowerCase())) ? filterValue : this.urlService.select.filter;
         this.selectedSandboxAndScenarioKeys = {sandboxKey: this.urlService.select.sandboxKey, scenarioKey: this.urlService.select.scenarioKey};
       }
       this.eventManager.addGlobalEventListener('window',
@@ -210,6 +211,7 @@ export class AppComponent {
         .debounceTime(300)
         .distinctUntilChanged()
         .subscribe(value => {
+          this.stateService.setFilter(value);
           this.filteredSandboxes = this.filterSandboxes(sandboxes, value);
           if (!value) {
             this.selectScenario(null, null);

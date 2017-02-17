@@ -1,18 +1,13 @@
-import { SelectedSandboxAndScenarioKeys } from './app-state';
-
 export class StateService {
   filter;
-  selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys;
+  filterKey = 'angularPlayground.filter';
 
   constructor() {
-    this.filter = sessionStorage.getItem('angularPlayground.filter');
-    this.selectedSandboxAndScenarioKeys = {
-      sandboxKey: sessionStorage.getItem('angularPlayground.sandboxKey'),
-      scenarioKey: parseInt(sessionStorage.getItem('angularPlayground.scenarioKey'))
-    };
+    this.filter = sessionStorage.getItem(this.filterKey);
+    sessionStorage.removeItem(this.filterKey);
 
     const beforeUnload = () => {
-      this.saveState();
+      sessionStorage.setItem(this.filterKey, emptyStringIfNull(this.filter));
       return 'unload';
     };
     window.addEventListener('beforeunload', beforeUnload);
@@ -24,20 +19,6 @@ export class StateService {
 
   setFilter(value) {
     this.filter = value;
-  }
-
-  getSelectedSandboxAndScenarioKeys() {
-    return this.selectedSandboxAndScenarioKeys;
-  }
-
-  setSandboxAndScenarioKeys(value: SelectedSandboxAndScenarioKeys) {
-    this.selectedSandboxAndScenarioKeys = value;
-  }
-
-  saveState() {
-    sessionStorage.setItem('angularPlayground.filter', emptyStringIfNull(this.filter));
-    sessionStorage.setItem('angularPlayground.sandboxKey', emptyStringIfNull(this.selectedSandboxAndScenarioKeys.sandboxKey));
-    sessionStorage.setItem('angularPlayground.scenarioKey', emptyStringIfNull(this.selectedSandboxAndScenarioKeys.scenarioKey));
   }
 }
 
