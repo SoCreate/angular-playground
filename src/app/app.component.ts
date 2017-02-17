@@ -178,20 +178,20 @@ export class AppComponent {
   commandBarActive = false;
   totalSandboxes: number;
   filteredSandboxes: Sandbox[];
-  selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys;
+  selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = {sandboxKey: null, scenarioKey: null};
   filter = new FormControl();
   @ViewChildren('scenarioElement') scenarioLinkElements;
 
   constructor(@Inject(SANDBOXES) sandboxes: Sandbox[],
-              private stateService: StateService,
               private urlService: UrlService,
               private eventManager: EventManager) {
     if(this.urlService.embed) {
-      this.selectScenario(this.urlService.embed.sandboxKey, this.urlService.embed.scenarioKey);
+      this.selectedSandboxAndScenarioKeys = {sandboxKey: this.urlService.select.sandboxKey, scenarioKey: this.urlService.select.scenarioKey};
     } else {
+      let filterValue;
       if (this.urlService.select) {
-        this.stateService.setFilter(this.urlService.select.filter);
-        this.stateService.setSandboxAndScenarioKeys({sandboxKey: this.urlService.select.sandboxKey, scenarioKey: this.urlService.select.scenarioKey});
+        filterValue = this.urlService.select.filter;
+        this.selectedSandboxAndScenarioKeys = {sandboxKey: this.urlService.select.sandboxKey, scenarioKey: this.urlService.select.scenarioKey};
       }
       this.eventManager.addGlobalEventListener('window',
         'keydown.control.o',
@@ -204,8 +204,6 @@ export class AppComponent {
           this.toggleCommandBar();
         });
       this.totalSandboxes = sandboxes.length;
-      this.selectedSandboxAndScenarioKeys = this.stateService.getSelectedSandboxAndScenarioKeys();
-      let filterValue = this.stateService.getFilter();
       this.filteredSandboxes = this.filterSandboxes(sandboxes, filterValue);
       this.filter.setValue(filterValue);
       this.filter.valueChanges
@@ -213,7 +211,6 @@ export class AppComponent {
         .distinctUntilChanged()
         .subscribe(value => {
           this.filteredSandboxes = this.filterSandboxes(sandboxes, value);
-          this.stateService.setFilter(value);
           if (!value) {
             this.selectScenario(null, null);
           }
@@ -329,6 +326,6 @@ export class AppComponent {
 
   private selectScenario(sandboxKey, scenarioKey) {
     this.selectedSandboxAndScenarioKeys = {sandboxKey, scenarioKey};
-    this.stateService.setSandboxAndScenarioKeys(this.selectedSandboxAndScenarioKeys);
+    this.urlService.setSelected(sandboxKey, scenarioKey);
   }
 }

@@ -37,7 +37,7 @@ export class SandboxBuilder {
   serialize() {
     return {
       key: this._key,
-      name: this._type.name.replace(/Component$/, ''),
+      name: this._type.name,
       type: this._type,
       scenarios: this._scenarios,
       prependText: this._config.prependText || '',

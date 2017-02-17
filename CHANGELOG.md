@@ -1,3 +1,42 @@
+<a name="1.2.0"></a>
+# 1.2.0 (2017-02-17)
+
+### Features
+* **state in url:** The selected component scenario now gets added as a query string to the URL instead
+of storing that info in session storage. This allows for **deep linking**.
+
+* **deep linking:** A running Playground app now supports a query string parameter for deep linking 
+directly to a component scenario.
+  ```
+  ?scenario=[prependText][componentName]/[scenarioDescription]
+  ```
+  So an example might look like `?select=feature1.NoticeComponent/with%20long%20text` and you could link to it:
+  ```html
+  <a href="http://yourplaygroundhost?scenario=feature1.NoticeComponent/with%20long%20text">View in Playground</a>
+  ```
+  
+* **embed mode:** A running Playground app now supports a query string parameter to put the
+render into embed mode (just the component scenario, no command bar support).
+  ```
+  ?scenario=[prependText][componentName]/[scenarioDescription]&embed=1
+  ```
+  So an example might look like `?embed=feature1.NoticeComponent/with%20long%20text&embed=1` and you could use it
+  within another app/page via an iframe:
+  ```html
+  <iframe src="http://yourplaygroundhost?scenario=feature1.NoticeComponent/with%20long%20text&embed=1"></iframe>
+  ```
+
+* **multi file for same component:** Added support for identifying `sandboxOf` calls on the same component
+type and grouping them in the command bar when the combo of `prependText` and `componentType` are the same.
+Now you can have multiple `*.sandbox.ts` files to sandbox the same component and the scenarios can fall under
+the same grouping in the command bar.
+
+### Notes
+* **Angular CLI integration:** As of `1.0.0-beta.31` and above the integration code to run Playground with
+Angular CLI is not working. There will be an update when the Angular CLI goes to `RC0` (which should 
+hopefully be soon). In the meantime, if you want to use Playground in an Angular CLI app you need to 
+stay on `1.0.0-beta.30`.
+
 <a name="1.1.8"></a>
 # 1.1.8  (2017-02-11)
 

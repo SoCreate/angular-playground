@@ -1,3 +1,15 @@
 export function loadSandboxes() {
-  return require('sandboxes').default;
+  let sandboxes = require('sandboxes').default;
+  sandboxes = sandboxes.reduce((acc, val) => {
+    let existingSandbox = acc.find(i => i.key.toLowerCase() === val.key.toLowerCase() && i.type === val.type);
+    if (existingSandbox) {
+      val.scenarios.forEach(scenario => {
+        existingSandbox.scenarios.push(Object.assign({}, scenario, {key: existingSandbox.scenarios.length+1}));
+      });
+    } else {
+      acc.push(val);
+    }
+    return acc;
+  }, []);
+  return sandboxes;
 }
