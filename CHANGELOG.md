@@ -10,17 +10,16 @@ directly to a component scenario.
   ```
   ?scenario=[prependText][componentName]/[scenarioDescription]
   ```
-  So an example might look like `?select=feature1.NoticeComponent/with%20long%20text` and you could link to it:
-  ```html
-  <a href="http://yourplaygroundhost?scenario=feature1.NoticeComponent/with%20long%20text">View in Playground</a>
-  ```
+  You can get a hold of this link by pulling up a component scenario in the Playground and getting
+  the link from the browser location bar.
   
 * **embed mode:** A running Playground app now supports a query string parameter to put the
 render into embed mode (just the component scenario, no command bar support).
   ```
   ?scenario=[prependText][componentName]/[scenarioDescription]&embed=1
   ```
-  So an example might look like `?embed=feature1.NoticeComponent/with%20long%20text&embed=1` and you could use it
+  This is the same as the deep link but with an added query string parameter of `embed=1`.  
+  So an example might look like `?scenario=feature1.NoticeComponent/with%20long%20text&embed=1` and you could use it
   within another app/page via an iframe:
   ```html
   <iframe src="http://yourplaygroundhost?scenario=feature1.NoticeComponent/with%20long%20text&embed=1"></iframe>
