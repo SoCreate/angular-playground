@@ -31,11 +31,14 @@ type and grouping them in the command bar when the combo of `prependText` and `c
 Now you can have multiple `*.sandbox.ts` files to sandbox the same component and the scenarios can fall under
 the same grouping in the command bar.
 
+* **fuzzy search:** Added fuzzy search support to the command bar (big thank you to [Nicolás Bevacqua](https://twitter.com/nzgb) for 
+ his open source [fuzzySearch](https://github.com/bevacqua/fuzzysearch) code!).
+
 ### Notes
 * **Angular CLI integration:** As of `1.0.0-beta.31` and above the integration code to run Playground with
 Angular CLI is not working. There will be an update when the Angular CLI goes to `RC0` (which should 
 hopefully be soon). In the meantime, if you want to use Playground in an Angular CLI app you need to 
-stay on `1.0.0-beta.30`.
+stay on `1.0.0-beta.30` or you can make use of the webpack eject command in `1.0.0-beta.32`.
 
 <a name="1.1.8"></a>
 # 1.1.8  (2017-02-11)

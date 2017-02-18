@@ -7,6 +7,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import {StateService} from './shared/state.service';
 import {EventManager} from "@angular/platform-browser";
 import {UrlService} from "./shared/url.service";
+import {fuzzySearch} from './shared/fuzzy-search.function';
 
 @Component({
   selector: 'ap-root',
@@ -191,7 +192,7 @@ export class AppComponent {
     } else {
       let filterValue = this.stateService.getFilter();
       if (this.urlService.select) {
-        filterValue = (filterValue && this.urlService.select.filter.toLowerCase().includes(filterValue.toLowerCase())) ? filterValue : this.urlService.select.filter;
+        filterValue = (filterValue && fuzzySearch(filterValue.toLowerCase(), this.urlService.select.filter.toLowerCase())) ? filterValue : this.urlService.select.filter;
         this.selectedSandboxAndScenarioKeys = {sandboxKey: this.urlService.select.sandboxKey, scenarioKey: this.urlService.select.scenarioKey};
       }
       this.eventManager.addGlobalEventListener('window',
@@ -306,8 +307,9 @@ export class AppComponent {
       return [];
     }
     let tabIndex = 0;
+    let filterNormalized = filter.toLowerCase();
     return sandboxes
-      .filter((sandbox: Sandbox) => sandbox.key.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
+      .filter((sandbox: Sandbox) => fuzzySearch(filterNormalized, sandbox.key.toLowerCase()))
       .sort((a: Sandbox, b: Sandbox) => {
         let nameA = a.name.toUpperCase();
         let nameB = b.name.toUpperCase();
