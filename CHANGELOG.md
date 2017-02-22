@@ -1,3 +1,17 @@
+<a name="1.2.1"></a>
+# 1.2.1 (2017-02-21)
+
+### Features
+* **cli flags:** Added support for the following flags when running `angular-playground` 
+  *(these are designed to be used in the case where you want to integrate the call to the Playground CLI into
+  a build process for an instance of the Playground)*:
+  * `-no-watch` Tells cli to not watch for `*.sandbox.ts` file changes.
+  * `-no-serve` Tells cli to not run `ng serve` if the Playground is set up to integrate with Angular CLI.
+
+* **cli config:** Added auto-discovery of `angular-playground.json` file next to `project.json` file if exists,
+so you can call `angular-playground` with no args and it will do the auto-discovery.
+
+
 <a name="1.2.0"></a>
 # 1.2.0 (2017-02-17)
 
