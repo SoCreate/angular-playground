@@ -6,8 +6,9 @@
   "scripts": {
     "playground:fresh": "npm i ../ && npm run playground",
     "playground": "angular-playground angular-playground.json",
-    "cli": "ts-node --project ../src/cli ../src/cli/cli.ts angular-playground.json",
-    "start": "ng serve --progress=false",
+    "cli": "ts-node --project ../src/cli ../src/cli/cli.ts",
+    "cli:build": "ts-node --project ../src/cli ../src/cli/cli.ts -no-watch -no-serve",
+    "start": "ng serve -no-progress",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test"
   },
