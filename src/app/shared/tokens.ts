@@ -1,2 +1,1 @@
-import { OpaqueToken } from '@angular/core';
-export const SANDBOXES = new OpaqueToken('sandboxes');
+export const SANDBOXES = 'SANDBOXES';
