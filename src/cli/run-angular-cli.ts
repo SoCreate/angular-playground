@@ -10,11 +10,11 @@ export const runAngularCli = (angularCliConfig) => {
   } catch (e) {
     cliPath = 'node_modules/angular-cli/bin/ng';
   }
-  let args = [cliPath, 'serve', '--progress=false'];
+  let args = [cliPath, 'serve', '-no-progress'];
   args.push('--port');
   args.push(port.toString());
-  if (angularCliConfig.environment) {
-    args.push(`-e=${angularCliConfig.environment}`);
+  if (angularCliConfig.appName) {
+    args.push(`-a=${angularCliConfig.appName}`);
   }
   const ngServe = childProcess.spawn('node', args, {maxBuffer: 1024 * 500});
   ngServe.stdout.on('data', (data) => {

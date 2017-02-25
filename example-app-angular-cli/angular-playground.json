@@ -1,7 +1,7 @@
 {
   "sourceRoot": "./src",
   "angularCli": {
-    "environment": "playground",
+    "appName": "playground",
     "port": 4201
   }
 }

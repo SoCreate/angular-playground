@@ -5,7 +5,7 @@
   "angular-cli": {},
   "scripts": {
     "playground:fresh": "npm i ../ && npm run playground",
-    "playground": "angular-playground angular-playground.json",
+    "playground": "angular-playground",
     "cli": "ts-node --project ../src/cli ../src/cli/cli.ts",
     "cli:build": "ts-node --project ../src/cli ../src/cli/cli.ts -no-watch -no-serve",
     "start": "ng serve -no-progress",
@@ -29,7 +29,7 @@
     "zone.js": "^0.7.2"
   },
   "devDependencies": {
-    "@angular/cli": "1.0.0-beta.30",
+    "@angular/cli": "^1.0.0-rc.0",
     "@angular/compiler-cli": "2.4.1",
     "@types/jasmine": "2.5.38",
     "@types/node": "^6.0.42",
