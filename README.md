@@ -11,3 +11,7 @@ your build system to build your components, directives and pipes.
 ### For setup and documentation visit:
 
 ### <http://www.angularplayground.it>
+
+
+### For the latest changes visit:
+[Changelog](/CHANGELOG.md)
