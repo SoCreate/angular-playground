@@ -1,3 +1,13 @@
+<a name="1.3.0"></a>
+# 1.3.0 (2017-02-27)
+
+### Features
+* **Angular CLI:** Added support for `@angular/cli@1.0.0-rc.0`. You can now make use of the multi-app support in Angular CLI
+  to create a "playground" app with a unique entry script. See docs at <http://angularplayground.it> for more info.
+
+* **Angular v4.x:** Changed some interal code of Playground app so it can be compatable with Angular `4.0.0-rc.1` and above.
+
+
 <a name="1.2.1"></a>
 # 1.2.1 (2017-02-21)
 
