@@ -1,4 +1,4 @@
-import { Component, Inject, trigger, style, state, transition, animate, ViewChildren, ElementRef } from '@angular/core';
+import { Component, Inject, ViewChildren, ElementRef } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Sandbox, SelectedSandboxAndScenarioKeys} from './shared/app-state';
 import {SANDBOXES} from './shared/tokens';
@@ -11,18 +11,6 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
 
 @Component({
   selector: 'ap-root',
-  animations: [
-    trigger('flyInOut', [
-      state('true', style({transform: 'translate(-50%, 0)'})),
-      transition('void => *', [
-        style({transform: 'translate(-50%, -110%)'}),
-        animate(100)
-      ]),
-      transition('* => void', [
-        animate(100, style({transform: 'translate(-50%, -110%)'}))
-      ])
-    ])
-  ],
   styles: [`
     :host * {
       box-sizing: border-box;
@@ -43,6 +31,11 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
         display: flex;
         flex-direction: column;
         left: 50%;
+        transform: translate(-50%, -110%);
+        transition: transform ease 100ms;
+      }
+      :host .command-bar.open {
+        transform: translate(-50%, 0);
       }
       :host .command-bar > input {
         font-family: Menlo,Monaco,monospace;
@@ -130,7 +123,7 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
       </symbol>
     </svg>
     <div class="command-bar-shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
-    <div class="command-bar" *ngIf="commandBarActive" [@flyInOut]="commandBarActive">
+    <div class="command-bar" *ngIf="commandBarActive" [class.open]="commandBarActive">
       <input type="text" name="filter" placeholder="filter" 
         [formControl]="filter" 
         #filterElement
@@ -161,12 +154,8 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
     </div>
     <section *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey" class="help-message">
       <div>
-        <template [ngIf]="totalSandboxes > 0">
-          <p>The app has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}} loaded.</p>
-        </template>
-        <template [ngIf]="totalSandboxes === 0">
-          <p>The app does not have any sandboxed components.</p>
-        </template>
+        <p *ngIf="totalSandboxes > 0">The app has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}} loaded.</p>
+        <p *ngIf="totalSandboxes === 0">The app does not have any sandboxed components.</p>
         <p>Pick sandboxed components: <strong>ctrl + o</strong></p>
       </div>
     </section>

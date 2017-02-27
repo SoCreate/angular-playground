@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 @Component({
   selector: 'ex-person-details',
   template: `
-    {{person.fullName}} <template [ngIf]="person.twitterHandle">(<a href="#">{{person.twitterHandle}}</a>)</template>
+    {{person.fullName}} <span *ngIf="person.twitterHandle">(<a href="#">{{person.twitterHandle}}</a>)</span>
     <ex-person-bio></ex-person-bio>
     Leave a comment: <input type="text">
   `,
