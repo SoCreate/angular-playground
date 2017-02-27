@@ -4,15 +4,19 @@ const childProcess = require('child_process');
 
 export const runAngularCli = (angularCliConfig) => {
   let port = angularCliConfig.port ? angularCliConfig.port : 4201;
-  let cliPath = 'node_modules/@angular/cli/bin/ng';
+  let cliName = '@angular/cli';
   try{
-    fs.accessSync(path.resolve(cliPath));
+    fs.accessSync(path.resolve('node_modules/@angular/cli/bin/ng'));
   } catch (e) {
-    cliPath = 'node_modules/angular-cli/bin/ng';
+    cliName = 'angular-cl';
   }
-  let args = [cliPath, 'serve', '--progress=false'];
+  let cliPath = `node_modules/${cliName}/bin/ng`;
+  let args = [cliPath, 'serve', '-no-progress'];
   args.push('--port');
   args.push(port.toString());
+  if (angularCliConfig.appName) {
+    args.push(`-a=${angularCliConfig.appName}`);
+  }
   if (angularCliConfig.environment) {
     args.push(`-e=${angularCliConfig.environment}`);
   }

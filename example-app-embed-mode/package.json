@@ -2,7 +2,7 @@
   "name": "example-app-embed-mode",
   "version": "0.0.1",
   "scripts": {
-    "start": "webpack-dev-server --inline --port 8081 --config config/webpack.dev.js"
+    "start": "webpack-dev-server --inline --port 8082 --config config/webpack.dev.js"
   },
   "dependencies": {
     "@angular/common": "2.4.1",

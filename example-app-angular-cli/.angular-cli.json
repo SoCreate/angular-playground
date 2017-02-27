@@ -1,6 +1,6 @@
 {
   "project": {
-    "version": "1.0.0-beta.24",
+    "version": "1.0.0-rc.0",
     "name": "angular-playground"
   },
   "apps": [
@@ -21,10 +21,26 @@
         "styles.scss"
       ],
       "scripts": [],
+      "environmentSource": "environments/environment.ts",
       "environments": {
-        "source": "environments/environment.ts",
         "dev": "environments/environment.ts",
-        "playground": "environments/environment.playground.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    },
+    {
+      "name": "playground",
+      "root": "src",
+      "outDir": "dist-playground",
+      "assets": [
+        "assets",
+        "favicon.ico"
+      ],
+      "index": "index.html",
+      "main": "main.playground.ts",
+      "tsconfig": "tsconfig.json",
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }
     }
