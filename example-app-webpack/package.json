@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "playground:fresh": "npm i ../ && npm run playground",
-    "playground": "concurrently \"angular-playground angular-playground.json\" \"npm run playground:serve\"",
+    "playground": "concurrently \"angular-playground\" \"npm run playground:serve\"",
     "playground:serve": "webpack-dev-server --inline --port 8081 --config config/webpack.playground.js",
     "start": "webpack-dev-server --inline --port 8080 --config config/webpack.dev.js"
   },
