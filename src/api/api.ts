@@ -18,8 +18,8 @@ export function sandboxOf(type: any, config?: SandboxOfConfig): SandboxBuilder {
 }
 
 export class SandboxBuilder {
-  private _key;
-  private _scenarios = [];
+  private _key: string;
+  private _scenarios: any[] = [];
   private _scenarioCounter = 0;
 
   constructor(private _type: any,
