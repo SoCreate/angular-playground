@@ -1,3 +1,9 @@
+<a name="1.3.2"></a>
+# 1.3.2 (2017-03-01)
+
+### Fixes
+* **build:** Add declare of `require` type in `load-sandboxes.ts` to fix TypeScript transpile error.
+
 <a name="1.3.1"></a>
 # 1.3.1 (2017-03-01)
 
