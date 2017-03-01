@@ -3,6 +3,7 @@ export interface SandboxOfConfig {
   imports?: any[];
   declarations?: any[];
   providers?: any[];
+  declareComponent?: boolean;
 }
 
 export interface ScenarioConfig {
@@ -43,7 +44,8 @@ export class SandboxBuilder {
       prependText: this._config.prependText || '',
       imports: this._config.imports || null,
       declarations: this._config.declarations || null,
-      providers: this._config.providers || null
+      providers: this._config.providers || null,
+      declareComponent: this._config.declareComponent !== undefined ? this._config.declareComponent : true,
     };
   }
 }
