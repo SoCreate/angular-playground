@@ -5,8 +5,8 @@ import {Sandbox} from './app-state';
 
 @Injectable()
 export class UrlService {
-  private _embed = null;
-  private _select = null;
+  private _embed: boolean = null;
+  private _select: any = null;
 
   get embed() {
     return this._embed;
@@ -23,7 +23,7 @@ export class UrlService {
     this._select = this.parse('scenario', sandboxes, urlPath);
   }
 
-  setSelected(sandboxKey, scenarioKey) {
+  setSelected(sandboxKey: string, scenarioKey: number) {
     if (sandboxKey === null && scenarioKey === null) {
       this.location.replaceState('');
       return;
@@ -34,7 +34,7 @@ export class UrlService {
     this.location.replaceState(`?scenario=${encodeURIComponent(sandboxKey)}/${encodeURIComponent(scenarioDescription)}`);
   }
 
-  private parse(key, sandboxes, urlPath) {
+  private parse(key: string, sandboxes: Sandbox[], urlPath: string) {
     let match = new RegExp('[?|&]' + key + '=([^&#]*)').exec(urlPath);
     if (match !== null) {
       let value = decodeURIComponent(match[1]);

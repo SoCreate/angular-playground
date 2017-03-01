@@ -1,5 +1,5 @@
 // https://github.com/bevacqua/fuzzysearch
-export function fuzzySearch(needle, haystack) {
+export function fuzzySearch(needle: string, haystack: string) {
   let hlen = haystack.length;
   let nlen = needle.length;
   if (nlen > hlen) {

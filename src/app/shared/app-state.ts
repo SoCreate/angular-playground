@@ -10,7 +10,8 @@ export interface Sandbox {
   prependText?: string,
   imports?: any[],
   declarations?: any[],
-  scenarios: Scenario[]
+  scenarios: Scenario[],
+  providers?: any[]
 }
 
 export interface Scenario {

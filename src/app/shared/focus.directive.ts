@@ -4,7 +4,7 @@ import {Directive, Input, ElementRef} from "@angular/core";
   selector: '[apFocus]'
 })
 export class FocusDirective {
-  @Input() set apFocus(value) {
+  @Input() set apFocus(value: any) {
     if(value) {
       this.elementRef.nativeElement.focus();
     }
