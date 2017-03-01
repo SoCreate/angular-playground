@@ -12,8 +12,8 @@
   ],
   "scripts": {
     "dist:clean": "rimraf ./dist",
-    "build": "npm run dist:clean && npm run ngc:build && npm run cli:build",
-    "ngc:build": "tsc -p ./tsconfig.json",
+    "build": "npm run dist:clean && npm run app:build && npm run cli:build",
+    "app:build": "tsc -p ./tsconfig.json && copyfiles src/app/**/* dist",
     "cli:build": "tsc -p ./src/cli/tsconfig.json",
     "prepublish": "npm run build"
   },
@@ -74,6 +74,7 @@
     "@angular/platform-browser-dynamic": "2.4.1",
     "@types/node": "6.0.42",
     "codelyzer": "^3.0.0-beta.0",
+    "copyfiles": "^1.2.0",
     "rimraf": "^2.5.4",
     "rxjs": "5.0.1",
     "tslint": "^4.0.2",
