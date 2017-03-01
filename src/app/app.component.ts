@@ -170,7 +170,7 @@ export class AppComponent {
   filteredSandboxes: Sandbox[];
   selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = {sandboxKey: null, scenarioKey: null};
   filter = new FormControl();
-  @ViewChildren('scenarioElement') scenarioLinkElements;
+  @ViewChildren('scenarioElement') scenarioLinkElements: any;
 
   constructor(@Inject(SANDBOXES) sandboxes: Sandbox[],
               private stateService: StateService,
@@ -186,7 +186,7 @@ export class AppComponent {
       }
       this.eventManager.addGlobalEventListener('window',
         'keydown.control.o',
-        (e) => {
+        (e: any) => {
           e.preventDefault();
         });
       this.eventManager.addGlobalEventListener('window',
@@ -210,12 +210,12 @@ export class AppComponent {
     }
   }
 
-  goToFirstScenario(event) {
+  goToFirstScenario(event: any) {
     event.preventDefault();
     this.focusScenarioLinkElement(0);
   }
 
-  onScenarioLinkKeyDown(scenarioElement, filterElement, event) {
+  onScenarioLinkKeyDown(scenarioElement: any, filterElement: any, event: any) {
     event.preventDefault();
     switch(event.key) {
       case 'ArrowUp':
@@ -235,7 +235,7 @@ export class AppComponent {
     }
   }
 
-  onScenarioLinkKeyUp(scenarioElement, event) {
+  onScenarioLinkKeyUp(scenarioElement: any, event: any) {
     event.preventDefault();
     switch(event.key) {
       case 'Escape':
@@ -247,19 +247,19 @@ export class AppComponent {
     }
   }
 
-  onScenarioClick(sandboxKey, scenarioKey, e) {
+  onScenarioClick(sandboxKey: string, scenarioKey: number, e: any) {
     this.selectScenario(sandboxKey, scenarioKey);
     e.preventDefault();
   }
 
-  isSelected(sandbox, scenario) {
+  isSelected(sandbox: any, scenario: any) {
     return this.selectedSandboxAndScenarioKeys.scenarioKey === scenario.key
       && this.selectedSandboxAndScenarioKeys.sandboxKey.toLowerCase() === sandbox.key.toLowerCase();
   }
 
-  private goUp(scenarioElement) {
+  private goUp(scenarioElement: any) {
     let currentIndex = -1;
-    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index) => {
+    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index: number) => {
       if(scenarioElementRef.nativeElement === scenarioElement) {
         currentIndex = index;
       }
@@ -271,9 +271,9 @@ export class AppComponent {
     }
   }
 
-  private goDown(scenarioElement) {
+  private goDown(scenarioElement: any) {
     let currentIndex = -1;
-    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index) => {
+    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index: number) => {
       if(scenarioElementRef.nativeElement === scenarioElement) {
         currentIndex = index;
       }
@@ -285,13 +285,13 @@ export class AppComponent {
     }
   }
 
-  private focusScenarioLinkElement(index) {
+  private focusScenarioLinkElement(index: number) {
     if(this.scenarioLinkElements.toArray()[index]) {
       this.scenarioLinkElements.toArray()[index].nativeElement.focus();
     }
   }
 
-  private filterSandboxes(sandboxes, filter) {
+  private filterSandboxes(sandboxes: Sandbox[], filter: string) {
     if (!filter) {
       return [];
     }
@@ -317,7 +317,7 @@ export class AppComponent {
     this.commandBarActive = !this.commandBarActive;
   }
 
-  private selectScenario(sandboxKey, scenarioKey) {
+  private selectScenario(sandboxKey: string, scenarioKey: number) {
     this.selectedSandboxAndScenarioKeys = {sandboxKey, scenarioKey};
     this.urlService.setSelected(sandboxKey, scenarioKey);
   }

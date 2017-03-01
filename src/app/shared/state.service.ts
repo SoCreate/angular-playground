@@ -1,5 +1,5 @@
 export class StateService {
-  filter;
+  filter: string;
   filterKey = 'angularPlayground.filter';
 
   constructor() {
@@ -17,11 +17,11 @@ export class StateService {
     return this.filter;
   }
 
-  setFilter(value) {
+  setFilter(value: string) {
     this.filter = value;
   }
 }
 
-function emptyStringIfNull(value) {
+function emptyStringIfNull(value: string) {
   return value ? value : '';
 }

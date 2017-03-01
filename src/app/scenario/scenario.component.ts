@@ -26,13 +26,13 @@ export class ScenarioComponent {
     }
   };
 
-  constructor(@Inject(SANDBOXES) private sandboxes,
+  constructor(@Inject(SANDBOXES) private sandboxes: Sandbox[],
               private compiler: Compiler,
               private injector: Injector,
               private view: ViewContainerRef) {
   }
 
-  private loadScenario(sandbox, scenario, location: ViewContainerRef, injector: Injector) {
+  private loadScenario(sandbox: Sandbox, scenario: Scenario, location: ViewContainerRef, injector: Injector) {
     let hostComponent = this.hostComponent(scenario);
     let hostModule = this.hostModule(sandbox, hostComponent);
     this.compiler.clearCache();
@@ -42,7 +42,7 @@ export class ScenarioComponent {
     location.createComponent(componentFactory, location.length, moduleRef.injector);
   }
 
-  private hostComponent(scenario) {
+  private hostComponent(scenario: Scenario) {
     @Component({
       selector: 'host-component',
       template: scenario.template,
@@ -57,7 +57,8 @@ export class ScenarioComponent {
     return HostComponent;
   }
 
-  private hostModule({imports, type, declarations, providers}, hostComponent) {
+  private hostModule(sandbox: Sandbox, hostComponent: any) {
+    let {imports, type, declarations, providers} = sandbox;
     @NgModule({
       imports: [
         CommonModule,
