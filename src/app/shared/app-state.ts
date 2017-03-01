@@ -11,7 +11,8 @@ export interface Sandbox {
   imports?: any[],
   declarations?: any[],
   scenarios: Scenario[],
-  providers?: any[]
+  providers?: any[],
+  declareComponent?: boolean,
 }
 
 export interface Scenario {

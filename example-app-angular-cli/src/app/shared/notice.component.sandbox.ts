@@ -1,3 +1,4 @@
+import { SharedModule } from './shared.module';
 import { sandboxOf } from 'angular-playground';
 import { CounterService } from './counter.service';
 import { NoticeComponent } from './notice.component';
@@ -8,7 +9,7 @@ class MockCounterService {
   }
 }
 
-export default sandboxOf(NoticeComponent, {providers: [CounterService]})
+export default sandboxOf(NoticeComponent, {imports: [SharedModule], declareComponent: false})
   .add('short text', {
     template: `<ex-notice>Notification</ex-notice>`
   })

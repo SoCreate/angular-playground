@@ -65,7 +65,7 @@ export class ScenarioComponent {
         imports ? imports : []
       ],
       declarations: [
-        type,
+        ...(sandbox.declareComponent ? [ type ] : []),
         hostComponent,
         declarations ? declarations : []
       ],
