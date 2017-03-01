@@ -4,7 +4,7 @@
 ### Fixes
 * **cli:** Add source files to build for distribution to fix issue with Angular CLI first build throwing error  
   ([#14](https://github.com/SoCreate/angular-playground/issues/14))  
-  ([1cd125d](https://github.com/SoCreate/angular-playground/commit/1cd125d)
+  ([1cd125d](https://github.com/SoCreate/angular-playground/commit/1cd125d))
 * **build:** Add typings throughout source files to support environments using `noImplicitAny`.
 
 <a name="1.3.0"></a>
