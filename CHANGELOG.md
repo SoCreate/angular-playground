@@ -1,3 +1,12 @@
+<a name="1.4.0"></a>
+# 1.4.0 (2017-03-01)
+
+### Features
+* **api:** Add `declareComponent` flag to `SandboxConfig` that controls whether the sandbox component is declared automatically - defaults to true  
+  ([#15](https://github.com/SoCreate/angular-playground/issues/15))  
+  ([74886d2](https://github.com/SoCreate/angular-playground/commit/74886d2))
+
+
 <a name="1.3.2"></a>
 # 1.3.2 (2017-03-01)
 
