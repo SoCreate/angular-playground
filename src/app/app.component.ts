@@ -20,12 +20,13 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
       display: flex;
       flex-direction: column; }
       :host .command-bar-shield {
+        z-index: 2;
         position: absolute;
         width: 100%;
         height: 100vh;
         opacity: 0; }
       :host .command-bar {
-        z-index: 1;
+        z-index: 3;
         font-family: Menlo,Monaco,monospace;
         position: absolute;
         display: flex;
@@ -103,6 +104,8 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
       }
        
       :host section {
+        z-index: 1;
+        position: relative;
         border: 0;
         width: 100%;
         background-color: white; }
