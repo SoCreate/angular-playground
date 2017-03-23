@@ -1,3 +1,11 @@
+<a name="1.4.1"></a>
+# 1.4.1 (2017-03-23)
+
+### Fixes
+* **command bar:** Add styles for stacking order to keep command bar on top of content in all cases.  
+  ([#20](https://github.com/SoCreate/angular-playground/pull/20))  
+  ([7638146](https://github.com/SoCreate/angular-playground/commit/7638146))
+
 <a name="1.4.0"></a>
 # 1.4.0 (2017-03-01)
 
