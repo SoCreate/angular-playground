@@ -21,7 +21,7 @@ export const runAngularCli = (angularCliConfig) => {
     args.push(`-e=${angularCliConfig.environment}`);
   }
   if (angularCliConfig.args) {
-    args.push(angularCliConfig.args);
+    args = args.concat(angularCliConfig.args);
   }
   const ngServe = childProcess.spawn('node', args, {maxBuffer: 1024 * 500});
   ngServe.stdout.on('data', (data) => {

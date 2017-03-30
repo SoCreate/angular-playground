@@ -3,6 +3,6 @@
   "angularCli": {
     "appName": "playground",
     "port": 4201,
-    "args": "-ssl"
+    "args": ["--ssl"]
   }
 }
