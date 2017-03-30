@@ -1,5 +1,34 @@
-<a name="1.5.0"></a>
+<a name="1.5.1"></a>
 # 1.5.1 (2017-03-27)
+
+### Fixes
+* **angular cli:** Fix support for `args` in `angular-playground.json` to be able to pass
+  additional arguments through to the `ng serve` command that is auto-run by Playground when
+  integrating with the Angular CLI.
+  
+  before: 
+  ```json
+  {
+    "sourceRoot": "./src",
+    "angularCli": {
+      . . .
+      "args": "--ssl --open"
+    }
+  }
+  ```
+  after:
+  ```json
+  {
+    "sourceRoot": "./src",
+    "angularCli": {
+      . . .
+      "args": ["--ssl", "--open", "--host=0.0.0.0"]
+    }
+  }
+  ```
+
+<a name="1.5.0"></a>
+# 1.5.0 (2017-03-27)
 
 ### Features
 * **angular cli:** Add support for `args` in `angular-playground.json` to be able to pass
