@@ -10,11 +10,21 @@ import {loadSandboxes} from './load-sandboxes';
 import {FocusDirective} from "./shared/focus.directive";
 import {UrlService} from "./shared/url.service";
 
+const PLAYGROUND_SUPPORT_MODULES = require('sandboxes').PLAYGROUND_SUPPORT_MODULES;
+
+let imports = [
+  BrowserModule,
+  ReactiveFormsModule
+];
+if(PLAYGROUND_SUPPORT_MODULES.length > 0) {
+  imports = [
+    ...imports,
+    ...PLAYGROUND_SUPPORT_MODULES
+  ];
+}
+
 @NgModule({
-  imports: [
-    BrowserModule,
-    ReactiveFormsModule
-  ],
+  imports,
   providers: [
     Location,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
