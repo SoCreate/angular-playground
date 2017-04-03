@@ -1,3 +1,11 @@
+<a name="1.5.2"></a>
+# 1.5.2 (2017-04-03)
+
+### Fixes
+* **angular animations:** Added support to auto-discover if your project is using `@angular/animations` and 
+  if it is, add the import of the `BrowserAnimationsModule` in the root `PlaygroundModule`  so Playground will support
+  components in your app that use animations.
+
 <a name="1.5.1"></a>
 # 1.5.1 (2017-03-30)
 
