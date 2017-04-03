@@ -14,6 +14,7 @@ export const build = (rootPath) => {
     modules.push('BrowserAnimationsModule');
   } catch (e) {
   }
+  content.addLine('');
   content.addLine(`export const PLAYGROUND_SUPPORT_MODULES: any[] = [${modules.join(',')}];`);
 
 
