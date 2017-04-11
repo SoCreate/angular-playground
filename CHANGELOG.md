@@ -1,3 +1,10 @@
+<a name="1.5.3"></a>
+# 1.5.3 (2017-04-11)
+
+### Fixes
+* **app:** Updated to support clearing url when no sandbox or scenario key is matched (helps when you live edit
+  a `.sandbox.ts` file and change the sandboxed item type or scenario description).
+
 <a name="1.5.2"></a>
 # 1.5.2 (2017-04-03)
 
