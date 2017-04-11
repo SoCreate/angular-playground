@@ -35,3 +35,4 @@ testem.log
 Thumbs.db
 /debug.log
 /src/sandboxes.ts
+/src/my-sandboxes
