@@ -22,23 +22,22 @@ export class UrlService {
     this._embed = /[?|&]embed=1/.exec(urlPath) !== null;
     this._select = this.parse('scenario', sandboxes, urlPath);
     if (this._select) {
-      this.replaceStateIfNull(this._select.sandboxKey, this._select.scenarioKey);
+      if (this._select.sandboxKey === null && this._select.scenarioKey === null) {
+        this.location.replaceState('');
+        return;
+      }
     }
   }
 
   setSelected(sandboxKey: string, scenarioKey: number) {
-    this.replaceStateIfNull(sandboxKey, scenarioKey);
-    let scenarioDescription = this.sandboxes
-      .find(sandbox => sandbox.key.toLowerCase() === sandboxKey.toLowerCase())
-      .scenarios.find(scenario => scenario.key === scenarioKey).description;
-    this.location.replaceState(`?scenario=${encodeURIComponent(sandboxKey)}/${encodeURIComponent(scenarioDescription)}`);
-  }
-
-  private replaceStateIfNull(sandboxKey: string, scenarioKey: number) {
     if (sandboxKey === null && scenarioKey === null) {
       this.location.replaceState('');
       return;
     }
+    let scenarioDescription = this.sandboxes
+      .find(sandbox => sandbox.key.toLowerCase() === sandboxKey.toLowerCase())
+      .scenarios.find(scenario => scenario.key === scenarioKey).description;
+    this.location.replaceState(`?scenario=${encodeURIComponent(sandboxKey)}/${encodeURIComponent(scenarioDescription)}`);
   }
 
   private parse(key: string, sandboxes: Sandbox[], urlPath: string) {
