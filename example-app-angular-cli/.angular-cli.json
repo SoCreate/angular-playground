@@ -15,7 +15,7 @@
       "main": "main.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.json",
-      "prefix": "ap",
+      "prefix": "ex",
       "mobile": false,
       "styles": [
         "styles.scss"
