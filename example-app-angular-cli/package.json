@@ -10,7 +10,7 @@
     "cli": "ts-node --project ../src/cli ../src/cli/cli.ts",
     "cli:build": "ts-node --project ../src/cli ../src/cli/cli.ts -no-watch -no-serve",
     "start": "ng serve -no-progress",
-    "build": "ng build -prod",
+    "build": "ng build -prod -a=app",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test"
   },
