@@ -8,7 +8,6 @@ export interface SandboxOfConfig {
 
 export interface ScenarioConfig {
   template: string;
-  description?: string;
   styles?: string[];
   context?: any;
   providers?: any[];
@@ -19,14 +18,13 @@ export function sandboxOf(type: any, config?: SandboxOfConfig): SandboxBuilder {
 }
 
 export class SandboxBuilder {
-  private _key: string;
+  private _prependTextAsKey: string;
   private _scenarios: any[] = [];
   private _scenarioCounter = 0;
 
   constructor(private _type: any,
               private _config: SandboxOfConfig = {}) {
-    let prependTextAsKey = this._config.prependText || '';
-    this._key = `${prependTextAsKey}${this._type.name}`;
+    this._prependTextAsKey = this._config.prependText || '';
   }
 
   add(description: string, config: ScenarioConfig) {
@@ -35,10 +33,10 @@ export class SandboxBuilder {
     return this;
   }
 
-  serialize() {
+  serialize(typeName: string) {
     return {
-      key: this._key,
-      name: this._type.name,
+      key: `${this._prependTextAsKey}${typeName}`,
+      name: typeName,
       type: this._type,
       scenarios: this._scenarios,
       prependText: this._config.prependText || '',

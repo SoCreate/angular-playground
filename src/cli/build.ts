@@ -8,7 +8,7 @@ export const build = (rootPath) => {
   let content = new StringBuilder();
 
   let modules = [];
-  try{
+  try {
     fs.accessSync(path.resolve('node_modules/@angular/animations'));
     importStatements.addLine(`import { BrowserAnimationsModule } from '@angular/platform-browser/animations';`);
     modules.push('BrowserAnimationsModule');
@@ -23,13 +23,18 @@ export const build = (rootPath) => {
   let sandboxes = [];
   fromDir(home, /\.sandbox.ts$/, (filename) => {
     let filePathToUse = filename.replace(home, '.').replace(/.ts$/, '').replace(/\\/g, '/');
-    let importName = `s${++sandboxCount}`;
-    sandboxes.push(importName);
-    importStatements.addLine(`import { default as ${importName} } from '${filePathToUse}';`);
+    const contents = fs.readFileSync(filename, 'utf8');
+    const match = / sandboxOf\(\s*([^)]+?)\s*\)/g.exec(contents);
+    if (match) {
+      const typeName = match[1].split(',')[0].trim();
+      let importName = `s${++sandboxCount}`;
+      sandboxes.push({importName, typeName});
+      importStatements.addLine(`import { default as ${importName} } from '${filePathToUse}';`);
+    }
   });
   content.addLine(`export let sandboxes: any[] = [];`);
-  sandboxes.forEach(importName => {
-    content.addLine(`sandboxes.push(${importName}.serialize());`);
+  sandboxes.forEach(({importName, typeName}) => {
+    content.addLine(`sandboxes.push(${importName}.serialize('${typeName}'));`);
   });
 
   let filePath = path.resolve(home, './sandboxes.ts');
