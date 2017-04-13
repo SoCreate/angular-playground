@@ -118,6 +118,7 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
       :host section.help-message > div {
         max-width: 50%;
         font-family: Menlo,Monaco,monospace; }
+      .soft { color: #666; }
   `],
   template: `
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -159,7 +160,7 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
       <div>
         <p *ngIf="totalSandboxes > 0">The app has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}} loaded.</p>
         <p *ngIf="totalSandboxes === 0">The app does not have any sandboxed components.</p>
-        <p>Pick sandboxed components: <strong>ctrl + o</strong></p>
+        <p>Pick sandboxed components: <strong>ctrl + o</strong> <span class="soft">or</span> <strong>F1</strong></p>
       </div>
     </section>
     <section *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
@@ -194,6 +195,16 @@ export class AppComponent {
         });
       this.eventManager.addGlobalEventListener('window',
         'keyup.control.o',
+        () => {
+          this.toggleCommandBar();
+        });
+      this.eventManager.addGlobalEventListener('window',
+        'keydown.F1',
+        (e: any) => {
+          e.preventDefault();
+        });
+      this.eventManager.addGlobalEventListener('window',
+        'keyup.F1',
         () => {
           this.toggleCommandBar();
         });
