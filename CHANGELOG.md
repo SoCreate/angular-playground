@@ -1,3 +1,19 @@
+<a name="1.6.0"></a>
+# 1.6.0 (2017-04-13)
+
+### Features
+* **command bar:** Added up arrow support from command bar text box
+  ([63fbea1](https://github.com/SoCreate/angular-playground/commit/63fbea1))  
+* **command bar:** Added F1 as supported Key to open Command Bar
+  ([d79adaa](https://github.com/SoCreate/angular-playground/commit/d79adaa))  
+* **command bar:** Added example of inline component in sandbox file
+  ([bcd4214](https://github.com/SoCreate/angular-playground/commit/bcd4214))  
+
+### Fixes
+* **cli:** Added support for production build minification
+  ([4aecc19](https://github.com/SoCreate/angular-playground/commit/4aecc19))  
+
+
 <a name="1.5.3"></a>
 # 1.5.3 (2017-04-11)
 
