@@ -10,6 +10,8 @@ import {loadSandboxes} from './load-sandboxes';
 import {FocusDirective} from "./shared/focus.directive";
 import {UrlService} from "./shared/url.service";
 
+declare let require: any;
+
 const PLAYGROUND_SUPPORT_MODULES = require('sandboxes').PLAYGROUND_SUPPORT_MODULES;
 
 let imports = [
