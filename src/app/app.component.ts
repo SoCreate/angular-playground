@@ -133,6 +133,7 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
         #filterElement
         [apFocus]="commandBarActive"
         (keyup.Esc)="commandBarActive = false"
+        (keydown.ArrowUp)="goToLastScenario($event)"
         (keydown.ArrowDown)="goToFirstScenario($event)">
       <div>
         <div *ngFor="let sandbox of filteredSandboxes">
@@ -227,6 +228,14 @@ export class AppComponent {
   goToFirstScenario(event: any) {
     event.preventDefault();
     this.focusScenarioLinkElement(0);
+  }
+
+  goToLastScenario(event: any) {
+    event.preventDefault();
+    const index = this.scenarioLinkElements.length - 1;
+    if (index >= 0) {
+      this.focusScenarioLinkElement(index);
+    }
   }
 
   onScenarioLinkKeyDown(scenarioElement: any, filterElement: any, event: any) {
