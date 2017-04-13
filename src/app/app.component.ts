@@ -19,106 +19,106 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
       font-family: sans-serif;
       display: flex;
       flex-direction: column; }
-      :host .command-bar-shield {
-        z-index: 2;
-        position: absolute;
-        width: 100%;
-        height: 100vh;
-        opacity: 0; }
-      :host .command-bar {
-        z-index: 3;
-        font-family: Menlo,Monaco,monospace;
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        left: 50%;
-        transform: translate(-50%, -110%);
-        transition: transform ease 100ms;
-      }
-      :host .command-bar.open {
-        transform: translate(-50%, 0);
-      }
-      :host .command-bar > input {
-        font-family: Menlo,Monaco,monospace;
-        width: 365px;
-        z-index: 1;
-        padding: 4px;
-        margin: 6px 0 0 5px;
-        border: 1px solid #174a6c;
-        background-color: #3c3c3c;
-        font-size: 14pt;
-        color: #fff;
-      }
-      :host .command-bar > input::-webkit-input-placeholder {
-        color: #a9a9a9; }
-      :host .command-bar > input::-moz-focus-inner {
-        border: 0;
-        padding: 0; }
-      :host .command-bar > div {
-        margin-top: -39px;
-        width: 376px;
-        padding: 34px 0 11px 0;
-        background-color: #252526;
-        color: #fff;
-        box-shadow: 0 3px 8px 5px black;
-      }
-      :host .command-bar > div > div:first-child {
-        margin-top: 12px;
-        padding-top: 4px;
-        border-top: 1px solid black;
-      }
-      :host .command-bar > div a {
-        cursor: pointer; 
-        display: block;
-        width: 100%;
-      }
-      :host .command-bar > div a:hover,
-      :host .command-bar > div a:focus {
-        background-color: #0097fb;
-        color: #fff;
-        outline-style: none;
-      }
-      :host .command-bar .sandbox {
-        font-style: italic;
-        color: rgba(255, 255, 255, .5);
-        padding: 2px 8px;
-      }
-      :host .command-bar .scenarios {
-        display: flex;
-      }
-      :host .command-bar .scenario {
-        padding: 2px 3px;
-        margin: 0 5px;
-      }
-      :host .command-bar .scenario-icon {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        fill: #fff;
-        opacity: .2;
-        margin: 4px 0 0 2px;
-      }
-      :host .command-bar .scenario-icon.selected {
-        opacity: 1;
-        fill: #0097fb;
-      }
-       
-      :host section {
-        z-index: 1;
-        position: relative;
-        border: 0;
-        width: 100%;
-        background-color: white; }
-        
-      :host section.help-message {
-        display: flex;
-        align-items: center;
-        justify-content: center; 
-        height: 100vh; }
-      :host section.help-message > div {
-        max-width: 50%;
-        font-family: Menlo,Monaco,monospace; }
-      .soft { color: #666; }
+    .command-bar-shield {
+      z-index: 2;
+      position: absolute;
+      width: 100%;
+      height: 100vh;
+      opacity: 0; }
+    .command-bar {
+      z-index: 3;
+      font-family: Menlo,Monaco,monospace;
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      left: 50%;
+      transform: translate(-50%, -110%);
+      transition: transform ease 100ms;
+    }
+    .command-bar.open {
+      transform: translate(-50%, 0);
+    }
+    input {
+      font-family: Menlo,Monaco,monospace;
+      width: 365px;
+      z-index: 1;
+      padding: 4px;
+      margin: 6px 0 0 5px;
+      border: 1px solid #174a6c;
+      background-color: #3c3c3c;
+      font-size: 14pt;
+      color: #fff;
+    }
+    input::-webkit-input-placeholder {
+      color: #a9a9a9; }
+    input::-moz-focus-inner {
+      border: 0;
+      padding: 0; }
+    .command-bar > div {
+      margin-top: -39px;
+      width: 376px;
+      padding: 34px 0 11px 0;
+      background-color: #252526;
+      color: #fff;
+      box-shadow: 0 3px 8px 5px black;
+    }
+    .command-bar > div > div:first-child {
+      margin-top: 12px;
+      padding-top: 4px;
+      border-top: 1px solid black;
+    }
+    .command-bar > div a {
+      cursor: pointer;
+      display: block;
+      width: 100%;
+    }
+    .command-bar > div a:hover,
+    .command-bar > div a:focus {
+      background-color: #0097fb;
+      color: #fff;
+      outline-style: none;
+    }
+    .sandbox {
+      font-style: italic;
+      color: rgba(255, 255, 255, .5);
+      padding: 2px 8px;
+    }
+    .scenarios {
+      display: flex;
+    }
+    .scenario {
+      padding: 2px 3px;
+      margin: 0 5px;
+    }
+    .scenario-icon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      fill: #fff;
+      opacity: .2;
+      margin: 4px 0 0 2px;
+    }
+    .scenario-icon.selected {
+      opacity: 1;
+      fill: #0097fb;
+    }
+
+    section {
+      z-index: 1;
+      position: relative;
+      border: 0;
+      width: 100%;
+      background-color: white; }
+
+    .help-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh; }
+    .help-message > div {
+      max-width: 50%;
+      font-family: Menlo,Monaco,monospace; }
+    .soft { color: #666; }
   `],
   template: `
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
