@@ -1,3 +1,48 @@
+<a name="1.7.0"></a>
+# 1.7.0 (2017-06-22)
+
+### Features
+* **root NgModule customization:** Created a `PlaygroundCommonModule` that can
+  be imported into your own root NgModule in cases where you need to import, provide,
+  etc other things at the root level for the Playground app.  
+  ([1e266cf](https://github.com/SoCreate/angular-playground/commit/1e266cf))  
+
+### Fixes
+* **z-index:** Removed z-index on `section` element as it was not needed  
+  ([d4d3dcf](https://github.com/SoCreate/angular-playground/commit/d4d3dcf))  
+* **dist:** Updated build to use `ngc` and removed delivery of `*.ts` files  
+  ([d64ebf3](https://github.com/SoCreate/angular-playground/commit/d64ebf3))  
+  
+### Misc
+* **example app cli:** Upgraded the AngularCLI version in the example app to 1.1.3
+
+### Breaking Changes
+* **removal of `BrowserAnimationsModule` auto-import:** Deleted the code in the 
+  Playground CLI that auto added the `BrowserAnimationsModule` to the root NgModule
+  imports. This should now be done by you in a custom root NgModule that you create
+  and have total control over. If you were using Playground and had sandboxed components
+  that were relying on `BrowserAnimationsModule` then you will want to create a NgModule
+  for Playground in your app and use the `PlaygroundCommonModule` and bootstrap the 
+  Playground `AppComponent`. Example:
+  
+```typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppComponent, PlaygroundCommonModule } from 'angular-playground';
+  
+@NgModule({
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    PlaygroundCommonModule
+  ],
+  bootstrap: [AppComponent]
+})
+export class MyPlaygroundModule {}
+```
+
+
 <a name="1.6.0"></a>
 # 1.6.0 (2017-04-13)
 
