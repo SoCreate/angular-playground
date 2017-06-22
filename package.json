@@ -11,9 +11,10 @@
     "dist"
   ],
   "scripts": {
+    "ngc": "ngc",
     "dist:clean": "rimraf ./dist",
     "build": "npm run dist:clean && npm run app:build && npm run cli:build",
-    "app:build": "tsc -p ./tsconfig.json && copyfiles src/app/**/* dist",
+    "app:build": "ngc -p ./tsconfig.json",
     "cli:build": "tsc -p ./src/cli/tsconfig.json",
     "prepublish": "npm run build"
   },
@@ -65,20 +66,20 @@
     "node-watch": "^0.4.1"
   },
   "devDependencies": {
-    "@angular/common": "2.4.1",
-    "@angular/compiler": "2.4.1",
-    "@angular/compiler-cli": "2.4.1",
-    "@angular/core": "2.4.1",
-    "@angular/forms": "2.4.1",
-    "@angular/platform-browser": "2.4.1",
-    "@angular/platform-browser-dynamic": "2.4.1",
-    "@types/node": "6.0.42",
-    "codelyzer": "^3.0.0-beta.0",
+    "@angular/common": "4.2.4",
+    "@angular/compiler": "4.2.4",
+    "@angular/compiler-cli": "4.2.4",
+    "@angular/core": "4.2.4",
+    "@angular/forms": "4.2.4",
+    "@angular/platform-browser": "4.2.4",
+    "@angular/platform-browser-dynamic": "4.2.4",
+    "@types/node": "6.0.60",
+    "codelyzer": "3.0.1",
     "copyfiles": "^1.2.0",
     "rimraf": "^2.5.4",
-    "rxjs": "5.0.1",
-    "tslint": "^4.0.2",
-    "typescript": "~2.0.3",
-    "zone.js": "0.7.2"
+    "rxjs": "5.1.0",
+    "tslint": "5.3.2",
+    "typescript": "2.3.3",
+    "zone.js": "0.8.4"
   }
 }

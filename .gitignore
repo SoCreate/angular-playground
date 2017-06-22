@@ -2,6 +2,8 @@
 
 # compiled output
 /dist/
+/src/**/*.ngfactory.ts
+*.ngsummary.json
 
 # dependencies
 node_modules
