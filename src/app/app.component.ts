@@ -104,7 +104,6 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
     }
 
     section {
-      z-index: 1;
       position: relative;
       border: 0;
       width: 100%;
