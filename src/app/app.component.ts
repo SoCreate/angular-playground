@@ -5,8 +5,8 @@ import {SANDBOXES} from './shared/tokens';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import {StateService} from './shared/state.service';
-import {EventManager} from "@angular/platform-browser";
-import {UrlService} from "./shared/url.service";
+import {EventManager} from '@angular/platform-browser';
+import {UrlService} from './shared/url.service';
 import {fuzzySearch} from './shared/fuzzy-search.function';
 
 @Component({
@@ -127,8 +127,8 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
     </svg>
     <div class="command-bar-shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
     <div class="command-bar" *ngIf="commandBarActive" [class.open]="commandBarActive">
-      <input type="text" name="filter" placeholder="filter" 
-        [formControl]="filter" 
+      <input type="text" name="filter" placeholder="filter"
+        [formControl]="filter"
         #filterElement
         [apFocus]="commandBarActive"
         (keyup.Esc)="commandBarActive = false"
@@ -180,7 +180,7 @@ export class AppComponent {
               private stateService: StateService,
               private urlService: UrlService,
               private eventManager: EventManager) {
-    if(this.urlService.embed) {
+    if (this.urlService.embed) {
       this.selectedSandboxAndScenarioKeys = {sandboxKey: this.urlService.select.sandboxKey, scenarioKey: this.urlService.select.scenarioKey};
     } else {
       let filterValue = this.stateService.getFilter();
@@ -239,7 +239,7 @@ export class AppComponent {
 
   onScenarioLinkKeyDown(scenarioElement: any, filterElement: any, event: any) {
     event.preventDefault();
-    switch(event.key) {
+    switch (event.key) {
       case 'ArrowUp':
         this.goUp(scenarioElement);
         break;
@@ -248,7 +248,7 @@ export class AppComponent {
         break;
       default:
         if (event.key !== 'Escape' && event.key !== 'Enter') {
-          if(event.key.length === 1) {
+          if (event.key.length === 1) {
             this.filter.setValue(`${this.filter.value}${event.key}`);
           }
           filterElement.focus();
@@ -259,7 +259,7 @@ export class AppComponent {
 
   onScenarioLinkKeyUp(scenarioElement: any, event: any) {
     event.preventDefault();
-    switch(event.key) {
+    switch (event.key) {
       case 'Escape':
         this.commandBarActive = false;
         break;
@@ -282,25 +282,25 @@ export class AppComponent {
   private goUp(scenarioElement: any) {
     let currentIndex = -1;
     this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index: number) => {
-      if(scenarioElementRef.nativeElement === scenarioElement) {
+      if (scenarioElementRef.nativeElement === scenarioElement) {
         currentIndex = index;
       }
     });
-    if(currentIndex === 0) {
+    if (currentIndex === 0) {
       this.focusScenarioLinkElement(this.scenarioLinkElements.length - 1);
     } else {
-      this.focusScenarioLinkElement(currentIndex +- 1);
+      this.focusScenarioLinkElement(currentIndex + - 1);
     }
   }
 
   private goDown(scenarioElement: any) {
     let currentIndex = -1;
     this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index: number) => {
-      if(scenarioElementRef.nativeElement === scenarioElement) {
+      if (scenarioElementRef.nativeElement === scenarioElement) {
         currentIndex = index;
       }
     });
-    if(currentIndex === this.scenarioLinkElements.length - 1) {
+    if (currentIndex === this.scenarioLinkElements.length - 1) {
       this.focusScenarioLinkElement(0);
     } else {
       this.focusScenarioLinkElement(currentIndex + 1);
@@ -308,7 +308,7 @@ export class AppComponent {
   }
 
   private focusScenarioLinkElement(index: number) {
-    if(this.scenarioLinkElements.toArray()[index]) {
+    if (this.scenarioLinkElements.toArray()[index]) {
       this.scenarioLinkElements.toArray()[index].nativeElement.focus();
     }
   }
