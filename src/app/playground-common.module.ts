@@ -5,8 +5,8 @@ import {ScenarioComponent} from './scenario/scenario.component';
 import {SANDBOXES} from './shared/tokens';
 import {StateService} from './shared/state.service';
 import {loadSandboxes} from './load-sandboxes';
-import {FocusDirective} from "./shared/focus.directive";
-import {UrlService} from "./shared/url.service";
+import {FocusDirective} from './shared/focus.directive';
+import {UrlService} from './shared/url.service';
 import {AppComponent} from './app.component';
 
 declare let require: any;
