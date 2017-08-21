@@ -1,3 +1,16 @@
+<a name="1.7.1"></a>
+# 1.7.1 (2017-08-21)
+
+### Fixes
+* **style:** Remove section and :host styles that force bgcolor and font  
+  ([c82bb4c](https://github.com/SoCreate/angular-playground/commit/c82bb4c))  
+* **tslint:** Add missing newline to last string in StringBuilder array  
+  ([814c161](https://github.com/SoCreate/angular-playground/commit/814c161))  
+* **tslint:** Fix tslint configuration  
+  ([4a5116b](https://github.com/SoCreate/angular-playground/commit/4a5116b))  
+  
+  
+
 <a name="1.7.0"></a>
 # 1.7.0 (2017-06-22)
 
