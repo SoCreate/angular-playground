@@ -7,6 +7,7 @@ export class StringBuilder {
 
   dump() {
     let data = this.lines.join('\n');
+    data += '\n';
     this.lines = [];
     return data;
   }
