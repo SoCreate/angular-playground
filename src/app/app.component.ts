@@ -16,7 +16,6 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
       box-sizing: border-box;
     }
     :host {
-      font-family: sans-serif;
       display: flex;
       flex-direction: column; }
     .command-bar-shield {
@@ -106,8 +105,7 @@ import {fuzzySearch} from './shared/fuzzy-search.function';
     section {
       position: relative;
       border: 0;
-      width: 100%;
-      background-color: white; }
+      width: 100%; }
 
     .help-message {
       display: flex;
