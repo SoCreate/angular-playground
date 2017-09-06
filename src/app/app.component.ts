@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChildren, ElementRef } from '@angular/core';
+import { Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Sandbox, SelectedSandboxAndScenarioKeys} from './shared/app-state';
 import {SANDBOXES} from './shared/tokens';
@@ -172,7 +172,7 @@ export class AppComponent {
   filteredSandboxes: Sandbox[];
   selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = {sandboxKey: null, scenarioKey: null};
   filter = new FormControl();
-  @ViewChildren('scenarioElement') scenarioLinkElements: any;
+  @ViewChildren('scenarioElement') scenarioLinkElements: QueryList<ElementRef>;
 
   constructor(@Inject(SANDBOXES) sandboxes: Sandbox[],
               private stateService: StateService,
@@ -224,14 +224,23 @@ export class AppComponent {
 
   goToFirstScenario(event: any) {
     event.preventDefault();
-    this.focusScenarioLinkElement(0);
+    const currentIndex = this.findCurrentScenarioIndex();
+
+    if (currentIndex) {
+      this.focusScenarioLinkElement(currentIndex);
+    } else {
+      this.focusScenarioLinkElement(0);
+    }
   }
 
   goToLastScenario(event: any) {
     event.preventDefault();
-    const index = this.scenarioLinkElements.length - 1;
-    if (index >= 0) {
-      this.focusScenarioLinkElement(index);
+    const currentIndex = this.findCurrentScenarioIndex();
+
+    if (currentIndex) {
+      this.focusScenarioLinkElement(currentIndex);
+    } else if (this.scenarioLinkElements.length > 0) {
+      this.focusScenarioLinkElement(this.scenarioLinkElements.length - 1);
     }
   }
 
@@ -277,27 +286,45 @@ export class AppComponent {
       && this.selectedSandboxAndScenarioKeys.sandboxKey.toLowerCase() === sandbox.key.toLowerCase();
   }
 
+  private findCurrentScenarioIndex(): number | undefined {
+    let currentIndex;
+
+    if (this.scenarioLinkElements.length > 0) {
+      this.scenarioLinkElements.map((element: ElementRef, i: number) => {
+        if (element.nativeElement.className.includes('selected')) {
+          currentIndex = i;
+        }
+      });
+    }
+
+    return currentIndex;
+  }
+
   private goUp(scenarioElement: any) {
     let currentIndex = -1;
-    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index: number) => {
+
+    this.scenarioLinkElements.forEach((scenarioElementRef: ElementRef, index: number) => {
       if (scenarioElementRef.nativeElement === scenarioElement) {
         currentIndex = index;
       }
     });
+
     if (currentIndex === 0) {
       this.focusScenarioLinkElement(this.scenarioLinkElements.length - 1);
     } else {
-      this.focusScenarioLinkElement(currentIndex + - 1);
+      this.focusScenarioLinkElement(currentIndex - 1);
     }
   }
 
   private goDown(scenarioElement: any) {
     let currentIndex = -1;
-    this.scenarioLinkElements.find((scenarioElementRef: ElementRef, index: number) => {
+
+    this.scenarioLinkElements.forEach((scenarioElementRef: ElementRef, index: number) => {
       if (scenarioElementRef.nativeElement === scenarioElement) {
         currentIndex = index;
       }
     });
+
     if (currentIndex === this.scenarioLinkElements.length - 1) {
       this.focusScenarioLinkElement(0);
     } else {
