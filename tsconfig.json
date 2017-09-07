@@ -22,6 +22,7 @@
   "exclude": [
     "node_modules",
     "example-app-angular-cli",
-    "example-app-webpack"
+    "example-app-webpack",
+    "example-app-embed-mode"
   ]
 }
