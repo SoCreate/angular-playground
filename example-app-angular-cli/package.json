@@ -5,7 +5,7 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "playground:fresh": "npm i ../ && npm run playground",
+    "playground:fresh": "npm run playground",
     "playground": "angular-playground",
     "playground2": "angular-playground angular-playground2.json",
     "cli": "ts-node --project ../src/cli ../src/cli/cli.ts",
@@ -38,7 +38,6 @@
     "@angular/language-service": "^4.0.0",
     "@types/jasmine": "2.5.45",
     "@types/node": "~6.0.60",
-    "angular-playground": "file:..",
     "codelyzer": "~3.0.1",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
