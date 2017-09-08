@@ -1,1 +1,0 @@
-# Example App for Playground
