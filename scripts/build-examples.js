@@ -8,7 +8,8 @@ examples.forEach(examplePath => {
     const resultPath = path.join(__dirname, `../${examplePath}/node_modules/angular-playground/`);
 
     Promise.all([copyDist(resultPath), copyPackageFile(resultPath)])
-        .then(() => console.log('dist/ successfully copied to', resultPath));
+        .then(() => console.log('dist/ successfully copied to', resultPath))
+        .catch(err => console.log(err));
 
 });
 
