@@ -5,7 +5,7 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "playground:copy": "node ../scripts/copy.js",
+    "playground:copy": "node ../../scripts/copy.js",
     "playground:run": "node ./node_modules/angular-playground/dist/bin/cli.js",
     "playground": "npm run playground:copy && npm run playground:run",
     "playground2:run": "node ./node_modules/angular-playground/dist/bin/cli.js angular-playground2.json",

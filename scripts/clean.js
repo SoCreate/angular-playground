@@ -6,6 +6,8 @@ Promise.all([cleanDist(), cleanMetadata()])
     .then(() => console.log('Cleaned build.'))
     .catch((err) => console.log(err));
 
+////////////////////////////////////////////
+
 function cleanDist() {
     return fs.remove(path.join(__dirname, '../dist/'));
 }
