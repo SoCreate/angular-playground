@@ -12,8 +12,8 @@
   ],
   "scripts": {
     "ngc": "ngc",
-    "dist:clean": "rimraf ./dist",
-    "build": "npm run dist:clean && npm run app:build && npm run cli:build",
+    "clean": "node ./scripts/clean.js",
+    "build": "npm run clean && npm run app:build && npm run cli:build",
     "app:build": "ngc -p ./tsconfig.json",
     "cli:build": "tsc -p ./src/cli/tsconfig.json",
     "prepublish": "npm run build"
@@ -77,7 +77,7 @@
     "codelyzer": "3.0.1",
     "copyfiles": "^1.2.0",
     "fs-extra": "^4.0.1",
-    "rimraf": "^2.5.4",
+    "glob": "^7.1.2",
     "rxjs": "5.1.0",
     "tslint": "5.3.2",
     "typescript": "2.3.3",
