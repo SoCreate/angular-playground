@@ -5,9 +5,9 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "playground:fresh": "npm run playground",
-    "playground": "angular-playground",
-    "playground2": "angular-playground angular-playground2.json",
+    "playground:fresh": "node ../scripts/build-examples.js && npm run playground",
+    "playground": "node ./node_modules/angular-playground/dist/bin/cli.js",
+    "playground2": "node ./node_modules/angular-playground/dist/bin/cli.js angular-playground2.json",
     "cli": "ts-node --project ../src/cli ../src/cli/cli.ts",
     "cli:build": "ts-node --project ../src/cli ../src/cli/cli.ts -no-watch -no-serve",
     "start": "ng serve -no-progress",
