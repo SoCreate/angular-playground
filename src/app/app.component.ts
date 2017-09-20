@@ -1,168 +1,275 @@
 import { Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {Sandbox, SelectedSandboxAndScenarioKeys} from './shared/app-state';
-import {SANDBOXES} from './shared/tokens';
+import { FormControl } from '@angular/forms';
+import { Sandbox, SelectedSandboxAndScenarioKeys } from './shared/app-state';
+import { SANDBOXES } from './shared/tokens';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
-import {StateService} from './shared/state.service';
-import {EventManager} from '@angular/platform-browser';
-import {UrlService} from './shared/url.service';
-import {fuzzySearch} from './shared/fuzzy-search.function';
+import { StateService } from './shared/state.service';
+import { EventManager } from '@angular/platform-browser';
+import { UrlService } from './shared/url.service';
+import { fuzzySearch } from './shared/fuzzy-search.function';
 
 @Component({
   selector: 'ap-root',
   styles: [`
-    :host * {
+
+    /* Globals */
+    * {
       box-sizing: border-box;
     }
+
     :host {
       display: flex;
-      flex-direction: column; }
-    .command-bar-shield {
-      z-index: 2;
-      position: absolute;
-      width: 100%;
+      flex-direction: column;
+    }
+
+    /* Shield */
+    .shield {
       height: 100vh;
-      opacity: 0; }
-    .command-bar {
-      z-index: 3;
-      font-family: Menlo,Monaco,monospace;
+      opacity: 0;
       position: absolute;
+      z-index: 2;
+      width: 100%;
+    }
+
+    /* Command Bar */
+    .command-bar {
+      background-color: #252526;
+      box-shadow: 0 3px 8px 5px black;
+      color: white;
       display: flex;
       flex-direction: column;
+      font-family: Menlo, Monaco, monospace;
       left: 50%;
+      margin-top: -6px;
+      max-height: 100vh;
+      padding-top: 10px;
+      position: absolute;
       transform: translate(-50%, -110%);
       transition: transform ease 100ms;
-    }
-    .command-bar.open {
-      transform: translate(-50%, 0);
-    }
-    input {
-      font-family: Menlo,Monaco,monospace;
-      width: 365px;
-      z-index: 1;
-      padding: 4px;
-      margin: 6px 0 0 5px;
-      border: 1px solid #174a6c;
-      background-color: #3c3c3c;
-      font-size: 14pt;
-      color: #fff;
-    }
-    input::-webkit-input-placeholder {
-      color: #a9a9a9; }
-    input::-moz-focus-inner {
-      border: 0;
-      padding: 0; }
-    .command-bar > div {
-      margin-top: -39px;
       width: 376px;
-      padding: 34px 0 11px 0;
-      background-color: #252526;
-      color: #fff;
-      box-shadow: 0 3px 8px 5px black;
+      z-index: 9999999999999;
     }
-    .command-bar > div > div:first-child {
-      margin-top: 12px;
-      padding-top: 4px;
-      border-top: 1px solid black;
-    }
-    .command-bar > div a {
-      cursor: pointer;
+
+    .command-bar::before {
+      border-bottom: solid 1px black;
+      content: "";
       display: block;
+      position: absolute;
+      top: 54px;
       width: 100%;
     }
-    .command-bar > div a:hover,
-    .command-bar > div a:focus {
+
+    .command-bar--open {
+      transform: translate(-50%, 0);
+    }
+
+    .command-bar__filter {
+      background-color: #3c3c3c;
+      border: 1px solid #174a6c;
+      color: white;
+      font-family: Menlo, Monaco, monospace;
+      font-size: 14pt;
+      margin: 6px 0 0 5px;
+      padding: 4px;
+      width: 365px;
+      z-index: 1;
+    }
+
+    .command-bar__filter::placeholder {
+      color: #a9a9a9;
+    }
+
+    .command-bar__filter:-ms-input-placeholder {
+      color: #a9a9a9;
+    }
+
+    .command-bar__filter::-moz-focus-inner {
+      border: 0;
+      padding: 0;
+    }
+
+    /* Sandboxes */
+    .command-bar__sandboxes {
+      border-top: solid 1px rgba(255, 255, 255, .1);
+      margin-top: 9px;
+      overflow: auto;
+      position: relative;
+    }
+
+    .command-bar__sandbox {
+      border-bottom: solid 1px black;
+      border-top: solid 1px rgba(255, 255, 255, .1);
+      padding: 8px 6px 14px;
+    }
+
+    .command-bar__sandbox:first-child {
+      border-top: none;
+    }
+
+    .command-bar__sandbox:last-child {
+      border-bottom: none;
+      padding-bottom: 12px;
+    }
+
+    .command-bar__title {
+      align-items: center;
+      color: rgba(255, 255, 255, .5);
+      display: flex;
+      font-size: 12px;
+      font-weight: normal;
+      justify-content: space-between;
+      margin: 0 0 5px;
+      padding: 5px 0 0;
+    }
+
+    .command-bar__title-text {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .command-bar__prepend-text {
+      background: rgba(255, 255, 255, .1);
+      border-radius: 2px;
+      display: block;
+      font-size: 9px;
+      margin-left: 10px;
+      order: 1;
+      padding: 4px 4px 3px;
+    }
+
+    /* Scenarios */
+    .command-bar__scenarios {
+      display: flex;
+    }
+
+    .command-bar__scenario-link {
+      align-items: center;
+      border-radius: 2px;
+      color: rgba(255, 255, 255, .5);
+      cursor: pointer;
+      display: flex;
+      padding: 2px 3px;
+      width: 100%;
+    }
+
+    .command-bar__scenario-link:hover,
+    .command-bar__scenario-link:active,
+    .command-bar__scenario-link:focus {
       background-color: #0097fb;
-      color: #fff;
+      color: white;
       outline-style: none;
     }
-    .sandbox {
-      font-style: italic;
-      color: rgba(255, 255, 255, .5);
-      padding: 2px 8px;
-    }
-    .scenarios {
-      display: flex;
-    }
-    .scenario {
-      padding: 2px 3px;
-      margin: 0 5px;
-    }
-    .scenario-icon {
+
+    .command-bar__scenario-icon {
       display: inline-block;
-      width: 20px;
+      fill: white;
       height: 20px;
-      fill: #fff;
+      margin: 4px 6px 0 0;
       opacity: .2;
-      margin: 4px 0 0 2px;
+      width: 20px;
     }
-    .scenario-icon.selected {
-      opacity: 1;
+
+    .command-bar__scenario-link:hover .command-bar__scenario-icon,
+    .command-bar__scenario-link:active .command-bar__scenario-icon,
+    .command-bar__scenario-link:focus .command-bar__scenario-icon {
+      opacity: .5;
+    }
+
+    .command-bar__scenario-link--selected {
+      color: white;
+    }
+
+    .command-bar__scenario-icon--selected {
       fill: #0097fb;
+      opacity: 1;
     }
 
-    section {
-      position: relative;
-      border: 0;
-      width: 100%; }
+    .command-bar__scenario-link:hover .command-bar__scenario-icon--selected,
+    .command-bar__scenario-link:active .command-bar__scenario-icon--selected,
+    .command-bar__scenario-link:focus .command-bar__scenario-icon--selected {
+      fill: white;
+    }
 
-    .help-message {
-      display: flex;
+    /* Content */
+    .content {
       align-items: center;
+      border: 0;
+      display: flex;
+      height: 100vh;
       justify-content: center;
-      height: 100vh; }
-    .help-message > div {
+      position: relative;
+      width: 100%;
+    }
+
+    .content__none {
+      font-family: Menlo, Monaco, monospace;
       max-width: 50%;
-      font-family: Menlo,Monaco,monospace; }
-    .soft { color: #666; }
+    }
+
+    .content__none em {
+      color: #666;
+    }
+
   `],
   template: `
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-      <symbol id="icon-pin" viewBox="25 25 50 50">
-        <path d="M70.32,34.393l-7.628-8.203c-0.854-0.916-2.256-1.066-3.281-0.342l-13.699,9.639c-0.479-0.055-0.956-0.082-1.425-0.082 c-5.935,0-9.126,4.326-9.259,4.51c-0.718,0.994-0.612,2.359,0.249,3.232l7.88,7.98L30.436,63.848c-0.98,0.98-0.98,2.568,0,3.549 c0.49,0.49,1.132,0.734,1.774,0.734c0.642,0,1.284-0.244,1.773-0.734l12.7-12.699l7.34,7.432c0.484,0.49,1.131,0.746,1.786,0.746 c0.436,0,0.874-0.113,1.27-0.346c4.014-2.357,3.876-9.373,3.557-12.727l9.799-12.125C71.22,36.707,71.171,35.307,70.32,34.393z M56.073,47.465c-0.432,0.535-0.626,1.225-0.536,1.906c0.332,2.51,0.239,5.236-0.146,7.002L40.678,41.475 c0.868-0.551,2.079-1.051,3.61-1.051c0.5,0,1.02,0.053,1.546,0.158c0.674,0.137,1.375-0.01,1.938-0.408l12.737-8.963l4.655,5.006 L56.073,47.465z"></path>
-      </symbol>
-    </svg>
-    <div class="command-bar-shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
-    <div class="command-bar" *ngIf="commandBarActive" [class.open]="commandBarActive">
-      <input type="text" name="filter" placeholder="filter"
+    <div class="shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
+    <div class="command-bar" *ngIf="commandBarActive" [class.command-bar--open]="commandBarActive">
+      <input
+        class="command-bar__filter"
+        type="text"
+        name="filter"
+        placeholder="filter"
         [formControl]="filter"
         #filterElement
         [apFocus]="commandBarActive"
         (keyup.Esc)="commandBarActive = false"
         (keydown.ArrowUp)="goToLastScenario($event)"
         (keydown.ArrowDown)="goToFirstScenario($event)">
-      <div>
-        <div *ngFor="let sandbox of filteredSandboxes">
-          <div class="sandbox"
-               [class.selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
-            {{sandbox.prependText}}{{sandbox.name}}</div>
-          <div *ngFor="let scenario of sandbox.scenarios" class="scenarios">
-            <svg class="scenario-icon" [class.selected]="isSelected(sandbox, scenario)">
-              <use xlink:href="#icon-pin"/>
-            </svg>
+      <div class="command-bar__sandboxes">
+        <div class="command-bar__sandbox" *ngFor="let sandbox of filteredSandboxes">
+          <h2 class="command-bar__title" title="{{sandbox.prependText}} {{sandbox.name}}" [class.command-bar__sandbox-title--selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
+            <span class="command-bar__prepend-text" *ngIf="sandbox.prependText">
+              {{sandbox.prependText}}
+            </span>
+            <span class="command-bar__title-text">
+              {{sandbox.name}}
+            </span>
+          </h2>
+          <div class="command-bar__scenarios" *ngFor="let scenario of sandbox.scenarios">
             <a
-               class="scenario"
-               #scenarioElement
-               [tabindex]="scenario.tabIndex"
-               (keydown)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
-               (keyup)="onScenarioLinkKeyUp(scenarioElement, $event)"
-               (click)="onScenarioClick(sandbox.key, scenario.key, $event); toggleCommandBar()"
-               [class.selected]="isSelected(sandbox, scenario)">
+              class="command-bar__scenario-link"
+              #scenarioElement
+              [tabindex]="scenario.tabIndex"
+              (keydown)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
+              (keyup)="onScenarioLinkKeyUp(scenarioElement, $event)"
+              (click)="onScenarioClick(sandbox.key, scenario.key, $event); toggleCommandBar()"
+              [class.command-bar__scenario-link--selected]="isSelected(sandbox, scenario)">
+              <svg class="command-bar__scenario-icon" [class.command-bar__scenario-icon--selected]="isSelected(sandbox, scenario)" viewBox="25 25 50 50">
+                <path d="M70.32,34.393l-7.628-8.203c-0.854-0.916-2.256-1.066-3.281-0.342l-13.699,9.639c-0.479-0.055-0.956-0.082-1.425-0.082 c-5.935,0-9.126,4.326-9.259,4.51c-0.718,0.994-0.612,2.359,0.249,3.232l7.88,7.98L30.436,63.848c-0.98,0.98-0.98,2.568,0,3.549 c0.49,0.49,1.132,0.734,1.774,0.734c0.642,0,1.284-0.244,1.773-0.734l12.7-12.699l7.34,7.432c0.484,0.49,1.131,0.746,1.786,0.746 c0.436,0,0.874-0.113,1.27-0.346c4.014-2.357,3.876-9.373,3.557-12.727l9.799-12.125C71.22,36.707,71.171,35.307,70.32,34.393z M56.073,47.465c-0.432,0.535-0.626,1.225-0.536,1.906c0.332,2.51,0.239,5.236-0.146,7.002L40.678,41.475 c0.868-0.551,2.079-1.051,3.61-1.051c0.5,0,1.02,0.053,1.546,0.158c0.674,0.137,1.375-0.01,1.938-0.408l12.737-8.963l4.655,5.006 L56.073,47.465z"></path>
+              </svg>
               {{scenario.description}}</a>
           </div>
         </div>
       </div>
     </div>
-    <section *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey" class="help-message">
-      <div>
-        <p *ngIf="totalSandboxes > 0">The app has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}} loaded.</p>
-        <p *ngIf="totalSandboxes === 0">The app does not have any sandboxed components.</p>
-        <p>Pick sandboxed components: <strong>ctrl + o</strong> <span class="soft">or</span> <strong>F1</strong></p>
+    <section class="content">
+      <div class="content__none" *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey">
+        <p *ngIf="totalSandboxes > 0">
+          The app has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}} loaded.
+        </p>
+        <p *ngIf="totalSandboxes === 0">
+          The app does not have any sandboxed components.
+        </p>
+        <p>
+          Pick sandboxed components: <strong>ctrl + o</strong> <em>or</em> <strong>F1</strong>
+        </p>
       </div>
-    </section>
-    <section *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
-      <ap-scenario [selectedSandboxAndScenarioKeys]="selectedSandboxAndScenarioKeys"></ap-scenario>
+      <ng-container *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
+        <ap-scenario [selectedSandboxAndScenarioKeys]="selectedSandboxAndScenarioKeys"></ap-scenario>
+      </ng-container>
     </section>
   `
 })
