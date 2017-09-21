@@ -1,1 +1,2 @@
-export const SANDBOXES = 'SANDBOXES';
+export const SANDBOX_MENU_ITEMS = 'SANDBOX_MENU_ITEMS';
+export const SANDBOX_LOADER = 'SANDBOX_LOADER';
