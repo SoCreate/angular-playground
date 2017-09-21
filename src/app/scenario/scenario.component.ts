@@ -1,11 +1,16 @@
 import {
   Component,
   ViewContainerRef,
-  ChangeDetectionStrategy, NgModule, Injector, Compiler, Input, Inject
+  ChangeDetectionStrategy,
+  NgModule,
+  Injector,
+  Compiler,
+  Input,
+  Inject
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sandbox, Scenario, SelectedSandboxAndScenarioKeys } from '../shared/app-state';
-import { SANDBOXES } from '../shared/tokens';
+import { SANDBOX_LOADER } from '../shared/tokens';
 
 @Component({
   selector: 'ap-scenario',
@@ -16,17 +21,18 @@ export class ScenarioComponent {
   @Input() set selectedSandboxAndScenarioKeys(selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys) {
     this.view.clear();
     if (selectedSandboxAndScenarioKeys) {
-      let sandbox: Sandbox = this.sandboxes.find((sandbox: Sandbox) => sandbox.key.toLowerCase() === selectedSandboxAndScenarioKeys.sandboxKey.toLowerCase());
-      if (sandbox) {
-        let scenario = sandbox.scenarios.find((scenario: Scenario) => scenario.key === selectedSandboxAndScenarioKeys.scenarioKey);
-        if (scenario) {
-          this.loadScenario(sandbox, scenario, this.view, this.injector);
+      this.sandboxLoader(selectedSandboxAndScenarioKeys.sandboxKey).then(sandbox => {
+        if (sandbox) {
+          let scenario = sandbox.scenarios.find((s: Scenario) => s.key === selectedSandboxAndScenarioKeys.scenarioKey);
+          if (scenario) {
+            this.loadScenario(sandbox, scenario, this.view, this.injector);
+          }
         }
-      }
+      });
     }
-  };
+  }
 
-  constructor(@Inject(SANDBOXES) private sandboxes: Sandbox[],
+  constructor(@Inject(SANDBOX_LOADER) private sandboxLoader: (key: string) => Promise<Sandbox>,
               private compiler: Compiler,
               private injector: Injector,
               private view: ViewContainerRef) {
@@ -65,7 +71,7 @@ export class ScenarioComponent {
         imports ? imports : []
       ],
       declarations: [
-        ...(sandbox.declareComponent ? [ type ] : []),
+        ...(sandbox.declareComponent ? [type] : []),
         hostComponent,
         declarations ? declarations : []
       ],
