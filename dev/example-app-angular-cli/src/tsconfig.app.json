@@ -2,14 +2,10 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "module": "es2015",
-    "baseUrl": "",
+    "baseUrl": "./",
+    "module": "esnext",
     "types": []
   },
-  "files": [
-    "main.ts",
-    "typings.d.ts"
-  ],
   "exclude": [
     "test.ts",
     "**/*.spec.ts"
