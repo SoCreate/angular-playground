@@ -4,29 +4,53 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export const build = (rootPath) => {
-  let importStatements = new StringBuilder();
   let content = new StringBuilder();
   let home = path.resolve(rootPath);
-  let sandboxCount = 0;
   let sandboxes = [];
+
   fromDir(home, /\.sandbox.ts$/, (filename) => {
-    let filePathToUse = filename.replace(home, '.').replace(/.ts$/, '').replace(/\\/g, '/');
+    let sandboxPath = filename.replace(home, '.').replace(/.ts$/, '').replace(/\\/g, '/');
     const contents = fs.readFileSync(filename, 'utf8');
-    const match = / sandboxOf\(\s*([^)]+?)\s*\)/g.exec(contents);
-    if (match) {
-      const typeName = match[1].split(',')[0].trim();
-      let importName = `s${++sandboxCount}`;
-      sandboxes.push({importName, typeName});
-      importStatements.addLine(`import { default as ${importName} } from '${filePathToUse}';`);
+
+    const matchSandboxOf = /\s?sandboxOf\s*\(\s*([^)]+?)\s*\)/g.exec(contents);
+    if (matchSandboxOf) {
+      const typeName = matchSandboxOf[1].split(',')[0].trim();
+      const matchPrependText = /prependText\s*:\s*['"](.+)['"]/g.exec(contents);
+
+      let scenarioMenuItems = [];
+      const scenarioRegex = /\.add\s*\(['"](.+)['"]\s*,\s*{/g;
+      let scenarioMatches;
+      let scenarioIndex = 1;
+      while ((scenarioMatches = scenarioRegex.exec(contents)) !== null) {
+        scenarioMenuItems.push({key: scenarioIndex, description: scenarioMatches[1]});
+        scenarioIndex++;
+      }
+
+      let label = matchPrependText ? matchPrependText[1] : '';
+      sandboxes.push({
+        key: sandboxPath,
+        searchKey: `${label}${typeName}`,
+        name: typeName,
+        prependText: label,
+        scenarioMenuItems
+      });
     }
   });
-  content.addLine(`export let sandboxes: any[] = [];`);
-  sandboxes.forEach(({importName, typeName}) => {
-    content.addLine(`sandboxes.push(${importName}.serialize('${typeName}'));`);
+
+  content.addLine(`export function getSandboxMenuItems() {`);
+  content.addLine(`return ${JSON.stringify(sandboxes)};`);
+  content.addLine(`}`);
+
+  content.addLine(`export function getSandbox(path: string) {`);
+  content.addLine(`switch(path) {`);
+  sandboxes.forEach(({key}) => {
+    content.addLine(`case '${key}':`);
+    content.addLine(`return import('${key}').then(sandbox => { return sandbox.default.serialize('${key}'); });`);
   });
+  content.addLine(`}}`);
 
   let filePath = path.resolve(home, './sandboxes.ts');
-  fs.writeFile(filePath, importStatements.dump() + content.dump(), function (err) {
+  fs.writeFile(filePath, content.dump(), function (err) {
     if (err) {
       return console.log(err);
     }
