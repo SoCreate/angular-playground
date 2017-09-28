@@ -26,27 +26,9 @@
     "angular"
   ],
   "author": {
-    "name": "Justin Schwartzenberger",
-    "url": "https://twitter.com/schwarty"
+    "name": "SoCreate",
+    "url": "https://SoCreate.it"
   },
-  "contributors": [
-    {
-      "name": "Jami Lurock",
-      "url": "https://twitter.com/maindg"
-    },
-    {
-      "name": "Brian Treese",
-      "url": "https://twitter.com/brianmtreese"
-    },
-    {
-      "name": "Greg Arroyo",
-      "url": "https://twitter.com/arroyocode"
-    },
-    {
-      "name": "Rich McCluskey",
-      "url": "https://twitter.com/rich_code"
-    }
-  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/SoCreate/angular-playground/issues"
