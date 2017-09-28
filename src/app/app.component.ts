@@ -1,7 +1,7 @@
 import { Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Sandbox, SelectedSandboxAndScenarioKeys } from './shared/app-state';
-import { SANDBOXES } from './shared/tokens';
+import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from './shared/app-state';
+import { SANDBOX_MENU_ITEMS } from './shared/tokens';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { StateService } from './shared/state.service';
@@ -229,28 +229,28 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
         (keydown.ArrowUp)="goToLastScenario($event)"
         (keydown.ArrowDown)="goToFirstScenario($event)">
       <div class="command-bar__sandboxes">
-        <div class="command-bar__sandbox" *ngFor="let sandbox of filteredSandboxes">
-          <h2 class="command-bar__title" title="{{sandbox.prependText}} {{sandbox.name}}" [class.command-bar__sandbox-title--selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandbox.key">
-            <span class="command-bar__prepend-text" *ngIf="sandbox.prependText">
-              {{sandbox.prependText}}
+        <div class="command-bar__sandbox" *ngFor="let sandboxMenuItem of filteredSandboxMenuItems">
+          <h2 class="command-bar__title" title="{{sandboxMenuItem.label}} {{sandboxMenuItem.name}}" [class.command-bar__sandbox-title--selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandboxMenuItem.key">
+            <span class="command-bar__prepend-text" *ngIf="sandboxMenuItem.label">
+              {{sandboxMenuItem.label}}
             </span>
             <span class="command-bar__title-text">
-              {{sandbox.name}}
+              {{sandboxMenuItem.name}}
             </span>
           </h2>
-          <div class="command-bar__scenarios" *ngFor="let scenario of sandbox.scenarios">
+          <div class="command-bar__scenarios" *ngFor="let scenarioMenuItem of sandboxMenuItem.scenarioMenuItems">
             <a
               class="command-bar__scenario-link"
               #scenarioElement
-              [tabindex]="scenario.tabIndex"
+              [tabindex]="scenarioMenuItem.tabIndex"
               (keydown)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
               (keyup)="onScenarioLinkKeyUp(scenarioElement, $event)"
-              (click)="onScenarioClick(sandbox.key, scenario.key, $event); toggleCommandBar()"
-              [class.command-bar__scenario-link--selected]="isSelected(sandbox, scenario)">
-              <svg class="command-bar__scenario-icon" [class.command-bar__scenario-icon--selected]="isSelected(sandbox, scenario)" viewBox="25 25 50 50">
+              (click)="onScenarioClick(sandboxMenuItem.key, scenarioMenuItem.key, $event); toggleCommandBar()"
+              [class.command-bar__scenario-link--selected]="isSelected(sandboxMenuItem, scenarioMenuItem)">
+              <svg class="command-bar__scenario-icon" [class.command-bar__scenario-icon--selected]="isSelected(sandboxMenuItem, scenarioMenuItem)" viewBox="25 25 50 50">
                 <path d="M70.32,34.393l-7.628-8.203c-0.854-0.916-2.256-1.066-3.281-0.342l-13.699,9.639c-0.479-0.055-0.956-0.082-1.425-0.082 c-5.935,0-9.126,4.326-9.259,4.51c-0.718,0.994-0.612,2.359,0.249,3.232l7.88,7.98L30.436,63.848c-0.98,0.98-0.98,2.568,0,3.549 c0.49,0.49,1.132,0.734,1.774,0.734c0.642,0,1.284-0.244,1.773-0.734l12.7-12.699l7.34,7.432c0.484,0.49,1.131,0.746,1.786,0.746 c0.436,0,0.874-0.113,1.27-0.346c4.014-2.357,3.876-9.373,3.557-12.727l9.799-12.125C71.22,36.707,71.171,35.307,70.32,34.393z M56.073,47.465c-0.432,0.535-0.626,1.225-0.536,1.906c0.332,2.51,0.239,5.236-0.146,7.002L40.678,41.475 c0.868-0.551,2.079-1.051,3.61-1.051c0.5,0,1.02,0.053,1.546,0.158c0.674,0.137,1.375-0.01,1.938-0.408l12.737-8.963l4.655,5.006 L56.073,47.465z"></path>
               </svg>
-              {{scenario.description}}</a>
+              {{scenarioMenuItem.description}}</a>
           </div>
         </div>
       </div>
@@ -276,22 +276,29 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
 export class AppComponent {
   commandBarActive = false;
   totalSandboxes: number;
-  filteredSandboxes: Sandbox[];
+  filteredSandboxMenuItems: SandboxMenuItem[];
   selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = {sandboxKey: null, scenarioKey: null};
   filter = new FormControl();
   @ViewChildren('scenarioElement') scenarioLinkElements: QueryList<ElementRef>;
 
-  constructor(@Inject(SANDBOXES) sandboxes: Sandbox[],
+  constructor(@Inject(SANDBOX_MENU_ITEMS) sandboxMenuItems: SandboxMenuItem[],
               private stateService: StateService,
               private urlService: UrlService,
               private eventManager: EventManager) {
+
     if (this.urlService.embed) {
-      this.selectedSandboxAndScenarioKeys = {sandboxKey: this.urlService.select.sandboxKey, scenarioKey: this.urlService.select.scenarioKey};
+      this.selectedSandboxAndScenarioKeys = {
+        sandboxKey: this.urlService.select.sandboxKey,
+        scenarioKey: this.urlService.select.scenarioKey
+      };
     } else {
       let filterValue = this.stateService.getFilter();
       if (this.urlService.select) {
         filterValue = (filterValue && fuzzySearch(filterValue.toLowerCase(), this.urlService.select.filter.toLowerCase())) ? filterValue : this.urlService.select.filter;
-        this.selectedSandboxAndScenarioKeys = {sandboxKey: this.urlService.select.sandboxKey, scenarioKey: this.urlService.select.scenarioKey};
+        this.selectedSandboxAndScenarioKeys = {
+          sandboxKey: this.urlService.select.sandboxKey,
+          scenarioKey: this.urlService.select.scenarioKey
+        };
       }
       this.eventManager.addGlobalEventListener('window',
         'keydown.control.o',
@@ -313,15 +320,15 @@ export class AppComponent {
         () => {
           this.toggleCommandBar();
         });
-      this.totalSandboxes = sandboxes.length;
-      this.filteredSandboxes = this.filterSandboxes(sandboxes, filterValue);
+      this.totalSandboxes = sandboxMenuItems.length;
+      this.filteredSandboxMenuItems = this.filterSandboxes(sandboxMenuItems, filterValue);
       this.filter.setValue(filterValue);
       this.filter.valueChanges
         .debounceTime(300)
         .distinctUntilChanged()
         .subscribe(value => {
           this.stateService.setFilter(value);
-          this.filteredSandboxes = this.filterSandboxes(sandboxes, value);
+          this.filteredSandboxMenuItems = this.filterSandboxes(sandboxMenuItems, value);
           if (!value) {
             this.selectScenario(null, null);
           }
@@ -445,15 +452,15 @@ export class AppComponent {
     }
   }
 
-  private filterSandboxes(sandboxes: Sandbox[], filter: string) {
+  private filterSandboxes(sandboxMenuItems: SandboxMenuItem[], filter: string) {
     if (!filter) {
       return [];
     }
     let tabIndex = 0;
     let filterNormalized = filter.toLowerCase();
-    return sandboxes
-      .filter((sandbox: Sandbox) => fuzzySearch(filterNormalized, sandbox.key.toLowerCase()))
-      .sort((a: Sandbox, b: Sandbox) => {
+    return sandboxMenuItems
+      .filter((sandboxMenuItem: SandboxMenuItem) => fuzzySearch(filterNormalized, sandboxMenuItem.searchKey.toLowerCase()))
+      .sort((a: SandboxMenuItem, b: SandboxMenuItem) => {
         let nameA = a.name.toUpperCase();
         let nameB = b.name.toUpperCase();
         if (nameA < nameB) {

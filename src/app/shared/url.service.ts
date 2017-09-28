@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Location } from '@angular/common';
-import { SANDBOXES } from './tokens';
-import { Sandbox } from './app-state';
+import { SANDBOX_MENU_ITEMS } from './tokens';
+import { SandboxMenuItem } from './app-state';
 
 @Injectable()
 export class UrlService {
@@ -16,11 +16,11 @@ export class UrlService {
     return this._select;
   }
 
-  constructor(@Inject(SANDBOXES) private sandboxes: Sandbox[],
+  constructor(@Inject(SANDBOX_MENU_ITEMS) private sandboxMenuItems: SandboxMenuItem[],
               private location: Location) {
     let urlPath = location.path();
     this._embed = /[?|&]embed=1/.exec(urlPath) !== null;
-    this._select = this.parse('scenario', sandboxes, urlPath);
+    this._select = this.parse('scenario', sandboxMenuItems, urlPath);
     if (this._select) {
       if (this._select.sandboxKey === null && this._select.scenarioKey === null) {
         this.location.replaceState('');
@@ -34,27 +34,28 @@ export class UrlService {
       this.location.replaceState('');
       return;
     }
-    let scenarioDescription = this.sandboxes
-      .find(sandbox => sandbox.key.toLowerCase() === sandboxKey.toLowerCase())
-      .scenarios.find(scenario => scenario.key === scenarioKey).description;
+    let scenarioDescription = this.sandboxMenuItems
+      .find(sandboxMenuItem => sandboxMenuItem.key.toLowerCase() === sandboxKey.toLowerCase())
+      .scenarioMenuItems.find(scenarioMenuItem => scenarioMenuItem.key === scenarioKey).description;
     this.location.replaceState(`?scenario=${encodeURIComponent(sandboxKey)}/${encodeURIComponent(scenarioDescription)}`);
   }
 
-  private parse(key: string, sandboxes: Sandbox[], urlPath: string) {
+  private parse(key: string, sandboxMenuItems: SandboxMenuItem[], urlPath: string) {
     let match = new RegExp('[?|&]' + key + '=([^&#]*)').exec(urlPath);
     if (match !== null) {
-      let value = decodeURIComponent(match[1]);
+      let value = match[1];
       let firstSlash = value.indexOf('/');
 
       let filter = value.substr(0, firstSlash);
-      let sandboxKey = filter;
-      let sandbox = sandboxes
-        .find(sandbox => sandbox.key.toLowerCase() === sandboxKey.toLowerCase());
-      if (!sandbox) {
+      let sandboxKey = decodeURIComponent(filter);
+      let sandboxMenuItem = sandboxMenuItems
+        .find(smi => smi.key.toLowerCase() === sandboxKey.toLowerCase());
+      if (!sandboxMenuItem) {
         return {filter, sandboxKey: null, scenarioKey: null};
       }
-      let scenarioKey = sandbox.scenarios
-          .findIndex(scenario => scenario.description.toLowerCase() === value.substr(firstSlash + 1, value.length).toLowerCase()) + 1;
+      let scenarioDesc = decodeURIComponent(value.substr(firstSlash + 1, value.length).toLowerCase());
+      let scenarioKey = sandboxMenuItem.scenarioMenuItems
+          .findIndex(scenarioMenuItem => scenarioMenuItem.description.toLowerCase() === scenarioDesc) + 1;
       if (scenarioKey <= 0) {
         return {filter, sandboxKey: null, scenarioKey: null};
       }

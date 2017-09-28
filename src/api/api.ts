@@ -1,5 +1,7 @@
+import { Sandbox } from '../app/shared/app-state';
+
 export interface SandboxOfConfig {
-  prependText?: string;
+  label?: string;
   imports?: any[];
   declarations?: any[];
   providers?: any[];
@@ -18,28 +20,24 @@ export function sandboxOf(type: any, config?: SandboxOfConfig): SandboxBuilder {
 }
 
 export class SandboxBuilder {
-  private _prependTextAsKey: string;
   private _scenarios: any[] = [];
   private _scenarioCounter = 0;
 
   constructor(private _type: any,
               private _config: SandboxOfConfig = {}) {
-    this._prependTextAsKey = this._config.prependText || '';
   }
 
   add(description: string, config: ScenarioConfig) {
     let key = ++this._scenarioCounter;
-    this._scenarios.push(Object.assign({}, config, {key, description}));
+    this._scenarios.push(Object.assign({}, config, {key}));
     return this;
   }
 
-  serialize(typeName: string) {
+  serialize(sandboxPath: string): Sandbox {
     return {
-      key: `${this._prependTextAsKey}${typeName}`,
-      name: typeName,
+      key: sandboxPath,
       type: this._type,
       scenarios: this._scenarios,
-      prependText: this._config.prependText || '',
       imports: this._config.imports || null,
       declarations: this._config.declarations || null,
       providers: this._config.providers || null,
