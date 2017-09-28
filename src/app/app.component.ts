@@ -230,9 +230,9 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
         (keydown.ArrowDown)="goToFirstScenario($event)">
       <div class="command-bar__sandboxes">
         <div class="command-bar__sandbox" *ngFor="let sandboxMenuItem of filteredSandboxMenuItems">
-          <h2 class="command-bar__title" title="{{sandboxMenuItem.prependText}} {{sandboxMenuItem.name}}" [class.command-bar__sandbox-title--selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandboxMenuItem.key">
-            <span class="command-bar__prepend-text" *ngIf="sandboxMenuItem.prependText">
-              {{sandboxMenuItem.prependText}}
+          <h2 class="command-bar__title" title="{{sandboxMenuItem.label}} {{sandboxMenuItem.name}}" [class.command-bar__sandbox-title--selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandboxMenuItem.key">
+            <span class="command-bar__prepend-text" *ngIf="sandboxMenuItem.label">
+              {{sandboxMenuItem.label}}
             </span>
             <span class="command-bar__title-text">
               {{sandboxMenuItem.name}}

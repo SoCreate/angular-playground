@@ -24,7 +24,7 @@ export interface SandboxMenuItem {
   key: string;
   searchKey: string;
   name: string;
-  prependText?: string;
+  label?: string;
   scenarioMenuItems: ScenarioMenuItem[];
 }
 

@@ -3,7 +3,7 @@ import { PersonDetailsComponent } from './person-details.component';
 import { PersonBioComponent } from './person-bio.component';
 
 export default sandboxOf(PersonDetailsComponent, {
-  prependText:'feature1.',
+  label:'feature1.',
   declarations: [PersonBioComponent]
 })
   .add('person with name and twitter', {

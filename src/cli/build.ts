@@ -15,7 +15,7 @@ export const build = (rootPath) => {
     const matchSandboxOf = /\s?sandboxOf\s*\(\s*([^)]+?)\s*\)/g.exec(contents);
     if (matchSandboxOf) {
       const typeName = matchSandboxOf[1].split(',')[0].trim();
-      const matchPrependText = /prependText\s*:\s*['"](.+)['"]/g.exec(contents);
+      const labelText = /label\s*:\s*['"](.+)['"]/g.exec(matchSandboxOf[0]);
 
       let scenarioMenuItems = [];
       const scenarioRegex = /\.add\s*\(['"](.+)['"]\s*,\s*{/g;
@@ -26,12 +26,12 @@ export const build = (rootPath) => {
         scenarioIndex++;
       }
 
-      let label = matchPrependText ? matchPrependText[1] : '';
+      let label = labelText ? labelText[1] : '';
       sandboxes.push({
         key: sandboxPath,
         searchKey: `${label}${typeName}`,
         name: typeName,
-        prependText: label,
+        label: label,
         scenarioMenuItems
       });
     }

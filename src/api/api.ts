@@ -1,7 +1,7 @@
 import { Sandbox } from '../app/shared/app-state';
 
 export interface SandboxOfConfig {
-  prependText?: string;
+  label?: string;
   imports?: any[];
   declarations?: any[];
   providers?: any[];
