@@ -361,9 +361,11 @@ export class AppComponent {
   onScenarioLinkKeyDown(scenarioElement: any, filterElement: any, event: any) {
     event.preventDefault();
     switch (event.key) {
+      case 'Up':
       case 'ArrowUp':
         this.goUp(scenarioElement);
         break;
+      case 'Down':
       case 'ArrowDown':
         this.goDown(scenarioElement);
         break;
