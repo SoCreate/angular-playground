@@ -117,6 +117,7 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
       align-items: center;
       color: rgba(255, 255, 255, .5);
       display: flex;
+      font-family: Consolas, monospace;
       font-size: 12px;
       font-weight: normal;
       justify-content: space-between;
