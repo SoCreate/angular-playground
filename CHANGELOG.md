@@ -1,3 +1,10 @@
+<a name="2.0.1"></a>
+# 2.0.1 (2017-09-28)
+
+### Fixes
+* **package peer dependencies:** Fix issue with peer dependencies not set to the right versions
+  ([3c7d374](https://github.com/SoCreate/angular-playground/commit/3c7d374)) 
+
 <a name="2.0.0"></a>
 # 2.0.0 (2017-09-28)
 
@@ -18,7 +25,7 @@
 
 ### Fixes
 * **command bar:** Fix edge browser keydown events
-  ([8c54c41](https://github.com/SoCreate/angular-playground/pull/51/commits/8c54c41)) 
+  ([8c54c41](https://github.com/SoCreate/angular-playground/commit/8c54c41)) 
 * **examples:** Fix examples showing how to embed sandboxes
   ([8ac215c](https://github.com/SoCreate/angular-playground/commit/8ac215c))  
 * **performance:** Change code to lazy load sandbox bundle when scenario is selected
