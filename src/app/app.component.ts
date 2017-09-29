@@ -153,7 +153,6 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
       display: flex;
       padding: 4px 3px;
       width: 100%;
-      transition: background 0.2s ease-out;
     }
 
     .command-bar__scenario-link:hover,
