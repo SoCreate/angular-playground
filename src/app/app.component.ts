@@ -245,7 +245,7 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
     }
 
     /* Content */
-    .content {
+    .content__none {
       align-items: center;
       border: 0;
       display: flex;
@@ -255,12 +255,13 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
       width: 100%;
     }
 
-    .content__none {
+    .content__none-message {
       font-family: Consolas, monospace;
       max-width: 50%;
+      text-align: center;
     }
 
-    .content__none em {
+    .content__none-message em {
       color: #666;
     }
 
@@ -978,15 +979,17 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
     </div>
     <section class="content">
       <div class="content__none" *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey">
-        <p *ngIf="totalSandboxes > 0">
-          The playground has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}}.
-        </p>
-        <p *ngIf="totalSandboxes === 0">
-          The playground does not have any sandboxed components.
-        </p>
-        <p>
-          Search sandboxed components: <strong>ctrl + o</strong> <em>or</em> <strong>F1</strong>
-        </p>
+        <div class="content__none-message">
+          <p *ngIf="totalSandboxes > 0">
+            The playground has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}}.
+          </p>
+          <p *ngIf="totalSandboxes === 0">
+            The playground does not have any sandboxed components.
+          </p>
+          <p>
+            Search sandboxed components: <strong>ctrl + o</strong> <em>or</em> <strong>F1</strong>
+          </p>
+        </div>
       </div>
       <ng-container *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
         <ap-scenario [selectedSandboxAndScenarioKeys]="selectedSandboxAndScenarioKeys"></ap-scenario>
