@@ -1,9 +1,10 @@
-<a name="2.0.1"></a>
-# 2.0.1 (2017-09-28)
+<a name="2.0.2"></a>
+# 2.0.2 (2017-09-28)
 
 ### Fixes
-* **package peer dependencies:** Fix issue with peer dependencies not set to the right versions
-  ([3c7d374](https://github.com/SoCreate/angular-playground/commit/3c7d374)) 
+* **package peer dependencies:** Fix issue with peer dependencies for 5.0.0-beta.0 and higher
+  ([cd16815](https://github.com/SoCreate/angular-playground/commit/cd16815)) 
+
 
 <a name="2.0.0"></a>
 # 2.0.0 (2017-09-28)
