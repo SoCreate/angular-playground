@@ -35,12 +35,12 @@
   },
   "homepage": "http://www.angularplayground.it",
   "peerDependencies": {
-    "@angular/common": ">=4.2.0",
-    "@angular/compiler": ">=4.2.0",
-    "@angular/core": ">=4.2.0",
-    "@angular/forms": ">=4.2.0",
-    "@angular/platform-browser": ">=4.2.0",
-    "@angular/platform-browser-dynamic": ">=4.2.0",
+    "@angular/common": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/compiler": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/core": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/forms": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/platform-browser": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/platform-browser-dynamic": ">=4.2.0 || >=5.0.0-beta.0",
     "rxjs": ">=5.4.2",
     "zone.js": ">=0.8.14"
   },
