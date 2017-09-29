@@ -267,7 +267,7 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
   `],
   template: `
     <div class="shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
-    <div class="command-bar" *ngIf="commandBarActive" [class.command-bar--open]="commandBarActive">
+    <div class="command-bar" [class.command-bar--open]="commandBarActive">
       <input
         class="command-bar__filter"
         type="text"
