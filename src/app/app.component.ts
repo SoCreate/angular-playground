@@ -45,7 +45,7 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
       max-height: 100vh;
       padding-top: 10px;
       position: absolute;
-      transform: translate(-50%, -110%);
+      transform: translate(-50%, -120%);
       transition: transform ease 100ms;
       width: 376px;
       z-index: 9999999999999;
@@ -268,7 +268,7 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
   `],
   template: `
     <div class="shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
-    <div class="command-bar" [class.command-bar--open]="commandBarActive">
+    <div class="command-bar" *ngIf="filteredSandboxMenuItems" [class.command-bar--open]="commandBarActive">
       <input
         class="command-bar__filter"
         type="text"
@@ -280,7 +280,7 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
         (keyup.Esc)="commandBarActive = false"
         (keydown.ArrowUp)="goToLastScenario($event)"
         (keydown.ArrowDown)="goToFirstScenario($event)">
-      <div *ngIf="filteredSandboxMenuItems.length > 0" class="command-bar__sandboxes">
+      <div *ngIf="filteredSandboxMenuItems && filteredSandboxMenuItems.length > 0" class="command-bar__sandboxes">
         <div class="command-bar__sandbox" *ngFor="let sandboxMenuItem of filteredSandboxMenuItems">
           <h2 class="command-bar__title" title="{{sandboxMenuItem.label}} {{sandboxMenuItem.name}}" [class.command-bar__sandbox-title--selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandboxMenuItem.key">
             <span class="command-bar__name">
@@ -309,7 +309,7 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
           </div>
         </div>
       </div>
-      <a *ngIf="filteredSandboxMenuItems.length > 0" class="command-bar__brand" href="http://www.angularplayground.it/" target="_blank">
+      <a *ngIf="filteredSandboxMenuItems && filteredSandboxMenuItems.length > 0" class="command-bar__brand" href="http://www.angularplayground.it/" target="_blank">
         <svg class="command-bar__logo" viewBox="0 0 645.9 136.4">
           <path class="command-bar__logo__box" d="M57.1,46.2c-0.1-0.3-0.1-0.5-0.1-0.8l-0.6,0.3c0.1-0.3,0.1-0.5,0.4-0.5c-0.4-0.3-1,0.2-1.5-0.4
               c0.3-0.4-0.3-1.2,0.5-1.3c-0.3,1.2,0.8-0.1,0.9,0.9c-0.1-0.2-0.1-0.4,0-0.7c0.1,0,0.2,0,0.2,0.1c0.7-1.2-0.9-0.6-0.8-1.8
