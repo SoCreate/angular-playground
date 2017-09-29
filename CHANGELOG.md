@@ -1,4 +1,5 @@
-<a name="2.0.0"></a>
+<a name="1.7.1"></a>
+# 2.0.0 (2017-09-28)
 
 ### Requirements
 * Requires Angular 4.2 or higher
