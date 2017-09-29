@@ -1,6 +1,6 @@
 {
   "name": "angular-playground",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
