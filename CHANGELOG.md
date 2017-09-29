@@ -1,3 +1,16 @@
+<a name="2.0.3"></a>
+# 2.0.3 (2017-09-29)
+
+### Fixes
+* **style:** Change the initial none message to be centered without affecting sandboxed component displays
+  ([37e9433](https://github.com/SoCreate/angular-playground/commit/37e9433)) 
+* **style:** Set command bar to show hide with css to maintain scroll position
+  ([f7a3cc9](https://github.com/SoCreate/angular-playground/commit/f7a3cc9)) 
+* **style:** Prevent list item headers from inheriting font family
+  ([c96047f](https://github.com/SoCreate/angular-playground/commit/c96047f)) 
+* **style:** Remove link transitions
+  ([046bad0](https://github.com/SoCreate/angular-playground/commit/046bad0)) 
+
 <a name="2.0.2"></a>
 # 2.0.2 (2017-09-28)
 
@@ -5,6 +18,12 @@
 * **package peer dependencies:** Fix issue with peer dependencies for 5.0.0-beta.0 and higher
   ([cd16815](https://github.com/SoCreate/angular-playground/commit/cd16815)) 
 
+<a name="2.0.1"></a>
+# 2.0.1 (2017-09-28)
+
+### Fixes
+* **package peer dependencies:** Fix issue with peer dependencies not set to the right versions
+  ([3c7d374](https://github.com/SoCreate/angular-playground/commit/3c7d374)) 
 
 <a name="2.0.0"></a>
 # 2.0.0 (2017-09-28)
