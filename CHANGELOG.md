@@ -1,3 +1,10 @@
+<a name="2.0.4"></a>
+# 2.0.4 (2017-09-29)
+
+### Fixes
+* **embedding:** Fix issues with embed mode
+  ([dff2962](https://github.com/SoCreate/angular-playground/commit/dff2962)) 
+
 <a name="2.0.3"></a>
 # 2.0.3 (2017-09-29)
 
