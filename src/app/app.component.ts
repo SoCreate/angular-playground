@@ -8,6 +8,7 @@ import { StateService } from './shared/state.service';
 import { EventManager } from '@angular/platform-browser';
 import { UrlService } from './shared/url.service';
 import { fuzzySearch } from './shared/fuzzy-search.function';
+import { LevenshteinDistance } from './shared/levenshtein-distance';
 
 @Component({
   selector: 'ap-root',
@@ -1008,7 +1009,8 @@ export class AppComponent {
   constructor(@Inject(SANDBOX_MENU_ITEMS) sandboxMenuItems: SandboxMenuItem[],
               private stateService: StateService,
               private urlService: UrlService,
-              private eventManager: EventManager) {
+              private eventManager: EventManager,
+              private levenshteinDistance: LevenshteinDistance) {
 
     if (this.urlService.embed) {
       this.selectedSandboxAndScenarioKeys = {
@@ -1185,19 +1187,19 @@ export class AppComponent {
     let tabIndex = 0;
     let filterNormalized = filter.toLowerCase();
     return sandboxMenuItems
-      .filter((sandboxMenuItem: SandboxMenuItem) => fuzzySearch(filterNormalized, sandboxMenuItem.searchKey.toLowerCase()))
-      .sort((a: SandboxMenuItem, b: SandboxMenuItem) => {
-        let nameA = a.name.toUpperCase();
-        let nameB = b.name.toUpperCase();
-        if (nameA < nameB) {
-          return -1;
+      .reduce((accum, curr) => {
+        let searchKeyNormalized = curr.searchKey.toLowerCase();
+        if(fuzzySearch(filterNormalized, searchKeyNormalized)) {
+          let weight = this.levenshteinDistance.getDistance(filterNormalized, searchKeyNormalized);
+          return [...accum, Object.assign({}, curr, {weight})];
+        } else {
+          return accum;
         }
-        if (nameA > nameB) {
-          return 1;
-        }
-        return 0;
+      }, [])
+      .sort((a, b) => {
+        return a.weight - b.weight;
       })
-      .map(sandbox => Object.assign({}, sandbox, {tabIndex: tabIndex++}));
+      .map(sandboxMenuItem => Object.assign({}, sandboxMenuItem, {tabIndex: tabIndex++}));
   }
 
   private toggleCommandBar() {
