@@ -1,6 +1,6 @@
 {
   "name": "angular-playground",
-  "version": "1.7.1",
+  "version": "2.0.4",
   "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -35,14 +35,14 @@
   },
   "homepage": "http://www.angularplayground.it",
   "peerDependencies": {
-    "@angular/common": ">=2.4.1 || >=4.0.0-rc.1",
-    "@angular/compiler": ">=2.4.1 || >=4.0.0-rc.1",
-    "@angular/core": ">=2.4.1 || >=4.0.0-rc.1",
-    "@angular/forms": ">=2.4.1 || >=4.0.0-rc.1",
-    "@angular/platform-browser": ">=2.4.1 || >=4.0.0-rc.1",
-    "@angular/platform-browser-dynamic": ">=2.4.1 || >=4.0.0-rc.1",
-    "rxjs": ">=5.0.1",
-    "zone.js": ">=0.7.2"
+    "@angular/common": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/compiler": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/core": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/forms": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/platform-browser": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/platform-browser-dynamic": ">=4.2.0 || >=5.0.0-beta.0",
+    "rxjs": ">=5.4.2",
+    "zone.js": ">=0.8.14"
   },
   "dependencies": {
     "node-watch": "^0.4.1"

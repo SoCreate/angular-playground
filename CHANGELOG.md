@@ -1,3 +1,160 @@
+<a name="2.0.4"></a>
+# 2.0.4 (2017-09-29)
+
+### Fixes
+* **embedding:** Fix issues with embed mode
+  ([dff2962](https://github.com/SoCreate/angular-playground/commit/dff2962)) 
+
+<a name="2.0.3"></a>
+# 2.0.3 (2017-09-29)
+
+### Fixes
+* **style:** Change the initial none message to be centered without affecting sandboxed component displays
+  ([37e9433](https://github.com/SoCreate/angular-playground/commit/37e9433)) 
+* **style:** Set command bar to show hide with css to maintain scroll position
+  ([f7a3cc9](https://github.com/SoCreate/angular-playground/commit/f7a3cc9)) 
+* **style:** Prevent list item headers from inheriting font family
+  ([c96047f](https://github.com/SoCreate/angular-playground/commit/c96047f)) 
+* **style:** Remove link transitions
+  ([046bad0](https://github.com/SoCreate/angular-playground/commit/046bad0)) 
+
+<a name="2.0.2"></a>
+# 2.0.2 (2017-09-28)
+
+### Fixes
+* **package peer dependencies:** Fix issue with peer dependencies for 5.0.0-beta.0 and higher
+  ([cd16815](https://github.com/SoCreate/angular-playground/commit/cd16815)) 
+
+<a name="2.0.1"></a>
+# 2.0.1 (2017-09-28)
+
+### Fixes
+* **package peer dependencies:** Fix issue with peer dependencies not set to the right versions
+  ([3c7d374](https://github.com/SoCreate/angular-playground/commit/3c7d374)) 
+
+<a name="2.0.0"></a>
+# 2.0.0 (2017-09-28)
+
+### Requirements
+* Requires Angular 4.2 or higher
+* Requires Typescript version 2.4 or higher
+* If using Angular CLI version 1.2 or higher is required
+* Requires changing compilerOptions -> module property in "tsconfig.json" or "tsconfig.app.json" to use "esnext"
+
+### Features
+* **command bar:** New improved look to the command bar for navigating between 
+  scenarios and components that have been sandboxed
+* **perfomance:** Change the tool to now build an index of sandboxes and only 
+  load a sandbox and its dependencies lazily when switching to that scenario
+  with the command bar
+* **labels:** Added a new way to differentiate sandboxes by giving them a specific
+  label that is shown in the command bar for categorizing and can be used in search
+
+### Fixes
+* **command bar:** Fix edge browser keydown events
+  ([8c54c41](https://github.com/SoCreate/angular-playground/commit/8c54c41)) 
+* **examples:** Fix examples showing how to embed sandboxes
+  ([8ac215c](https://github.com/SoCreate/angular-playground/commit/8ac215c))  
+* **performance:** Change code to lazy load sandbox bundle when scenario is selected
+  ([4bc33ff](https://github.com/SoCreate/angular-playground/commit/4bc33ff))  
+* **performance:** Update build to create functions that lazy load sandboxes
+  ([503c67b](https://github.com/SoCreate/angular-playground/commit/503c67b))  
+* **command bar:** Change code to work with menu items index that was built from all 
+  sandboxes to seperate the loading of components from listing what is available to 
+  be loaded so that a sandboxes/related components are not loaded in one large bundle
+  but instead each sandbox is independently bundled
+  ([503c67b](https://github.com/SoCreate/angular-playground/commit/503c67b))  
+* **performance:** Add new factory methods to get menu items/Remove combining of sandbox
+  ([eb40a11](https://github.com/SoCreate/angular-playground/commit/eb40a11))  
+* **performance:** Update build to create functions that lazy load sandboxes
+  ([b4d241b](https://github.com/SoCreate/angular-playground/commit/b4d241b))  
+* **command bar:** Update api to only deal with sandbox type information
+  ([2a188de](https://github.com/SoCreate/angular-playground/commit/2a188de))  
+* **typescript:** Update tsconfig to support using import function for lazy loading
+  ([7e1ca6f](https://github.com/SoCreate/angular-playground/commit/7e1ca6f))  
+* **package upgrades:** Update webpack example to newer version of angular 
+  ([3fc808a](https://github.com/SoCreate/angular-playground/commit/3fc808a))  
+* **style:** Change menu style
+  ([49256d8](https://github.com/SoCreate/angular-playground/commit/49256d8))  
+* **package upgrades:** Upgrade sample and dev cli projects to latest package versions  
+  ([f3e970f](https://github.com/SoCreate/angular-playground/commit/f3e970f))  
+ 
+ ### Breaking Changes
+* **component scenario combining removed:** Each sandbox will now uniquely show up as 
+  its own section in the command bar even if it is sandboxing the same component
+* **embed url:** Embed url has now changed to uniquely reference the sandbox file
+  based on the path within the application
+
+  Before:
+  ```html
+  <a href="http://localhost:4201/?scenario=feature1.PersonBioComponent/a%20special%20case">View in Playground</a>
+  <iframe src="http://localhost:4201/?scenario=feature1.PersonBioComponent/a%20special%20case&embed=1" frameborder="0" width="100%"></iframe>
+  ```
+
+  After:
+  ```html
+  <a href="http://localhost:4201/?scenario=.%2Fapp%2Ffeature1%2Fperson-bio.component.other.sandbox/a%20special%20case">View in Playground</a>
+  <iframe src="http://localhost:4201/?scenario=.%2Fapp%2Ffeature1%2Fperson-bio.component.other.sandbox/a%20special%20case&embed=1" frameborder="0" width="100%"></iframe>
+  ```
+
+* **api:** Rename prependText property to label
+  ([05b6bba](https://github.com/SoCreate/angular-playground/commit/05b6bba)) 
+
+  Before:
+  ```typescript
+  import {sandboxOf} from 'angular-playground';
+  import {PersonBioComponent} from './person-bio.component';
+  export default sandboxOf(PersonBioComponent, {prependText:'feature1.'})
+    .add('a special case', {template:`<h1>Special Bio</h1><ex-person-bio></ex-person-bio>`});
+  ```
+
+  After:
+  ```typescript
+  import {sandboxOf} from 'angular-playground';
+  import {PersonBioComponent} from './person-bio.component';
+  export default sandboxOf(PersonBioComponent, {label:'feature1'})
+    .add('a special case', {template:`<h1>Special Bio</h1><ex-person-bio></ex-person-bio>`});
+  ```
+ 
+* **typescript configuration:** In order to lazy load sandboxes for components the
+  new version requires that the compilerOptions -> module option in the tsconfig file
+  be set to "esnext"
+
+  Before:
+  ```json
+  {
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+      "outDir": "../out-tsc/app",
+      "baseUrl": "./",
+      "module": "es2015",
+      "types": []
+    },
+    "exclude": [
+      "test.ts",
+      "**/*.spec.ts"
+    ]
+  }
+  ```
+
+  After:
+  ```json
+  {
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+      "outDir": "../out-tsc/app",
+      "baseUrl": "./",
+      "module": "esnext",
+      "types": []
+    },
+    "exclude": [
+      "test.ts",
+      "**/*.spec.ts"
+    ]
+  }
+  ```
+
+  
 <a name="1.7.1"></a>
 # 1.7.1 (2017-08-21)
 
