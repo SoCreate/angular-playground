@@ -1067,7 +1067,7 @@ export class AppComponent {
     const currentIndex = this.findCurrentScenarioIndex();
 
     if (currentIndex) {
-      this.focusScenarioLinkElement(currentIndex);
+      this.focusScenarioLinkElement(currentIndex + 1);
     } else {
       this.focusScenarioLinkElement(0);
     }
@@ -1078,7 +1078,7 @@ export class AppComponent {
     const currentIndex = this.findCurrentScenarioIndex();
 
     if (currentIndex) {
-      this.focusScenarioLinkElement(currentIndex);
+      this.focusScenarioLinkElement(currentIndex - 1);
     } else if (this.scenarioLinkElements.length > 0) {
       this.focusScenarioLinkElement(this.scenarioLinkElements.length - 1);
     }
