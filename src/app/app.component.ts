@@ -1065,9 +1065,7 @@ export class AppComponent {
         scenarioKey: this.urlService.select.scenarioKey
       };
     } else {
-      let filterValue = this.stateService.getFilter();
       if (this.urlService.select) {
-        filterValue = (filterValue && fuzzySearch(filterValue.toLowerCase(), this.urlService.select.filter.toLowerCase())) ? filterValue : this.urlService.select.filter;
         this.selectedSandboxAndScenarioKeys = {
           sandboxKey: this.urlService.select.sandboxKey,
           scenarioKey: this.urlService.select.scenarioKey
@@ -1093,6 +1091,7 @@ export class AppComponent {
         () => {
           this.toggleCommandBar();
         });
+      let filterValue = this.stateService.getFilter();
       this.totalSandboxes = sandboxMenuItems.length;
       this.filteredSandboxMenuItems = this.filterSandboxes(sandboxMenuItems, filterValue);
       this.filter.setValue(filterValue);

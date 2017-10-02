@@ -46,21 +46,21 @@ export class UrlService {
       let value = match[1];
       let firstSlash = value.indexOf('/');
 
-      let filter = value.substr(0, firstSlash);
-      let sandboxKey = decodeURIComponent(filter);
+      let sbKey = value.substr(0, firstSlash);
+      let sandboxKey = decodeURIComponent(sbKey);
       let sandboxMenuItem = sandboxMenuItems
         .find(smi => smi.key.toLowerCase() === sandboxKey.toLowerCase());
       if (!sandboxMenuItem) {
-        return {filter, sandboxKey: null, scenarioKey: null};
+        return {sandboxKey: null, scenarioKey: null};
       }
       let scenarioDesc = decodeURIComponent(value.substr(firstSlash + 1, value.length).toLowerCase());
       let scenarioKey = sandboxMenuItem.scenarioMenuItems
           .findIndex(scenarioMenuItem => scenarioMenuItem.description.toLowerCase() === scenarioDesc) + 1;
       if (scenarioKey <= 0) {
-        return {filter, sandboxKey: null, scenarioKey: null};
+        return {sandboxKey: null, scenarioKey: null};
       }
 
-      return {filter, sandboxKey, scenarioKey};
+      return {sandboxKey, scenarioKey};
     }
   }
 }
