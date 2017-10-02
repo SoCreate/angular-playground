@@ -1,3 +1,19 @@
+<a name="2.1.0"></a>
+# 2.1.0 (2017-10-02)
+
+### Features
+* **menu bar navigation:** Add new preview feature to show scenarios when holding the alt key and using the up and down arrow keys
+  ([1e34464](https://github.com/SoCreate/angular-playground/commit/1e34464)) 
+* **search:** Change fuzzy search to improve accuracy of search results
+  ([6e8c57f](https://github.com/SoCreate/angular-playground/commit/6e8c57f)) 
+
+### Fixes
+* **menu bar navigation:** Change moving up or down in the menu with arrow keys when 
+scenario is selected to go right to the previous or next item
+  ([53ceed4](https://github.com/SoCreate/angular-playground/commit/53ceed4)) 
+* **embedding:** Fix issue with filter filled out with key path when using url in new browser tab
+  ([c37649c](https://github.com/SoCreate/angular-playground/commit/c37649c)) 
+
 <a name="2.0.4"></a>
 # 2.0.4 (2017-09-29)
 
