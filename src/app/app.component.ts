@@ -47,7 +47,7 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       padding-top: 10px;
       position: absolute;
       transform: translate(-50%, -120%);
-      transition: transform ease 100ms;
+      transition: transform ease 100ms, opacity ease 100ms;
       width: 376px;
       z-index: 9999999999999;
     }
@@ -64,6 +64,10 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
     .command-bar--open {
       min-height: 60px;
       transform: translate(-50%, 0);
+    }
+
+    .command-bar--preview {
+      opacity: .7;
     }
 
     .command-bar__filter {
@@ -269,7 +273,11 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
   `],
   template: `
     <div class="shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
-    <div class="command-bar" *ngIf="filteredSandboxMenuItems" [class.command-bar--open]="commandBarActive">
+    <div class="command-bar" *ngIf="filteredSandboxMenuItems"
+      (keydown.alt)="onCommandBarStartPreview($event)"
+      (keyup.alt)="onCommandBarStopPreview()"
+      [class.command-bar--open]="commandBarActive"
+      [class.command-bar--preview]="commandBarPreview">
       <input
         class="command-bar__filter"
         type="text"
@@ -1043,6 +1051,7 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
 })
 export class AppComponent {
   commandBarActive = false;
+  commandBarPreview = false;
   totalSandboxes: number;
   filteredSandboxMenuItems: SandboxMenuItem[];
   selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = {sandboxKey: null, scenarioKey: null};
@@ -1069,8 +1078,8 @@ export class AppComponent {
       }
       this.eventManager.addGlobalEventListener('window',
         'keydown.control.o',
-        (e: any) => {
-          e.preventDefault();
+        (event: any) => {
+          event.preventDefault();
         });
       this.eventManager.addGlobalEventListener('window',
         'keyup.control.o',
@@ -1079,8 +1088,8 @@ export class AppComponent {
         });
       this.eventManager.addGlobalEventListener('window',
         'keydown.F1',
-        (e: any) => {
-          e.preventDefault();
+        (event: any) => {
+          event.preventDefault();
         });
       this.eventManager.addGlobalEventListener('window',
         'keyup.F1',
@@ -1180,8 +1189,17 @@ export class AppComponent {
     }
   }
 
-  onScenarioClick(sandboxKey: string, scenarioKey: number, e: any) {
-    e.preventDefault();
+  onCommandBarStartPreview(event: any) {
+    event.preventDefault();
+    this.commandBarPreview = true;
+  }
+
+  onCommandBarStopPreview() {
+    this.commandBarPreview = false;
+  }
+
+  onScenarioClick(sandboxKey: string, scenarioKey: number, event: any) {
+    event.preventDefault();
     this.selectScenario(sandboxKey, scenarioKey);
   }
 
