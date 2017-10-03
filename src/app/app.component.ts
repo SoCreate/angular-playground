@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from './shared/app-state';
 import { SANDBOX_MENU_ITEMS } from './shared/tokens';
@@ -288,12 +288,8 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
              *ngFor="let sandboxMenuItem of filteredSandboxMenuItems; index as menuItemIndex">
           <h2 class="command-bar__title" title="{{sandboxMenuItem.label}} {{sandboxMenuItem.name}}"
               [class.command-bar__sandbox-title--selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandboxMenuItem.key">
-            <span class="command-bar__name">
-              {{sandboxMenuItem.name}}
-            </span>
-            <span class="command-bar__label" *ngIf="sandboxMenuItem.label">
-              {{sandboxMenuItem.label}}
-            </span>
+            <span class="command-bar__name" [innerHtml]="sandboxMenuItem.name | apHighlightSearchMatch : sandboxMenuItem.indexMatches"></span>
+            <span class="command-bar__label" *ngIf="sandboxMenuItem.label" [innerHtml]="sandboxMenuItem.label | apHighlightSearchMatch : sandboxMenuItem.indexMatches : sandboxMenuItem.name.length"></span>
           </h2>
           <div class="command-bar__scenarios"
                *ngFor="let scenarioMenuItem of sandboxMenuItem.scenarioMenuItems; index as scenarioMenuItemIndex">
@@ -1266,9 +1262,10 @@ export class AppComponent {
     return sandboxMenuItems
       .reduce((accum, curr) => {
         let searchKeyNormalized = curr.searchKey.toLowerCase();
-        if (fuzzySearch(filterNormalized, searchKeyNormalized)) {
+        let indexMatches = fuzzySearch(filterNormalized, searchKeyNormalized);
+        if (indexMatches) {
           let weight = this.levenshteinDistance.getDistance(filterNormalized, searchKeyNormalized);
-          return [...accum, Object.assign({}, curr, {weight})];
+          return [...accum, Object.assign({}, curr, {weight, indexMatches})];
         } else {
           return accum;
         }

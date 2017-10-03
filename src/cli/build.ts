@@ -29,7 +29,7 @@ export const build = (rootPath) => {
       let label = labelText ? labelText[1] : '';
       sandboxes.push({
         key: sandboxPath,
-        searchKey: `${label}${typeName}`,
+        searchKey: `${typeName}${label}`,
         name: typeName,
         label: label,
         scenarioMenuItems
