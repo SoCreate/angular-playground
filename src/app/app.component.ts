@@ -47,7 +47,7 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       padding-top: 10px;
       position: absolute;
       transform: translate(-50%, -120%);
-      transition: transform ease 100ms;
+      transition: transform ease 100ms, background-color ease 100ms, box-shadow ease 100ms;
       width: 376px;
       z-index: 9999999999999;
     }
@@ -67,7 +67,8 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
     }
 
     .command-bar--preview {
-      background: rgba(37, 37, 38, 0.8);
+      background-color: rgba(37, 37, 38, .8);
+      box-shadow: 0 3px 8px 5px rgba(0, 0, 0, .8);
     }
 
     .command-bar__filter {
@@ -274,7 +275,7 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
   template: `
     <div class="shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
     <div class="command-bar" *ngIf="filteredSandboxMenuItems"
-      (keydown.alt)="onCommandBarStartPreview()"
+      (keydown.alt)="onCommandBarStartPreview($event)"
       (keyup.alt)="onCommandBarStopPreview()"
       [class.command-bar--open]="commandBarActive"
       [class.command-bar--preview]="commandBarPreview">
@@ -1082,8 +1083,8 @@ export class AppComponent {
       }
       this.eventManager.addGlobalEventListener('window',
         'keydown.control.o',
-        (e: any) => {
-          e.preventDefault();
+        (event: any) => {
+          event.preventDefault();
         });
       this.eventManager.addGlobalEventListener('window',
         'keyup.control.o',
@@ -1092,8 +1093,8 @@ export class AppComponent {
         });
       this.eventManager.addGlobalEventListener('window',
         'keydown.F1',
-        (e: any) => {
-          e.preventDefault();
+        (event: any) => {
+          event.preventDefault();
         });
       this.eventManager.addGlobalEventListener('window',
         'keyup.F1',
@@ -1193,7 +1194,7 @@ export class AppComponent {
     }
   }
 
-  onCommandBarStartPreview() {
+  onCommandBarStartPreview(event: any) {
     event.preventDefault();
     this.commandBarPreview = true;
   }
@@ -1202,8 +1203,8 @@ export class AppComponent {
     this.commandBarPreview = false;
   }
 
-  onScenarioClick(sandboxKey: string, scenarioKey: number, e: any) {
-    e.preventDefault();
+  onScenarioClick(sandboxKey: string, scenarioKey: number, event: any) {
+    event.preventDefault();
     this.selectScenario(sandboxKey, scenarioKey);
   }
 
