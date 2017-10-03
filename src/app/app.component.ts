@@ -273,43 +273,46 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       color: #666;
     }
 
-    .content__items {
-      border: solid 1px #ccc;
-      border-bottom: 0;
-      width: 450px;
-      margin-top: 2em;
+    .content__none-message p {
+      font-size: 20px;
     }
 
-    .content__item {
-      border-bottom: solid 1px #ccc;
+    .content__shortcuts {
+      border-top: solid 1px #ccc;
+      margin-top: 2em;
+      padding: 30px 0 0 100px;
+      width: 520px;
+    }
+
+    .content__shortcut {
       display: flex;
     }
 
-    .content__item-label {
+    .content__shortcut-label {
       align-items: center;
-      border-right: solid 1px #ccc;
       display: flex;
       font-size: 11px;
       justify-content: flex-end;
-      max-width: 100px;
-      min-width: 100px;
-      padding: 16px;
+      max-width: 150px;
+      min-width: 150px;
+      padding: 8px 12px 8px 0;
+      white-space: nowrap;
     }
 
-    .content__item-label code {
+    .content__shortcut-label code {
       background: #eee;
       border: solid 1px #ccc;
       border-radius: 4px;
       padding: 3px 7px;
     }
 
-    .content__item-value {
+    .content__shortcut-value {
       align-items: center;
       display: flex;
       font-size: 11px;
       line-height: 1.75;
-      padding: 13px;
       text-align: left;
+      white-space: nowrap;
     }
 
   `],
@@ -1080,88 +1083,21 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
           <p *ngIf="totalSandboxes === 0">
             The playground does not have any sandboxed components
           </p>
-          <div class="content__items">
-            <div class="content__item">
-              <div class="content__item-label">
+          <div class="content__shortcuts">
+          <div class="content__shortcut" *ngFor="let shortcut of shortcuts">
+            <div class="content__shortcut-label">
+              <ng-container *ngFor="let key of shortcut.keys; let i = index">
                 <code>
-                ctrl + o
+                  {{key}}
                 </code>
-              </div>
-              <div class="content__item-value">
-                Toggle command bar open/closed
-              </div>
+                <ng-container *ngIf="shortcut.keys.length > 1 && i < shortcut.keys.length - 1">&nbsp;&nbsp;/&nbsp;&nbsp;</ng-container>
+              </ng-container>
             </div>
-            <div class="content__item">
-              <div class="content__item-label">
-                <code>
-                f1
-                </code>
-              </div>
-              <div class="content__item-value">
-                Toggle command bar open/closed
-              </div>
-            </div>
-            <div class="content__item">
-              <div class="content__item-label">
-                <code>
-                esc
-                </code>
-              </div>
-              <div class="content__item-value">
-                Close command bar
-              </div>
-            </div>
-            <div class="content__item">
-              <div class="content__item-label">
-                <code>
-                &darr;
-                </code>
-              </div>
-              <div class="content__item-value">
-                Navigate down in command bar list
-              </div>
-            </div>
-            <div class="content__item">
-              <div class="content__item-label">
-                <code>
-                &uarr;
-                </code>
-              </div>
-              <div class="content__item-value">
-                Navigate up in command bar list
-              </div>
-            </div>
-            <div class="content__item">
-              <div class="content__item-label">
-                <code>
-                alt + &darr;
-                </code>
-              </div>
-              <div class="content__item-value">
-                Toggle scenarios while navigating down in command bar list
-              </div>
-            </div>
-            <div class="content__item">
-              <div class="content__item-label">
-                <code>
-                alt + &uarr;
-                </code>
-              </div>
-              <div class="content__item-value">
-                Toggle scenarios while navigating up in command bar list
-              </div>
-            </div>
-            <div class="content__item">
-              <div class="content__item-label">
-                <code>
-                alt + f1
-                </code>
-              </div>
-              <div class="content__item-value">
-                Toggle shortcuts list
-              </div>
+            <div class="content__shortcut-value">
+              {{shortcut.description}}
             </div>
           </div>
+        </div>
         </div>
       </div>
       <ng-container *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
@@ -1177,6 +1113,7 @@ export class AppComponent {
   filteredSandboxMenuItems: SandboxMenuItem[];
   selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = {sandboxKey: null, scenarioKey: null};
   filter = new FormControl();
+  shortcuts = this.getShortcuts();
   @ViewChildren('scenarioElement') scenarioLinkElements: QueryList<ElementRef>;
 
   constructor(@Inject(SANDBOX_MENU_ITEMS) sandboxMenuItems: SandboxMenuItem[],
@@ -1422,5 +1359,26 @@ export class AppComponent {
   private selectScenario(sandboxKey: string, scenarioKey: number) {
     this.selectedSandboxAndScenarioKeys = {sandboxKey, scenarioKey};
     this.urlService.setSelected(sandboxKey, scenarioKey);
+  }
+
+  private getShortcuts() { 
+    return [
+      {
+        keys: ['ctrl + o', 'f1'],
+        description: 'Toggle command bar open/closed',
+      },
+      {
+        keys: ['esc'],
+        description: 'Close command bar',
+      },
+      {
+        keys: ['\u2191', '\u2193'],
+        description: 'Navigate up or down in command bar list',
+      },
+      {
+        keys: ['alt + \u2191', 'alt + \u2193'],
+        description: 'Switch scenarios while navigating up or down in command bar list',
+      }
+    ];
   }
 }
