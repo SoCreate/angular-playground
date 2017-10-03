@@ -47,7 +47,7 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       padding-top: 10px;
       position: absolute;
       transform: translate(-50%, -120%);
-      transition: transform ease 100ms, background-color ease 100ms, box-shadow ease 100ms;
+      transition: transform ease 100ms, opacity ease 100ms;
       width: 376px;
       z-index: 9999999999999;
     }
@@ -67,8 +67,7 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
     }
 
     .command-bar--preview {
-      background-color: rgba(37, 37, 38, .8);
-      box-shadow: 0 3px 8px 5px rgba(0, 0, 0, .8);
+      opacity: .7;
     }
 
     .command-bar__filter {
