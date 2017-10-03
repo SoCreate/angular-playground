@@ -66,6 +66,10 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       transform: translate(-50%, 0);
     }
 
+    .command-bar--preview {
+      background: rgba(37, 37, 38, 0.8);
+    }
+
     .command-bar__filter {
       background-color: #3c3c3c;
       border: 1px solid #174a6c;
@@ -269,7 +273,11 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
   `],
   template: `
     <div class="shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
-    <div class="command-bar" *ngIf="filteredSandboxMenuItems" [class.command-bar--open]="commandBarActive">
+    <div class="command-bar" *ngIf="filteredSandboxMenuItems"
+      (keydown.alt)="onCommandBarStartPreview()"
+      (keyup.alt)="onCommandBarStopPreview()"
+      [class.command-bar--open]="commandBarActive"
+      [class.command-bar--preview]="commandBarPreview">
       <input
         class="command-bar__filter"
         type="text"
@@ -1047,6 +1055,7 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
 })
 export class AppComponent {
   commandBarActive = false;
+  commandBarPreview = false;
   totalSandboxes: number;
   filteredSandboxMenuItems: SandboxMenuItem[];
   selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = {sandboxKey: null, scenarioKey: null};
@@ -1182,6 +1191,15 @@ export class AppComponent {
         scenarioElement.click();
         break;
     }
+  }
+
+  onCommandBarStartPreview() {
+    event.preventDefault();
+    this.commandBarPreview = true;
+  }
+
+  onCommandBarStopPreview() {
+    this.commandBarPreview = false;
   }
 
   onScenarioClick(sandboxKey: string, scenarioKey: number, e: any) {
