@@ -254,20 +254,62 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       align-items: center;
       border: 0;
       display: flex;
-      height: 100vh;
+      min-height: calc(100vh - 4em);
       justify-content: center;
+      padding-top: 2em;
+      padding-bottom: 2em;
       position: relative;
       width: 100%;
     }
 
     .content__none-message {
-      font-family: Consolas, monospace;
+      font-family: Arial, sans-serif;
       max-width: 50%;
+      min-width: 450px;
       text-align: center;
     }
 
     .content__none-message em {
       color: #666;
+    }
+
+    .content__items {
+      border: solid 1px #ccc;
+      border-bottom: 0;
+      width: 450px;
+      margin-top: 2em;
+    }
+
+    .content__item {
+      border-bottom: solid 1px #ccc;
+      display: flex;
+    }
+
+    .content__item-label {
+      align-items: center;
+      border-right: solid 1px #ccc;
+      display: flex;
+      font-size: 11px;
+      justify-content: flex-end;
+      max-width: 100px;
+      min-width: 100px;
+      padding: 16px;
+    }
+
+    .content__item-label code {
+      background: #eee;
+      border: solid 1px #ccc;
+      border-radius: 4px;
+      padding: 3px 7px;
+    }
+
+    .content__item-value {
+      align-items: center;
+      display: flex;
+      font-size: 11px;
+      line-height: 1.75;
+      padding: 13px;
+      text-align: left;
     }
 
   `],
@@ -1033,14 +1075,93 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       <div class="content__none" *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey">
         <div class="content__none-message">
           <p *ngIf="totalSandboxes > 0">
-            The playground has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}}.
+            The playground has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}}
           </p>
           <p *ngIf="totalSandboxes === 0">
-            The playground does not have any sandboxed components.
+            The playground does not have any sandboxed components
           </p>
-          <p>
-            Search sandboxed components: <strong>ctrl + o</strong> <em>or</em> <strong>F1</strong>
-          </p>
+          <div class="content__items">
+            <div class="content__item">
+              <div class="content__item-label">
+                <code>
+                ctrl + o
+                </code>
+              </div>
+              <div class="content__item-value">
+                Toggle command bar open/closed
+              </div>
+            </div>
+            <div class="content__item">
+              <div class="content__item-label">
+                <code>
+                f1
+                </code>
+              </div>
+              <div class="content__item-value">
+                Toggle command bar open/closed
+              </div>
+            </div>
+            <div class="content__item">
+              <div class="content__item-label">
+                <code>
+                esc
+                </code>
+              </div>
+              <div class="content__item-value">
+                Close command bar
+              </div>
+            </div>
+            <div class="content__item">
+              <div class="content__item-label">
+                <code>
+                &darr;
+                </code>
+              </div>
+              <div class="content__item-value">
+                Navigate down in command bar list
+              </div>
+            </div>
+            <div class="content__item">
+              <div class="content__item-label">
+                <code>
+                &uarr;
+                </code>
+              </div>
+              <div class="content__item-value">
+                Navigate up in command bar list
+              </div>
+            </div>
+            <div class="content__item">
+              <div class="content__item-label">
+                <code>
+                alt + &darr;
+                </code>
+              </div>
+              <div class="content__item-value">
+                Toggle scenarios while navigating down in command bar list
+              </div>
+            </div>
+            <div class="content__item">
+              <div class="content__item-label">
+                <code>
+                alt + &uarr;
+                </code>
+              </div>
+              <div class="content__item-value">
+                Toggle scenarios while navigating up in command bar list
+              </div>
+            </div>
+            <div class="content__item">
+              <div class="content__item-label">
+                <code>
+                alt + f1
+                </code>
+              </div>
+              <div class="content__item-value">
+                Toggle shortcuts list
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <ng-container *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
