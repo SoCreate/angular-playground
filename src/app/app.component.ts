@@ -146,6 +146,12 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       padding: 5px 0 0;
     }
 
+    .command-bar__title ::ng-deep mark {
+      background: transparent;
+      color: #0097fb;
+      font-weight: bold;
+    }
+
     .command-bar__name {
       max-width: 100%;
       overflow: hidden;
