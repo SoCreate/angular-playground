@@ -103,6 +103,22 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       position: relative;
     }
 
+    .command-bar__sandboxes::-webkit-scrollbar {
+      background-color: transparent;
+      width: 6px;
+    }
+
+    .command-bar__sandboxes::-webkit-scrollbar-track {
+      border-left: solid 1px black;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .command-bar__sandboxes::-webkit-scrollbar-thumb  {
+      background-color: rgba(255, 255, 255, 0.1);
+      margin-left: 2px;
+      width: 4px;
+    }
+
     .command-bar__sandbox {
       border-bottom: solid 1px black;
       border-top: solid 1px rgba(255, 255, 255, .1);
@@ -128,6 +144,12 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       justify-content: space-between;
       margin: 0 0 5px;
       padding: 5px 0 0;
+    }
+
+    .command-bar__title ::ng-deep mark {
+      background: transparent;
+      color: #0097fb;
+      font-weight: bold;
     }
 
     .command-bar__name {
@@ -254,20 +276,65 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       align-items: center;
       border: 0;
       display: flex;
-      height: 100vh;
+      min-height: calc(100vh - 4em);
       justify-content: center;
+      padding-top: 2em;
+      padding-bottom: 2em;
       position: relative;
       width: 100%;
     }
 
     .content__none-message {
-      font-family: Consolas, monospace;
+      font-family: Arial, sans-serif;
       max-width: 50%;
+      min-width: 450px;
       text-align: center;
     }
 
     .content__none-message em {
       color: #666;
+    }
+
+    .content__none-message p {
+      font-size: 20px;
+    }
+
+    .content__shortcuts {
+      border-top: solid 1px #ccc;
+      margin-top: 2em;
+      padding: 30px 0 0 100px;
+      width: 520px;
+    }
+
+    .content__shortcut {
+      display: flex;
+    }
+
+    .content__shortcut-label {
+      align-items: center;
+      display: flex;
+      font-size: 11px;
+      justify-content: flex-end;
+      max-width: 150px;
+      min-width: 150px;
+      padding: 8px 12px 8px 0;
+      white-space: nowrap;
+    }
+
+    .content__shortcut-label code {
+      background: #eee;
+      border: solid 1px #ccc;
+      border-radius: 4px;
+      padding: 3px 7px;
+    }
+
+    .content__shortcut-value {
+      align-items: center;
+      display: flex;
+      font-size: 11px;
+      line-height: 1.75;
+      text-align: left;
+      white-space: nowrap;
     }
 
   `],
@@ -1033,14 +1100,26 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       <div class="content__none" *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey">
         <div class="content__none-message">
           <p *ngIf="totalSandboxes > 0">
-            The playground has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}}.
+            The playground has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}}
           </p>
           <p *ngIf="totalSandboxes === 0">
-            The playground does not have any sandboxed components.
+            The playground does not have any sandboxed components
           </p>
-          <p>
-            Search sandboxed components: <strong>ctrl + o</strong> <em>or</em> <strong>F1</strong>
-          </p>
+          <div class="content__shortcuts">
+          <div class="content__shortcut" *ngFor="let shortcut of shortcuts">
+            <div class="content__shortcut-label">
+              <ng-container *ngFor="let key of shortcut.keys; let i = index">
+                <code>
+                  {{key}}
+                </code>
+                <ng-container *ngIf="shortcut.keys.length > 1 && i < shortcut.keys.length - 1">&nbsp;&nbsp;/&nbsp;&nbsp;</ng-container>
+              </ng-container>
+            </div>
+            <div class="content__shortcut-value">
+              {{shortcut.description}}
+            </div>
+          </div>
+        </div>
         </div>
       </div>
       <ng-container *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
@@ -1056,6 +1135,7 @@ export class AppComponent {
   filteredSandboxMenuItems: SandboxMenuItem[];
   selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = {sandboxKey: null, scenarioKey: null};
   filter = new FormControl();
+  shortcuts = this.getShortcuts();
   @ViewChildren('scenarioElement') scenarioLinkElements: QueryList<ElementRef>;
 
   constructor(@Inject(SANDBOX_MENU_ITEMS) sandboxMenuItems: SandboxMenuItem[],
@@ -1301,5 +1381,26 @@ export class AppComponent {
   private selectScenario(sandboxKey: string, scenarioKey: number) {
     this.selectedSandboxAndScenarioKeys = {sandboxKey, scenarioKey};
     this.urlService.setSelected(sandboxKey, scenarioKey);
+  }
+
+  private getShortcuts() { 
+    return [
+      {
+        keys: ['ctrl + o', 'f1'],
+        description: 'Toggle command bar open/closed',
+      },
+      {
+        keys: ['esc'],
+        description: 'Close command bar',
+      },
+      {
+        keys: ['\u2191', '\u2193'],
+        description: 'Navigate up or down in command bar list',
+      },
+      {
+        keys: ['alt + \u2191', 'alt + \u2193'],
+        description: 'Switch scenarios while navigating up or down in command bar list',
+      }
+    ];
   }
 }
