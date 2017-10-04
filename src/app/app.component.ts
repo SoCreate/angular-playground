@@ -103,6 +103,22 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
       position: relative;
     }
 
+    .command-bar__sandboxes::-webkit-scrollbar {
+      background-color: transparent;
+      width: 6px;
+    }
+
+    .command-bar__sandboxes::-webkit-scrollbar-track {
+      border-left: solid 1px black;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .command-bar__sandboxes::-webkit-scrollbar-thumb  {
+      background-color: rgba(255, 255, 255, 0.1);
+      margin-left: 2px;
+      width: 4px;
+    }
+
     .command-bar__sandbox {
       border-bottom: solid 1px black;
       border-top: solid 1px rgba(255, 255, 255, .1);
