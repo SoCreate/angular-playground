@@ -8,6 +8,8 @@ import { loadSandboxMenuItems, sandboxLoaderFactory } from './load-sandboxes';
 import { FocusDirective } from './shared/focus.directive';
 import { UrlService } from './shared/url.service';
 import { AppComponent } from './app.component';
+import { LevenshteinDistance } from './shared/levenshtein-distance';
+import { HighlightSearchMatchPipe } from './shared/highlight-search-match.pipe';
 
 declare let require: any;
 
@@ -22,9 +24,10 @@ declare let require: any;
     {provide: SANDBOX_MENU_ITEMS, useFactory: loadSandboxMenuItems},
     {provide: SANDBOX_LOADER, useFactory: sandboxLoaderFactory},
     StateService,
-    UrlService
+    UrlService,
+    LevenshteinDistance
   ],
-  declarations: [AppComponent, ScenarioComponent, FocusDirective],
+  declarations: [AppComponent, ScenarioComponent, FocusDirective, HighlightSearchMatchPipe],
   exports: [AppComponent]
 })
 export class PlaygroundCommonModule {
