@@ -13,7 +13,7 @@
   "scripts": {
     "ngc": "ngc",
     "clean": "node ./scripts/clean.js",
-    "build": "npm run clean && npm run app:build && npm run cli:build",
+    "build": "npm run app:build && npm run cli:build",
     "app:build": "gulp build",
     "cli:build": "tsc -p ./src/cli/tsconfig.json",
     "prepublish": "npm run build"
