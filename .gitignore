@@ -2,6 +2,7 @@
 
 # compiled output
 /dist/
+/build/
 /src/**/*.ngfactory.ts
 *.ngsummary.json
 
