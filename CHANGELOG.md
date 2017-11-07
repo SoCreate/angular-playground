@@ -1,3 +1,25 @@
+<a name="2.2.0"></a>
+# 2.2.0 (2017-10-08)
+
+### Features
+* **style:** Add styles for scrollbar in chrome
+  ([c6a406f](https://github.com/SoCreate/angular-playground/commit/c6a406f))
+* **style:** Change style of shortcuts on home page
+  ([c61044d](https://github.com/SoCreate/angular-playground/commit/c61044d))
+* **style:** Add shortcuts list to initial view
+  ([686e87d](https://github.com/SoCreate/angular-playground/commit/686e87d))
+* **style:** Add style for highlighted search terms
+  ([6d2224c](https://github.com/SoCreate/angular-playground/commit/6d2224c))
+* **search:** Add highlight feature to the search to show which fuzzy characters have matched
+  ([134940c](https://github.com/SoCreate/angular-playground/commit/134940c))
+* **style:** Reduce opacity on entire command bar in preview mode instead of just the background
+  ([8de2840](https://github.com/SoCreate/angular-playground/commit/8de2840))
+* **style:** Pass through proper keydown event and adjust styles on the command bar preview mode
+  ([213a854](https://github.com/SoCreate/angular-playground/commit/213a854))
+* **style:** Add transparency to command bar when holding the alt key
+  ([d505810](https://github.com/SoCreate/angular-playground/commit/d505810))
+
+
 <a name="2.1.0"></a>
 # 2.1.0 (2017-10-02)
 
