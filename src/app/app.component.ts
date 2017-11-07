@@ -43,26 +43,20 @@ export class AppComponent {
           scenarioKey: this.urlService.select.scenarioKey
         };
       }
-      this.eventManager.addGlobalEventListener('window',
-        'keydown.control.o',
-        (event: any) => {
-          event.preventDefault();
-        });
-      this.eventManager.addGlobalEventListener('window',
-        'keyup.control.o',
-        () => {
+
+      this.eventManager.addGlobalEventListener('window', 'keydown.control.p', this.blockEvent);
+      this.eventManager.addGlobalEventListener('window', 'keydown.F2', this.blockEvent);
+
+      this.eventManager.addGlobalEventListener('window', 'keyup.control.p', (event: KeyboardEvent) => {
+          this.blockEvent(event);
           this.toggleCommandBar();
         });
-      this.eventManager.addGlobalEventListener('window',
-        'keydown.F1',
-        (event: any) => {
-          event.preventDefault();
-        });
-      this.eventManager.addGlobalEventListener('window',
-        'keyup.F1',
-        () => {
+
+      this.eventManager.addGlobalEventListener('window', 'keyup.F2', (event: KeyboardEvent) => {
+          this.blockEvent(event);
           this.toggleCommandBar();
         });
+
       let filterValue = this.stateService.getFilter();
       this.totalSandboxes = sandboxMenuItems.length;
       this.filteredSandboxMenuItems = this.filterSandboxes(sandboxMenuItems, filterValue);
@@ -175,6 +169,11 @@ export class AppComponent {
       && this.selectedSandboxAndScenarioKeys.sandboxKey.toLowerCase() === sandbox.key.toLowerCase();
   }
 
+  private blockEvent(e: KeyboardEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
   private showScenario(selectedScenarioElementRef: ElementRef) {
     if (selectedScenarioElementRef) {
       this.selectScenario(
@@ -270,10 +269,10 @@ export class AppComponent {
     this.urlService.setSelected(sandboxKey, scenarioKey);
   }
 
-  private getShortcuts() { 
+  private getShortcuts() {
     return [
       {
-        keys: ['ctrl + o', 'f1'],
+        keys: ['ctrl + p', 'f2'],
         description: 'Toggle command bar open/closed',
       },
       {
