@@ -18,7 +18,7 @@ gulp.task('inline', ['clean'], () => {
         .pipe(gulp.dest('./build'));
 });
 
-gulp.task('aot', (cb) => {
+gulp.task('aot', ['inline'], (cb) => {
     exec('ngc -p ./tsconfig.json', (err, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
@@ -26,4 +26,4 @@ gulp.task('aot', (cb) => {
     });
 });
 
-gulp.task('build', ['inline', 'aot']);
+gulp.task('build', ['aot']);
