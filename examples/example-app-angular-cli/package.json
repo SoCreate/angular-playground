@@ -8,6 +8,7 @@
     "playground:copy": "node ../../scripts/copy.js",
     "playground:run": "node ./node_modules/angular-playground/dist/bin/cli.js",
     "playground": "npm run playground:copy && npm run playground:run",
+    "playground:dev": "npm run build --prefix ../../ && npm run playground",
     "playground2:run": "node ./node_modules/angular-playground/dist/bin/cli.js angular-playground2.json",
     "cli": "ts-node --project ../../src/cli ../../src/cli/cli.ts",
     "cli:build": "ts-node --project ../../src/cli ../../src/cli/cli.ts -no-watch -no-serve",
