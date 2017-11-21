@@ -1,6 +1,6 @@
 {
   "name": "angular-playground",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -35,12 +35,12 @@
   },
   "homepage": "http://www.angularplayground.it",
   "peerDependencies": {
-    "@angular/common": ">=4.2.0 || >=5.0.0-beta.0",
-    "@angular/compiler": ">=4.2.0 || >=5.0.0-beta.0",
-    "@angular/core": ">=4.2.0 || >=5.0.0-beta.0",
-    "@angular/forms": ">=4.2.0 || >=5.0.0-beta.0",
-    "@angular/platform-browser": ">=4.2.0 || >=5.0.0-beta.0",
-    "@angular/platform-browser-dynamic": ">=4.2.0 || >=5.0.0-beta.0",
+    "@angular/common": ">=4.2.0 || >=5.0.0",
+    "@angular/compiler": ">=4.2.0 || >=5.0.0",
+    "@angular/core": ">=4.2.0 || >=5.0.0",
+    "@angular/forms": ">=4.2.0 || >=5.0.0",
+    "@angular/platform-browser": ">=4.2.0 || >=5.0.0",
+    "@angular/platform-browser-dynamic": ">=4.2.0 || >=5.0.0",
     "rxjs": ">=5.4.2",
     "zone.js": ">=0.8.14"
   },
@@ -48,13 +48,13 @@
     "node-watch": "^0.4.1"
   },
   "devDependencies": {
-    "@angular/common": "4.2.4",
-    "@angular/compiler": "4.2.4",
-    "@angular/compiler-cli": "4.2.4",
-    "@angular/core": "4.2.4",
-    "@angular/forms": "4.2.4",
-    "@angular/platform-browser": "4.2.4",
-    "@angular/platform-browser-dynamic": "4.2.4",
+    "@angular/common": "^5.0.0",
+    "@angular/compiler": "^5.0.0",
+    "@angular/compiler-cli": "^5.0.0",
+    "@angular/core": "^5.0.0",
+    "@angular/forms": "^5.0.0",
+    "@angular/platform-browser": "^5.0.0",
+    "@angular/platform-browser-dynamic": "^5.0.0",
     "@types/node": "6.0.60",
     "codelyzer": "3.0.1",
     "copyfiles": "^1.2.0",
@@ -62,9 +62,9 @@
     "glob": "^7.1.2",
     "gulp": "^3.9.1",
     "gulp-inline-ng2-template": "^4.0.0",
-    "rxjs": "5.1.0",
+    "rxjs": "^5.5.2",
     "tslint": "5.3.2",
-    "typescript": "2.3.3",
+    "typescript": "2.4.2",
     "zone.js": "0.8.4"
   }
 }

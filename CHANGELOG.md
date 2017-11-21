@@ -1,3 +1,13 @@
+<a name="2.3.0"></a>
+# 2.3.0 (2017-11-13)
+
+### Features
+* **keyboard shortcuts:** Change dropdown keybindings to f2 and ctrl+p
+  ([8b8dd84](https://github.com/SoCreate/angular-playground/commit/8b8dd84))
+* **update angular:** Update to 5.0.0 release
+  ([841984b](https://github.com/SoCreate/angular-playground/commit/841984b))
+
+
 <a name="2.2.0"></a>
 # 2.2.0 (2017-10-08)
 
