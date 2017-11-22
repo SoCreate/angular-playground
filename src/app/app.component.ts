@@ -239,10 +239,12 @@ export class AppComponent {
 
   private filterSandboxes(sandboxMenuItems: SandboxMenuItem[], filter: string) {
     if (!filter) {
-      return [];
+      return sandboxMenuItems.map((item, i) => Object.assign({}, item, { tabIndex: i }));
     }
+
     let tabIndex = 0;
     let filterNormalized = filter.toLowerCase();
+
     return sandboxMenuItems
       .reduce((accum, curr) => {
         let searchKeyNormalized = curr.searchKey.toLowerCase();
