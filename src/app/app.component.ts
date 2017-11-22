@@ -239,10 +239,6 @@ export class AppComponent {
 
   private filterSandboxes(sandboxMenuItems: SandboxMenuItem[], filter: string) {
     if (!filter) {
-      return [];
-    }
-
-    if (filter === '*') {
       return sandboxMenuItems.map((item, i) => Object.assign({}, item, { tabIndex: i }));
     }
 

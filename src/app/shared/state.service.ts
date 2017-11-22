@@ -14,8 +14,7 @@ export class StateService {
   }
 
   getFilter() {
-    // Asterisk to list all results by default
-    return this.filter ? this.filter : '*';
+    return this.filter;
   }
 
   setFilter(value: string) {
