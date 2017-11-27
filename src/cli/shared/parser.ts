@@ -8,7 +8,7 @@ export function getParsedArguments(supportedFlags: string[], args: string[])
     const flags: string[] = [];
 
     args = args.reduce((accr, value) => {
-        const flag = getArgumentValue(value);
+        const flag = getFlag(value);
         supportedFlags.indexOf(flag) > -1 ? flags.push(value) : accr.push(value);
         return accr;
     }, []);
@@ -21,6 +21,6 @@ export function getParsedArguments(supportedFlags: string[], args: string[])
  * e.g. --path=./src/
  * @param argument - Flag argument
  */
-export function getArgumentValue(argument: string): string {
+function getFlag(argument: string): string {
     return argument.split('=')[0];
 }

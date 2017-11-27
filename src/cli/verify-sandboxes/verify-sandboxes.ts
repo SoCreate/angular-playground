@@ -1,13 +1,26 @@
 import * as puppeteer from 'puppeteer';
 import * as process from 'process';
-import { getParsedArguments, getArgumentValue } from '../shared/parser';
+import * as path from 'path';
+import { getParsedArguments } from '../shared/parser';
 
-// TODO: Update Docs!
+// TODO: Update usage documentation
+// TODO: Doc comments
+
+interface ScenarioSummary {
+    url: string;
+    name: string;
+    description: string;
+}
 
 class Configuration {
+    public chromeArguments = [
+        '--disable-gpu',
+        '--no-sandbox'
+    ];
+
     constructor (
-        public path: string,
-        public build: boolean,
+        public sandboxPath: string,
+        public buildMode: boolean,
         public port: number,
     ) {}
 
@@ -21,11 +34,6 @@ const supportedFlages = ['--path', '--build', '--port'];
 const parameters = process.argv;
 const parsedArguments = getParsedArguments(supportedFlages, parameters);
 
-const chromeArguments = [
-    '--disable-gpu',
-    '--no-sandbox'
-];
-
 let browser: any;
 let currentScenario = '';
 
@@ -34,52 +42,13 @@ process.on('unhandledRejection', () => {
     if (browser) browser.close();
 });
 
-
-// const cmd_args = process.argv.filter(arg => arg.includes('--'));
-// const sandboxesPath = cmd_args[0].substring('--path='.length, cmd_args[0].length);
-// const selectRandomScenario = cmd_args[1] === '--build';
-
-
-// const BASE_URL = 'http://localhost:8002/';
-// let currentScenario = '';
-// let browser;
-
-// // Ensure Chromium instances are destroyed
-// process.on('unhandledRejection', () => {
-//     if (browser) {
-//         browser.close();
-//     }
-// });
-
 (async () => {
     const configuration = configure(parsedArguments.flags);
-    // await main();
+    await main(configuration);
 })();
 
 
 /////////////////////////////////
-
-// interface ScenarioSummary {
-//     url: string;
-//     name: string;
-//     description: string;
-// }
-
-// async function main () {
-//     browser = await puppeteer.launch({
-//         headless: true,
-//         handleSIGINT: false,
-//         args
-//     });
-
-//     const scenarios = getSandboxMetadata(selectRandomScenario);
-//     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
-//     for (let i = 0; i < scenarios.length; i++) {
-//         await work(scenarios[i]);
-//     }
-
-//     browser.close();
-// }
 
 function configure(flags: string[]): Configuration {
     const pathArg = flags.find(f => f.includes('--path'));
@@ -90,70 +59,89 @@ function configure(flags: string[]): Configuration {
         process.exit(1);
     }
 
-    const path = getArgumentValue(pathArg);
+    const sandboxLocation = path.join(process.cwd(), getArgumentValue(pathArg));
     const buildMode = flags.indexOf('--build') !== -1;
     const port = portArg ? parseInt(getArgumentValue(portArg), 10) : 8002;
 
-    return new Configuration(path, buildMode, port);
+    return new Configuration(sandboxLocation, buildMode, port);
 }
 
-// function getSandboxMetadata(randomScenario) {
-//     const scenarios: ScenarioSummary[] = [];
+async function main (configuration: Configuration) {
+    browser = await puppeteer.launch({
+        headless: true,
+        handleSIGINT: false,
+        args: configuration.chromeArguments
+    });
 
-//     loadSandboxMenuItems(sandboxesPath).forEach(scenario => {
-//         if (randomScenario) {
-//             // Pick a random scenario for each component
-//             const randomItemKey = getRandomKey(scenario.scenarioMenuItems.length);
-//             scenario.scenarioMenuItems
-//                 .forEach(item => {
-//                     if (item.key === randomItemKey) {
-//                         const url = `${BASE_URL}?scenario=${encodeURIComponent(scenario.key)}/${encodeURIComponent(item.description)}`;
-//                         scenarios.push({ url, name: scenario.key, description: item.description });
-//                     }
-//                 });
-//         } else {
-//             // Grab all scenarios
-//             scenario.scenarioMenuItems
-//                 .forEach(item => {
-//                     const url = `${BASE_URL}?scenario=${encodeURIComponent(scenario.key)}/${encodeURIComponent(item.description)}`;
-//                     scenarios.push({ url, name: scenario.key, description: item.description });
-//                 });
-//         }
-//     });
+    const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.buildMode, configuration.sandboxPath);
+    console.log(`Retrieved ${scenarios.length} scenarios.\n`);
+    for (let i = 0; i < scenarios.length; i++) {
+        await work(scenarios[i]);
+    }
 
-//     return scenarios;
-// }
+    browser.close();
+}
 
-// function loadSandboxMenuItems(path: string) {
-//     try {
-//         return require(path).getSandboxMenuItems();
-//     } catch (err) {
-//         console.error('Failed to load sandboxes.ts file.');
-//         console.error(err);
-//         console.log('Terminating process.');
-//         process.exit(1);
-//     }
-// }
+function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean, path: string): ScenarioSummary[] {
+    const scenarios: ScenarioSummary[] = [];
 
-// async function work (scenario) {
-//     const page = await browser.newPage();
-//     page.on('console', msg => onConsoleErr(msg));
-//     currentScenario = scenario.name;
-//     await page.goto(scenario.url);
-//     console.log(`Checking: ${currentScenario}: ${scenario.description}`);
-//     await page.close();
-// }
+    loadSandboxMenuItems(path).forEach((scenario: any) => {
+        if (selectRandomScenario) {
+            const randomItemKey = getRandomKey(scenario.scenarioMenuItems.length);
+            scenario.scenarioMenuItems
+                .forEach((item: any) => {
+                    if (item.key === randomItemKey) {
+                        const url = `${baseUrl}?scenario=${encodeURIComponent(scenario.key)}/${encodeURIComponent(item.description)}`;
+                        scenarios.push({ url, name: scenario.key, description: item.description });
+                    }
+                });
+        } else {
+            // Grab all scenarios
+            scenario.scenarioMenuItems
+                .forEach((item: any) => {
+                    const url = `${baseUrl}?scenario=${encodeURIComponent(scenario.key)}/${encodeURIComponent(item.description)}`;
+                    scenarios.push({ url, name: scenario.key, description: item.description });
+                });
+        }
+    });
 
-// function onConsoleErr(msg) {
-//     if (msg.type === 'error') {
-//         console.error(`ERROR Found in ${currentScenario}`);
-//         browser.close();
-//         process.exit(1);
-//     }
-// }
+    return scenarios;
+}
 
-// // Returns a random value between 1 and the provided length.
-// // Note: indexing of keys starts at 1, not 0
-// function getRandomKey(menuItemsLength) {
-//     return Math.floor(Math.random() * (menuItemsLength - 1) + 1);
-// }
+function loadSandboxMenuItems(path: string) {
+    try {
+        return require(path).getSandboxMenuItems();
+    } catch (err) {
+        console.error('Failed to load sandboxes.ts file.');
+        console.error(err);
+        console.log('Terminating process.');
+        process.exit(1);
+    }
+}
+
+async function work(scenario: ScenarioSummary) {
+    const page = await browser.newPage();
+    page.on('console', (msg: any) => onConsoleErr(msg));
+    currentScenario = scenario.name;
+    await page.goto(scenario.url);
+    console.log(`Checking: ${currentScenario}: ${scenario.description}`);
+    await page.close();
+}
+
+function onConsoleErr(msg: any) {
+    if (msg.type === 'error') {
+        console.error(`ERROR Found in ${currentScenario}`);
+        browser.close();
+        process.exit(1);
+    }
+}
+
+// Returns a random value between 1 and the provided length.
+// Note: indexing of keys starts at 1, not 0
+function getRandomKey(menuItemsLength: number): number {
+    return Math.floor(Math.random() * (menuItemsLength - 1) + 1);
+}
+
+function getArgumentValue(argument: string) {
+    return argument.split('=')[1];
+}
