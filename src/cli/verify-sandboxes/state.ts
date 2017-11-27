@@ -14,6 +14,7 @@ export class Configuration {
         public sandboxPath: string,
         public buildMode: boolean,
         public port: number,
+        public timeoutAttempts = 20
     ) {}
 
     get baseUrl(): string {

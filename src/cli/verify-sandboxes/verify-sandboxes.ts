@@ -4,9 +4,6 @@ import * as path from 'path';
 import { getParsedArguments } from '../shared/parser';
 import { Configuration, ScenarioSummary, ErrorReporter } from './state';
 
-// TODO: Update usage documentation
-// TODO: Doc comments
-
 // Parse command line input
 const supportedFlages = ['--path', '--build', '--port'];
 const parameters = process.argv;
@@ -46,6 +43,7 @@ function configure(flags: string[]): Configuration {
 }
 
 async function main (configuration: Configuration) {
+    let timeoutAttempts = configuration.timeoutAttempts;
     browser = await puppeteer.launch({
         headless: true,
         handleSIGINT: false,
@@ -55,7 +53,7 @@ async function main (configuration: Configuration) {
     const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.buildMode, configuration.sandboxPath);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
-        await work(scenarios[i]);
+        await openScenarioInNewPage(scenarios[i], configuration.timeoutAttempts);
     }
 
     browser.close();
@@ -69,14 +67,26 @@ async function main (configuration: Configuration) {
 }
 
 /**
- * Creates a Chromium page and navigates to a scenario
+ * Creates a Chromium page and navigates to a scenario (URL)
  * @param scenario - Scenario to visit
  */
-async function work(scenario: ScenarioSummary) {
+async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts: number) {
+    if (timeoutAttempts === 0) {
+        await browser.close();
+        process.exit(1);
+    }
+
     const page = await browser.newPage();
     page.on('console', (msg: any) => onConsoleErr(msg));
     currentScenario = scenario.name;
-    await page.goto(scenario.url);
+
+    try {
+        await page.goto(scenario.url);  await page.goto(scenario.url);
+    } catch (e) {
+        console.log(`Failed to connect. Attempting to Reconnect. (Attempts Remaining ${timeoutAttempts})`);
+        await openScenarioInNewPage(scenario, timeoutAttempts - 1);
+    }
+
     console.log(`Checking: ${currentScenario}: ${scenario.description}`);
     await page.close();
 }
