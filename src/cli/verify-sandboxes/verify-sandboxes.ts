@@ -61,7 +61,7 @@ function configure(flags: string[]): Configuration {
 
     const sandboxLocation = path.join(process.cwd(), getArgumentValue(pathArg));
     const buildMode = flags.indexOf('--build') !== -1;
-    const port = portArg ? parseInt(getArgumentValue(portArg), 10) : 8002;
+    const port = portArg ? parseInt(getArgumentValue(portArg), 10) : 4201;
 
     return new Configuration(sandboxLocation, buildMode, port);
 }
