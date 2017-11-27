@@ -2,32 +2,10 @@ import * as puppeteer from 'puppeteer';
 import * as process from 'process';
 import * as path from 'path';
 import { getParsedArguments } from '../shared/parser';
+import { Configuration, ScenarioSummary, ErrorReporter } from './state';
 
 // TODO: Update usage documentation
 // TODO: Doc comments
-
-interface ScenarioSummary {
-    url: string;
-    name: string;
-    description: string;
-}
-
-class Configuration {
-    public chromeArguments = [
-        '--disable-gpu',
-        '--no-sandbox'
-    ];
-
-    constructor (
-        public sandboxPath: string,
-        public buildMode: boolean,
-        public port: number,
-    ) {}
-
-    get baseUrl(): string {
-        return `http://localhost:${this.port}`;
-    }
-}
 
 // Parse command line input
 const supportedFlages = ['--path', '--build', '--port'];
@@ -36,6 +14,7 @@ const parsedArguments = getParsedArguments(supportedFlages, parameters);
 
 let browser: any;
 let currentScenario = '';
+const reporter = new ErrorReporter();
 
 // Ensure Chromium instances are destroyed on err
 process.on('unhandledRejection', () => {
@@ -80,8 +59,34 @@ async function main (configuration: Configuration) {
     }
 
     browser.close();
+
+    if (reporter.errors.length > 0) {
+        reporter.compileReport();
+        process.exit(1);
+    } else {
+        process.exit(0);
+    }
 }
 
+/**
+ * Creates a Chromium page and navigates to a scenario
+ * @param scenario - Scenario to visit
+ */
+async function work(scenario: ScenarioSummary) {
+    const page = await browser.newPage();
+    page.on('console', (msg: any) => onConsoleErr(msg));
+    currentScenario = scenario.name;
+    await page.goto(scenario.url);
+    console.log(`Checking: ${currentScenario}: ${scenario.description}`);
+    await page.close();
+}
+
+/**
+ * Retrieves Sandbox scenario URLs, descriptions, and names
+ * @param baseUrl - Base URL of scenario path e.g. http://localhost:4201
+ * @param selectRandomScenario - Whether or not to select one random scenario of all availalble scenarios for a component
+ * @param path - Path to sandboxes.ts
+ */
 function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean, path: string): ScenarioSummary[] {
     const scenarios: ScenarioSummary[] = [];
 
@@ -108,7 +113,11 @@ function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean, path
     return scenarios;
 }
 
-function loadSandboxMenuItems(path: string) {
+/**
+ * Attemtp to load sandboxes.ts and provide menu items
+ * @param path - Path to sandboxes.ts
+ */
+function loadSandboxMenuItems(path: string): any[] {
     try {
         return require(path).getSandboxMenuItems();
     } catch (err) {
@@ -119,29 +128,30 @@ function loadSandboxMenuItems(path: string) {
     }
 }
 
-async function work(scenario: ScenarioSummary) {
-    const page = await browser.newPage();
-    page.on('console', (msg: any) => onConsoleErr(msg));
-    currentScenario = scenario.name;
-    await page.goto(scenario.url);
-    console.log(`Checking: ${currentScenario}: ${scenario.description}`);
-    await page.close();
-}
-
+/**
+ * Callback when Chromium page encounters a console error
+ * @param msg - Error message
+ */
 function onConsoleErr(msg: any) {
     if (msg.type === 'error') {
         console.error(`ERROR Found in ${currentScenario}`);
-        browser.close();
-        process.exit(1);
+        reporter.addError(msg, currentScenario);
     }
 }
 
-// Returns a random value between 1 and the provided length.
-// Note: indexing of keys starts at 1, not 0
+/**
+ * Returns a random value between 1 and the provided length.
+ * Note: indexing of keys starts at 1, not 0
+ * @param menuItemsLength - Maximum number of items
+ */
 function getRandomKey(menuItemsLength: number): number {
     return Math.floor(Math.random() * (menuItemsLength - 1) + 1);
 }
 
+/**
+ * Separates value of an argument from its flag
+ * @param argument - Flag with value e.g. --path=./src/
+ */
 function getArgumentValue(argument: string) {
     return argument.split('=')[1];
 }

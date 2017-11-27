@@ -17,7 +17,7 @@
     "app:build": "gulp build",
     "cli:build": "tsc -p ./src/cli/tsconfig.json",
     "prepublish": "npm run build",
-    "test": "ts-node ./src/cli/verify-sandboxes/verify-sandboxes.ts --path=./examples/example-app-angular-cli/src/sandboxes.ts --build"
+    "test": "ts-node ./src/cli/verify-sandboxes/verify-sandboxes.ts --path=./examples/example-app-angular-cli/src/sandboxes.ts"
   },
   "repository": {
     "type": "git",
