@@ -83,7 +83,7 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
     try {
         await page.goto(scenario.url);  await page.goto(scenario.url);
     } catch (e) {
-        console.log(`Failed to connect. Attempting to Reconnect. (Attempts Remaining ${timeoutAttempts})`);
+        console.log(`Attempting to connect. (Attempts Remaining ${timeoutAttempts})`);
         await openScenarioInNewPage(scenario, timeoutAttempts - 1);
     }
 
