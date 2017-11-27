@@ -7,7 +7,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["es6", "dom"],
-    "module": "es6",
+    "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "target": "es5",
