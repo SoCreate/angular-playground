@@ -3,6 +3,9 @@ import * as process from 'process';
 import * as path from 'path';
 import { ErrorReporter, ReportType } from './shared/error-reporter';
 import { Configuration } from './shared/configuration';
+// ts-node required for runtime typescript compilation of sandboxes.ts
+require('ts-node/register');
+
 
 interface ScenarioSummary {
     url: string;
