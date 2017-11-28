@@ -16,8 +16,7 @@
     "build": "npm run app:build && npm run cli:build",
     "app:build": "gulp build",
     "cli:build": "tsc -p ./src/cli/tsconfig.json",
-    "prepublish": "npm run build",
-    "test": "ts-node ./src/cli/verify-sandboxes/verify-sandboxes.ts --path=./examples/example-app-angular-cli/src/sandboxes.ts"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -66,7 +65,6 @@
     "gulp-inline-ng2-template": "^4.0.0",
     "puppeteer": "^0.13.0",
     "rxjs": "^5.5.2",
-    "ts-node": "^3.3.0",
     "tslint": "5.3.2",
     "typescript": "2.4.2",
     "zone.js": "0.8.4"
