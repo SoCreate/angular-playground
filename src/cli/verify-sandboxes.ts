@@ -1,56 +1,31 @@
-#! /usr/bin/env node
 import * as puppeteer from 'puppeteer';
 import * as process from 'process';
 import * as path from 'path';
-import { getParsedArguments } from '../shared/parser';
-import { Configuration, ScenarioSummary, ErrorReporter } from './state';
+import { ErrorReporter, ReportType } from './shared/error-reporter';
+import { Configuration } from './shared/configuration';
 
-// Parse command line input
-const supportedFlages = ['--path', '--build', '--port'];
-const parameters = process.argv.slice(2);
-const parsedArguments = getParsedArguments(supportedFlages, parameters);
+interface ScenarioSummary {
+    url: string;
+    name: string;
+    description: string;
+}
 
 let browser: any;
 let currentScenario = '';
 const reporter = new ErrorReporter();
-const SANDBOXES_PATH = './src/sandboxes.ts';
 
 // Ensure Chromium instances are destroyed on err
 process.on('unhandledRejection', () => {
     if (browser) browser.close();
 });
 
-// Begin browser tasks
-// (async () => {
-//     await runPlayground();
-//     await verifySandboxes();
-// })();
-
-export async function verifySandboxes() {
-    const configuration = configure(parsedArguments.flags);
-    await main(configuration);
+export async function verifySandboxes(configuration: Configuration, sandboxesPath: string) {
+    await main(configuration, sandboxesPath);
 }
-
 
 /////////////////////////////////
 
-function configure(flags: string[]): Configuration {
-    const pathArg = flags.find(f => f.includes('--path'));
-    const portArg = flags.find(f => f.includes('--port'));
-
-    if (!pathArg) {
-        console.error('Please specify the path to sandboxes.ts');
-        process.exit(1);
-    }
-
-    const sandboxLocation = path.join(process.cwd(), getArgumentValue(pathArg));
-    const buildMode = flags.indexOf('--build') !== -1;
-    const port = portArg ? parseInt(getArgumentValue(portArg), 10) : 4201;
-
-    return new Configuration(sandboxLocation, buildMode, port);
-}
-
-async function main (configuration: Configuration) {
+async function main (configuration: Configuration, sandboxesPath: string) {
     let timeoutAttempts = configuration.timeoutAttempts;
     browser = await puppeteer.launch({
         headless: true,
@@ -58,7 +33,7 @@ async function main (configuration: Configuration) {
         args: configuration.chromeArguments
     });
 
-    const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.buildMode, SANDBOXES_PATH);
+    const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.randomScenario, sandboxesPath);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
         await openScenarioInNewPage(scenarios[i], configuration.timeoutAttempts);
@@ -166,12 +141,4 @@ function onConsoleErr(msg: any) {
  */
 function getRandomKey(menuItemsLength: number): number {
     return Math.floor(Math.random() * (menuItemsLength - 1) + 1);
-}
-
-/**
- * Separates value of an argument from its flag
- * @param argument - Flag with value e.g. --path=./src/
- */
-function getArgumentValue(argument: string) {
-    return argument.split('=')[1];
 }

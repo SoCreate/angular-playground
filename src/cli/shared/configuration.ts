@@ -18,7 +18,7 @@ export class Configuration {
     runCheckErrors: boolean;
     randomScenario: boolean;
     configFilePath: string;
-    port = 4201;
+    port = 4201; // TODO
     timeoutAttempts = 20;
     chromeArguments = [ '--disable-gpu', '--no-sandbox' ];
 

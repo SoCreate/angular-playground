@@ -1,27 +1,3 @@
-export interface ScenarioSummary {
-    url: string;
-    name: string;
-    description: string;
-}
-
-export class Configuration {
-    public chromeArguments = [
-        '--disable-gpu',
-        '--no-sandbox'
-    ];
-
-    constructor (
-        public sandboxPath: string,
-        public buildMode: boolean,
-        public port: number,
-        public timeoutAttempts = 20
-    ) {}
-
-    get baseUrl(): string {
-        return `http://localhost:${this.port}`;
-    }
-}
-
 export enum ReportType {
     Log
 }
@@ -34,8 +10,6 @@ export class ErrorReporter {
     get errors() {
         return this._errors;
     }
-
-
 
     addError(error: any, scenario: string) {
         this._errors.push({ error, scenario });

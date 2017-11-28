@@ -3,8 +3,8 @@ import * as path from 'path';
 import { build } from './build';
 import { startWatch } from './start-watch';
 import { runAngularCli } from './run-angular-cli';
-import { getParsedArguments } from 'shared/parser';
-import { Configuration } from './configuration';
+import { Configuration } from './shared/configuration';
+import { verifySandboxes } from './verify-sandboxes';
 
 (async () => {
     await run();
@@ -23,7 +23,7 @@ async function run() {
       process.exit(1);
     }
 
-    await build(playgroundConfig.sourceRoot);
+    const sandboxesPath = await build(playgroundConfig.sourceRoot);
 
     if (config.runWatch) {
       startWatch(playgroundConfig, () => build(playgroundConfig.sourceRoot));
@@ -31,5 +31,9 @@ async function run() {
 
     if (config.runAngularCliServe && playgroundConfig.angularCli) {
       runAngularCli(playgroundConfig.angularCli);
+    }
+
+    if (config.runCheckErrors) {
+        verifySandboxes(config, sandboxesPath);
     }
 }
