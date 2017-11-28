@@ -1,8 +1,10 @@
+#! /usr/bin/env node
 import * as puppeteer from 'puppeteer';
 import * as process from 'process';
 import * as path from 'path';
 import { getParsedArguments } from '../shared/parser';
 import { Configuration, ScenarioSummary, ErrorReporter } from './state';
+import { runPlayground } from '../run';
 
 // Parse command line input
 const supportedFlages = ['--path', '--build', '--port'];
@@ -18,7 +20,9 @@ process.on('unhandledRejection', () => {
     if (browser) browser.close();
 });
 
+// Begin browser tasks
 (async () => {
+    await runPlayground();
     const configuration = configure(parsedArguments.flags);
     await main(configuration);
 })();
@@ -67,7 +71,9 @@ async function main (configuration: Configuration) {
 }
 
 /**
- * Creates a Chromium page and navigates to a scenario (URL)
+ * Creates a Chromium page and navigates to a scenario (URL).
+ * If Chromium is not able to connect to the provided page, it will issue a series
+ * of retries before it finally fails.
  * @param scenario - Scenario to visit
  */
 async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts: number) {
@@ -83,7 +89,7 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
     try {
         await page.goto(scenario.url);
     } catch (e) {
-        console.log(`Attempting to connect. (Attempts Remaining ${timeoutAttempts})`);
+        console.log(`Attempting to connect. (Attempts Remaining: ${timeoutAttempts})`);
         await openScenarioInNewPage(scenario, timeoutAttempts - 1);
     }
 

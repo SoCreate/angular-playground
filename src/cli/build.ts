@@ -3,7 +3,7 @@ import { StringBuilder } from './string-builder';
 import * as fs from 'fs';
 import * as path from 'path';
 
-export const build = (rootPath) => {
+export const build = (rootPath): Promise<any> => {
   let content = new StringBuilder();
   let home = path.resolve(rootPath);
   let sandboxes = [];
@@ -50,10 +50,15 @@ export const build = (rootPath) => {
   content.addLine(`}}`);
 
   let filePath = path.resolve(home, './sandboxes.ts');
-  fs.writeFile(filePath, content.dump(), function (err) {
-    if (err) {
-      return console.log(err);
-    }
-    console.log(`Created file: ${filePath}`);
+
+  return new Promise((resolve, reject) => {
+    fs.writeFile(filePath, content.dump(), function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        console.log(`Created file: ${filePath}`);
+        resolve(content);
+      }
+    });
   });
 };
