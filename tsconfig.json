@@ -9,7 +9,7 @@
     "lib": ["es6", "dom"],
     "module": "es6",
     "moduleResolution": "node",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "target": "es5",
     "newLine": "LF",
     "typeRoots": [
