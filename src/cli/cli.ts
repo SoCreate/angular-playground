@@ -24,6 +24,7 @@ async function run() {
     }
 
     const sandboxesPath = await build(playgroundConfig.sourceRoot);
+    config.port = playgroundConfig.angularCli.port ? playgroundConfig.angularCli.port : 4201;
 
     if (config.runWatch) {
         startWatch(playgroundConfig, () => build(playgroundConfig.sourceRoot));
