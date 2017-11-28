@@ -69,15 +69,14 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
     currentScenario = scenario.name;
 
     try {
+        console.log(`Checking: ${currentScenario}: ${scenario.description}`);
         await page.goto(scenario.url);
     } catch (e) {
+        await page.close();
         await delay(5000);
         console.log(`Attempting to connect. (Attempts Remaining: ${timeoutAttempts})`);
         await openScenarioInNewPage(scenario, timeoutAttempts - 1);
     }
-
-    console.log(`Checking: ${currentScenario}: ${scenario.description}`);
-    await page.close();
 }
 
 /**
