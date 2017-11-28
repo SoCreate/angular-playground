@@ -4,16 +4,16 @@ import * as process from 'process';
 import * as path from 'path';
 import { getParsedArguments } from '../shared/parser';
 import { Configuration, ScenarioSummary, ErrorReporter } from './state';
-import { runPlayground } from '../run';
 
 // Parse command line input
 const supportedFlages = ['--path', '--build', '--port'];
-const parameters = process.argv;
+const parameters = process.argv.slice(2);
 const parsedArguments = getParsedArguments(supportedFlages, parameters);
 
 let browser: any;
 let currentScenario = '';
 const reporter = new ErrorReporter();
+const SANDBOXES_PATH = './src/sandboxes.ts';
 
 // Ensure Chromium instances are destroyed on err
 process.on('unhandledRejection', () => {
@@ -21,11 +21,15 @@ process.on('unhandledRejection', () => {
 });
 
 // Begin browser tasks
-(async () => {
-    await runPlayground();
+// (async () => {
+//     await runPlayground();
+//     await verifySandboxes();
+// })();
+
+export async function verifySandboxes() {
     const configuration = configure(parsedArguments.flags);
     await main(configuration);
-})();
+}
 
 
 /////////////////////////////////
@@ -54,7 +58,7 @@ async function main (configuration: Configuration) {
         args: configuration.chromeArguments
     });
 
-    const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.buildMode, configuration.sandboxPath);
+    const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.buildMode, SANDBOXES_PATH);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
         await openScenarioInNewPage(scenarios[i], configuration.timeoutAttempts);
