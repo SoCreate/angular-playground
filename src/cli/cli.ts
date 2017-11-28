@@ -17,20 +17,20 @@ async function run() {
     let configFile = path.resolve(config.configFilePath);
     let playgroundConfig;
     try {
-      playgroundConfig = require(configFile.replace(/.json$/, ''));
+        playgroundConfig = require(configFile.replace(/.json$/, ''));
     } catch (e) {
-      process.stdout.write(`[angular-playground]: \x1b[31mFailed to load config file ${configFile}\x1b[0m\n`);
-      process.exit(1);
+        process.stdout.write(`[angular-playground]: \x1b[31mFailed to load config file ${configFile}\x1b[0m\n`);
+        process.exit(1);
     }
 
     const sandboxesPath = await build(playgroundConfig.sourceRoot);
 
     if (config.runWatch) {
-      startWatch(playgroundConfig, () => build(playgroundConfig.sourceRoot));
+        startWatch(playgroundConfig, () => build(playgroundConfig.sourceRoot));
     }
 
     if (config.runAngularCliServe && playgroundConfig.angularCli) {
-      runAngularCli(playgroundConfig.angularCli);
+        runAngularCli(playgroundConfig.angularCli);
     }
 
     if (config.runCheckErrors) {

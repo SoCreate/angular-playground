@@ -71,6 +71,7 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
     try {
         await page.goto(scenario.url);
     } catch (e) {
+        await delay(5000);
         console.log(`Attempting to connect. (Attempts Remaining: ${timeoutAttempts})`);
         await openScenarioInNewPage(scenario, timeoutAttempts - 1);
     }
@@ -144,4 +145,12 @@ function onConsoleErr(msg: any) {
  */
 function getRandomKey(menuItemsLength: number): number {
     return Math.floor(Math.random() * (menuItemsLength - 1) + 1);
+}
+
+function delay(ms: number) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, ms);
+    });
 }
