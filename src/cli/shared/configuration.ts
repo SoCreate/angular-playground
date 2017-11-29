@@ -46,7 +46,7 @@ export class Configuration {
     chromeArguments = [ '--disable-gpu', '--no-sandbox' ];
 
     constructor(rawArgv: string[]) {
-        const { argvFlags, argvSwitches } = this.getParsedArguments(rawArgv);
+        const { argvFlags, argvSwitches } = this.separateRawArguments(rawArgv);
         this.configureFlags(argvFlags);
         this.configureArguments(argvSwitches);
     }
@@ -58,30 +58,31 @@ export class Configuration {
     // Boolean flags
     private configureFlags(argvFlags: string[]) {
         Object.keys(this.flags).forEach(flag => {
-            const options = this.flags[flag];
-            options.active = this.argInList(options.aliases, argvFlags);
+            const currentFlag = this.flags[flag];
+            currentFlag.active = this.argInList(currentFlag.aliases, argvFlags);
         });
     }
 
     // Arguments that may have values attached
     private configureArguments(argvSwitches: string[]) {
         Object.keys(this.switches).forEach(switchName => {
-            const switchIndex = this.argInListWithIndex(this.switches[switchName].aliases, argvSwitches);
+            const currentSwitch = this.switches[switchName];
+            const switchIndex = this.argInListWithIndex(currentSwitch.aliases, argvSwitches);
+
             if (switchIndex !== -1) {
-                this.switches[switchName].value = this.getArgValue(switchIndex, argvSwitches);
+                currentSwitch.value = this.getArgValue(switchIndex, argvSwitches);
             } else if (switchName === 'config' && argvSwitches.length > 0) {
                 // Support default argument for config path
-                this.switches[switchName].value = argvSwitches[0];
+                currentSwitch.value = argvSwitches[0];
             }
         });
     }
 
     /**
-     * Separates accepted command line arguments from other ts-node arguments
-     * @param supportedFlags - Accepted command line flags
-     * @param args - Process arguments
+     * Separates flags and switches
+     * @param argv - Process arguments
      */
-    private getParsedArguments(argv: string[]): { argvFlags: string[], argvSwitches: string[] } {
+    private separateRawArguments(argv: string[]): { argvFlags: string[], argvSwitches: string[] } {
         const argvFlags: string[] = [];
 
         const argvSwitches = argv.reduce((accr, value) => {
