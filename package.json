@@ -45,6 +45,7 @@
     "zone.js": ">=0.8.14"
   },
   "dependencies": {
+    "async": "^2.6.0",
     "node-watch": "^0.4.1"
   },
   "devDependencies": {

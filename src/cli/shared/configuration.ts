@@ -25,7 +25,7 @@ export class Configuration {
             aliases: ['--no-serve', '-S'],
             active: false
         },
-        runCheckErrors: {
+        checkErrors: {
             aliases: ['--check-errors', '-E'],
             active: false
         },
@@ -40,16 +40,17 @@ export class Configuration {
             aliases: ['--config', '-C'],
             value: 'angular-playground.json'
         },
-        port: {
-            aliases: ['--port', '-P'],
-            value: 4201
-        },
+        // port: {
+        //     aliases: ['--port', '-P'],
+        //     value: 4201
+        // },
         timeoutAttempts: {
             aliases: ['--timeout-attempts', '-TA'],
             value: 90
         }
     };
 
+    // Used to tailor the version of headless chromium ran by puppeteer
     chromeArguments = [ '--disable-gpu', '--no-sandbox' ];
 
     constructor(rawArgv: string[]) {
@@ -60,6 +61,23 @@ export class Configuration {
 
     get baseUrl(): string {
         return `http://localhost:${this.switches.port.value}`;
+    }
+
+    /**
+     * Override flags and switches with angular playground configuration JSON file
+     * @param playgroundConfig
+     */
+    overrideWithFile(playgroundConfig: any) {
+        Object.keys(playgroundConfig).forEach(key => {
+            const settingValue = playgroundConfig[key];
+            if (this.flags.hasOwnProperty(key)) {
+                this.flags[key].active = settingValue;
+            }
+
+            if (this.switches.hasOwnProperty(key)) {
+                this.switches[key].value = settingValue;
+            }
+        });
     }
 
     // Boolean flags

@@ -5,6 +5,7 @@ import { startWatch } from './start-watch';
 import { runAngularCli } from './run-angular-cli';
 import { Configuration } from './shared/configuration';
 import { verifySandboxes } from './verify-sandboxes';
+import { findFirstFreePort } from './shared/find-port';
 
 (async () => {
     await run();
@@ -23,9 +24,16 @@ async function run() {
         process.exit(1);
     }
 
+    // Parity between command line arguments and configuration file
+    config.overrideWithFile(playgroundConfig);
+
     const sandboxesPath = await build(playgroundConfig.sourceRoot);
     if (playgroundConfig.angularCli.port) {
         config.switches.port.value = playgroundConfig.angularCli.port;
+    }
+
+    if (config.flags.checkErrors.active) {
+        // get port dynamically
     }
 
     if (!config.flags.noWatch.active) {
@@ -36,7 +44,7 @@ async function run() {
         runAngularCli(playgroundConfig.angularCli);
     }
 
-    if (config.flags.runCheckErrors.active) {
+    if (config.flags.checkErrors.active) {
         verifySandboxes(config, sandboxesPath);
     }
 }
