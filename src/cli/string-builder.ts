@@ -1,14 +1,14 @@
 export class StringBuilder {
-  private lines = [];
+    private lines = [];
 
-  addLine(line) {
-    this.lines.push(line);
-  }
+    addLine(line) {
+        this.lines.push(line);
+    }
 
-  dump() {
-    let data = this.lines.join('\n');
-    data += '\n';
-    this.lines = [];
-    return data;
-  }
+    dump() {
+        let data = this.lines.join('\n');
+        data += '\n';
+        this.lines = [];
+        return data;
+    }
 }
