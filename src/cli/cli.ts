@@ -14,7 +14,7 @@ async function run() {
     const rawArgs = process.argv.slice(2);
     const config = new Configuration(rawArgs);
 
-    let configFile = path.resolve(config.configFilePath);
+    let configFile = path.resolve(config.switches.config.value);
     let playgroundConfig;
     try {
         playgroundConfig = require(configFile.replace(/.json$/, ''));
@@ -26,15 +26,15 @@ async function run() {
     const sandboxesPath = await build(playgroundConfig.sourceRoot);
     config.port = playgroundConfig.angularCli.port ? playgroundConfig.angularCli.port : 4201;
 
-    if (config.runWatch) {
+    if (!config.flags.noWatch.active) {
         startWatch(playgroundConfig, () => build(playgroundConfig.sourceRoot));
     }
 
-    if (config.runAngularCliServe && playgroundConfig.angularCli) {
+    if (!config.flags.noServe.active && playgroundConfig.angularCli) {
         runAngularCli(playgroundConfig.angularCli);
     }
 
-    if (config.runCheckErrors) {
+    if (config.flags.runCheckErrors.active) {
         verifySandboxes(config, sandboxesPath);
     }
 }

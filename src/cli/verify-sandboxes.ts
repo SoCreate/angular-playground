@@ -36,7 +36,7 @@ async function main (configuration: Configuration, sandboxesPath: string) {
         args: configuration.chromeArguments
     });
 
-    const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.randomScenario, sandboxesPath);
+    const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.flags.randomScenario.active, sandboxesPath);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
         await openScenarioInNewPage(scenarios[i], configuration.timeoutAttempts);
