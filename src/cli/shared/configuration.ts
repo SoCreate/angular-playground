@@ -11,6 +11,7 @@ interface Switches {
         value: any;
     };
 }
+
 /**
  * Configuration object used to parse and assign command line arguments
  */
@@ -38,11 +39,17 @@ export class Configuration {
         config: {
             aliases: ['--config', '-C'],
             value: 'angular-playground.json'
+        },
+        port: {
+            aliases: ['--port', '-P'],
+            value: 4201
+        },
+        timeoutAttempts: {
+            aliases: ['--timeout-attempts', '-TA'],
+            value: 90
         }
     };
 
-    port: number;
-    timeoutAttempts = 20;
     chromeArguments = [ '--disable-gpu', '--no-sandbox' ];
 
     constructor(rawArgv: string[]) {
@@ -52,7 +59,7 @@ export class Configuration {
     }
 
     get baseUrl(): string {
-        return `http://localhost:${this.port}`;
+        return `http://localhost:${this.switches.port.value}`;
     }
 
     // Boolean flags

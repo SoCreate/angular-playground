@@ -29,7 +29,7 @@ export async function verifySandboxes(configuration: Configuration, sandboxesPat
 /////////////////////////////////
 
 async function main (configuration: Configuration, sandboxesPath: string) {
-    let timeoutAttempts = configuration.timeoutAttempts;
+    const timeoutAttempts = configuration.switches.timeoutAttempts.value;
     browser = await puppeteer.launch({
         headless: true,
         handleSIGINT: false,
@@ -39,7 +39,7 @@ async function main (configuration: Configuration, sandboxesPath: string) {
     const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.flags.randomScenario.active, sandboxesPath);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
-        await openScenarioInNewPage(scenarios[i], configuration.timeoutAttempts);
+        await openScenarioInNewPage(scenarios[i], timeoutAttempts);
     }
 
     browser.close();
@@ -73,7 +73,7 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
         await page.goto(scenario.url);
     } catch (e) {
         await page.close();
-        await delay(5000);
+        await delay(1000);
         console.log(`Attempting to connect. (Attempts Remaining: ${timeoutAttempts})`);
         await openScenarioInNewPage(scenario, timeoutAttempts - 1);
     }
