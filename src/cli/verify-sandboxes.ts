@@ -16,27 +16,29 @@ interface ScenarioSummary {
 let browser: any;
 let currentScenario = '';
 const reporter = new ErrorReporter();
+let hostUrl = '';
 
 // Ensure Chromium instances are destroyed on err
 process.on('unhandledRejection', () => {
     if (browser) browser.close();
 });
 
-export async function verifySandboxes(configuration: Configuration, sandboxesPath: string) {
-    await main(configuration, sandboxesPath);
+export async function verifySandboxes(configuration: Configuration, sandboxesPath: string, port: number) {
+    hostUrl = `localhost:${port}`;
+    await main(configuration, sandboxesPath, port);
 }
 
 /////////////////////////////////
 
-async function main (configuration: Configuration, sandboxesPath: string) {
-    const timeoutAttempts = configuration.switches.timeoutAttempts.value;
+async function main (configuration: Configuration, sandboxesPath: string, port: number) {
+    const timeoutAttempts = configuration.flags.timeout.value;
     browser = await puppeteer.launch({
         headless: true,
         handleSIGINT: false,
         args: configuration.chromeArguments
     });
 
-    const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.flags.randomScenario.active, sandboxesPath);
+    const scenarios = getSandboxMetadata(hostUrl, configuration.flags.randomScenario.value, sandboxesPath);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
         await openScenarioInNewPage(scenarios[i], timeoutAttempts);
