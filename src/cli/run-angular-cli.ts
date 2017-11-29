@@ -1,26 +1,18 @@
+import { Configuration } from './shared/configuration';
+
 const fs = require('fs');
 const path = require('path');
 const childProcess = require('child_process');
 
-export const runAngularCli = (angularCliConfig) => {
-    let port = angularCliConfig.port ? angularCliConfig.port : 4201;
-    // TODO: Add config option
-    const cliPath = 'node_modules/@angular/cli/bin/ng';
-    // let cliName = '@angular/cli';
-    // try {
-    //     fs.accessSync(path.resolve('node_modules/@angular/cli/bin/ng'));
-    // } catch (e) {
-    //     cliName = 'angular-cl';
-    // }
-    // let cliPath = `node_modules/${cliName}/bin/ng`;
-    let args = [cliPath, 'serve', '-no-progress'];
+export const runAngularCli = (config: Configuration, angularCliConfig: any) => {
+    let args = [config.flags.ngCliCmdPath.value, 'serve', '-no-progress'];
     args.push('--port');
-    args.push(port.toString());
-    if (angularCliConfig.appName) {
-        args.push(`-a=${angularCliConfig.appName}`);
+    args.push(config.flags.ngCliPort.value.toString());
+    if (config.flags.ngCliApp.value) {
+        args.push(`-a=${config.flags.ngCliApp.value}`);
     }
-    if (angularCliConfig.environment) {
-        args.push(`-e=${angularCliConfig.environment}`);
+    if (config.flags.ngCliEnv.value) {
+        args.push(`-e=${config.flags.ngCliEnv.value}`);
     }
     if (angularCliConfig.args) {
         args = args.concat(angularCliConfig.args);

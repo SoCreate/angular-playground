@@ -45,7 +45,7 @@ async function run() {
     }
 
     if (!config.flags.noServe.value && playgroundConfig.angularCli) {
-        runAngularCli(playgroundConfig.angularCli);
+        runAngularCli(config, playgroundConfig.angularCli);
     }
 
     if (config.flags.checkErrors.value) {

@@ -22,8 +22,9 @@ export class Configuration {
         config: new Flag(['--config', '-C'], 'angular-playground.json'),
         timeout: new Flag(['--timeout'], 90),
         ngCliApp: new Flag(['--ng-cli-app'], 'playground'),
-        ngCliEnv: new Flag(['--ng-cli-env'], 'environments/environment.ts'),
+        ngCliEnv: new Flag(['--ng-cli-env'], null),
         ngCliPort: new Flag(['--ng-cli-port'], 4201),
+        ngCliCmdPath: new Flag(['--ng-cli-cmd'], 'node_modules/@angular/cli/bin/ng')
     };
 
     // Used to tailor the version of headless chromium ran by puppeteer
@@ -70,6 +71,7 @@ export class Configuration {
         }
     }
 
+    // TODO: Refactor to use "Flag directories" for future directory support and maintenance
     private setAngularCliFlag(key: string, value: any) {
         switch (key) {
             case 'appName':
@@ -80,6 +82,10 @@ export class Configuration {
                 break;
             case 'environment':
                 this.flags.ngCliEnv.value = value;
+                break;
+            case 'cmdPath':
+                this.flags.ngCliCmdPath.value = value;
+                break;
         }
     }
 
