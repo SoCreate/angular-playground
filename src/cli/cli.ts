@@ -41,7 +41,7 @@ async function run() {
     }
 
     if (!config.flags.noWatch.value) {
-        startWatch(playgroundConfig, () => build(playgroundConfig.sourceRoot));
+        startWatch(config.flags.sourceRoot.value, () => build(config.flags.sourceRoot.value));
     }
 
     if (!config.flags.noServe.value && playgroundConfig.angularCli) {
