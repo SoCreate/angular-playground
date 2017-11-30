@@ -64,7 +64,7 @@ async function main (configuration: Configuration, sandboxesPath: string, port: 
 async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts: number) {
     if (timeoutAttempts === 0) {
         await browser.close();
-        process.exit(1);
+        throw new Error('Unable to connect to Playground.');
     }
 
     const page = await browser.newPage();

@@ -32,16 +32,13 @@ export class Configuration {
     constructor(rawArgv: string[]) {
         // Apply command line arguments
         rawArgv.forEach((argv, i) => {
-            const matchingFlagName = this.findMatchingFlagName(argv);
+            const matchingFlag = this.findMatchingFlag(argv);
+            if (!matchingFlag) return;
 
-            if (matchingFlagName) {
-                const matchingFlag = this.flags[matchingFlagName];
-                if (typeof matchingFlag.value === 'boolean') {
-                    matchingFlag.value = true;
-                } else {
-                    // Value follows flag
-                    matchingFlag.value = rawArgv[i + 1];
-                }
+            if (typeof matchingFlag.value === 'boolean') {
+                matchingFlag.value = true;
+            } else {
+                matchingFlag.value = rawArgv[i + 1];
             }
         });
     }
@@ -64,27 +61,41 @@ export class Configuration {
                 }
             }
         });
-
-        const missingFlag = this.getAnyUnfulfilledFlag();
-        if (missingFlag !== undefined) {
-            throw new Error(`CLI flag ${missingFlag.aliases[0]} needs a value.`);
-        }
     }
 
+    /**
+     * Iterates through flags and flag-groups to find the flag with a matching alias
+     * @param alias - alias from argv, e.g. --config
+     */
+    private findMatchingFlag(alias: string): Flag {
+        let result: Flag;
+
+        Object.keys(this.flags).forEach(key => {
+            const currentFlag = this.flags[key];
+
+            if (this.instanceOfFlagGroup(currentFlag)) {
+                Object.keys(currentFlag).forEach(nestedKey => {
+                    const currentSubFlag = currentFlag[nestedKey];
+
+                    if (currentSubFlag.aliases.includes(alias)) {
+                        result = currentSubFlag;
+                    }
+                });
+            } else {
+                if (currentFlag.aliases.includes(alias)) {
+                    result = currentFlag;
+                }
+            }
+        });
+
+        return result;
+    }
+
+    /**
+     * Determines if provided item is a Flag or Flag-group
+     * @param item - Flag or Flag-group
+     */
     private instanceOfFlagGroup(item: any) {
         return !item.hasOwnProperty('value');
-    }
-
-    private findMatchingFlagName(alias: string): string {
-        const matchingIndex = Object.keys(this.flags)
-            .map(key => this.flags[key].aliases)
-            .findIndex(aliases => aliases.indexOf(alias) !== -1);
-        return matchingIndex !== -1 ? Object.keys(this.flags)[matchingIndex] : undefined;
-    }
-
-    private getAnyUnfulfilledFlag(): Flag {
-        return Object.keys(this.flags)
-            .map(key => this.flags[key])
-            .find(flag => flag.required && flag.value === null);
     }
 }
