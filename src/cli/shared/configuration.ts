@@ -15,7 +15,7 @@ export class Configuration {
         noServe: new Flag(['--no-serve'], false),
         checkErrors: new Flag(['--check-errors'], false),
         randomScenario: new Flag(['--random-scenario'], false),
-        sourceRoot: new Flag(['--src', '-S'], null, true),
+        sourceRoot: new Flag(['--src', '-S'], './src', true),
         config: new Flag(['--config', '-C'], 'angular-playground.json'),
         timeout: new Flag(['--timeout'], 90),
         angularCli: {
