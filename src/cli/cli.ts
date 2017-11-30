@@ -13,7 +13,6 @@ import { findFirstFreePort } from './shared/find-port';
 
 async function run() {
     const rawArgs = process.argv.slice(2);
-    console.log(rawArgs);
     const config = new Configuration(rawArgs);
     let sandboxPort, playgroundConfig;
 
@@ -28,8 +27,6 @@ async function run() {
 
     // Parity between command line arguments and configuration file
     config.applyConfigurationFile(playgroundConfig);
-    console.log(config);
-
     const sandboxesPath = await build(playgroundConfig.sourceRoot);
 
     if (config.flags.checkErrors.value) {
