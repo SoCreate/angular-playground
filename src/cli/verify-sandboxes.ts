@@ -24,7 +24,7 @@ process.on('unhandledRejection', () => {
 });
 
 export async function verifySandboxes(configuration: Configuration, sandboxesPath: string, port: number) {
-    hostUrl = `localhost:${port}`;
+    hostUrl = `http://localhost:${port}`;
     await main(configuration, sandboxesPath, port);
 }
 
@@ -72,15 +72,10 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
     currentScenario = scenario.name;
 
     try {
-        console.log('attempting to hit page');
-        console.log(scenario.url);
         await page.goto(scenario.url);
     } catch (e) {
-        console.log('closing page')
         await page.close();
-        console.log('beginning delay')
         await delay(1000);
-        console.log('running again')
         await openScenarioInNewPage(scenario, timeoutAttempts - 1);
     }
 }
