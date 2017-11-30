@@ -63,19 +63,32 @@ export class Configuration {
         });
     }
 
+    /**
+     * Return a flag that contains the provided alias or undefined if none found
+     * @param alias - Alias provided by argv. e.g. --config
+     * @param flagGroup - Grouping of flags to check
+     */
     private findFlag(alias: string, flagGroup: any): Flag {
-        for (const key in flagGroup) {
-            if (!flagGroup.hasOwnProperty(key)) continue;
-            const currentFlag = flagGroup[key];
+        return this.getValues(flagGroup).find(flag => {
+            if (this.instanceOfFlagGroup(flag)) {
+                return this.findFlag(alias, flag);
+            }
 
-            if (this.instanceOfFlagGroup(currentFlag)) {
-                return this.findFlag(alias, currentFlag);
-            } else if (currentFlag.aliases.includes(alias)) {
-                return currentFlag;
+            return flag.aliases.includes(alias);
+        });
+    }
+
+    // Shim for Object.values()
+    private getValues(obj: any): any[] {
+        const vals = [];
+
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                vals.push(obj[key]);
             }
         }
 
-        return undefined;
+        return vals;
     }
 
     /**
