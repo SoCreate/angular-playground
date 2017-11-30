@@ -41,6 +41,7 @@ async function main (configuration: Configuration, sandboxesPath: string, port: 
     const scenarios = getSandboxMetadata(hostUrl, configuration.flags.randomScenario.value, sandboxesPath);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
+        console.log(`Checking: ${scenarios[i].name}: ${scenarios[i].description}`);
         await openScenarioInNewPage(scenarios[i], timeoutAttempts);
     }
 
@@ -71,12 +72,10 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
     currentScenario = scenario.name;
 
     try {
-        console.log(`Checking: ${currentScenario}: ${scenario.description}`);
         await page.goto(scenario.url);
     } catch (e) {
         await page.close();
         await delay(1000);
-        console.log(`Attempting to connect. (Attempts Remaining: ${timeoutAttempts})`);
         await openScenarioInNewPage(scenario, timeoutAttempts - 1);
     }
 }
