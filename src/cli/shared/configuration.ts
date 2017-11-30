@@ -48,19 +48,20 @@ export class Configuration {
      * @param playgroundConfig
      */
     applyConfigurationFile(playgroundConfig: any) {
-        Object.keys(playgroundConfig).forEach(key => {
-            if (this.instanceOfFlagGroup(this.flags[key])) {
-                Object.keys(playgroundConfig[key]).forEach(nestedKey => {
-                    if (this.flags[key].hasOwnProperty(nestedKey)) {
-                        this.flags[key][nestedKey].value = playgroundConfig[key][nestedKey];
-                    }
-                });
-            } else {
-                if (this.flags.hasOwnProperty(key)) {
-                    this.flags[key].value = playgroundConfig[key];
+        const applyToFlags = (config: any, flagGroup: any) => {
+            Object.keys(config).forEach(key => {
+                if (!flagGroup.hasOwnProperty(key)) return;
+                const flag = flagGroup[key];
+
+                if (this.instanceOfFlagGroup(flag)) {
+                    applyToFlags(config[key], flag);
                 }
-            }
-        });
+
+                flag.value = config[key];
+            });
+        };
+
+        applyToFlags(playgroundConfig, this.flags);
     }
 
     /**
