@@ -16,7 +16,6 @@ async function run() {
     const config = new Configuration(rawArgs);
     let sandboxPort, playgroundConfig;
 
-    // let configFile = path.resolve(config.switches.config.value);
     let configFile = path.resolve(config.flags.config.value);
     try {
         playgroundConfig = require(configFile.replace(/.json$/, ''));
@@ -33,7 +32,7 @@ async function run() {
         // get port dynamically
         const port = await findFirstFreePort('127.0.0.1', 7000, 9000);
         sandboxPort = port;
-        config.flags.ngCliPort.value = port;
+        config.flags.angularCli.port.value = port;
     }
 
     if (!config.flags.noWatch.value) {

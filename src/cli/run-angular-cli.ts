@@ -5,14 +5,15 @@ const path = require('path');
 const childProcess = require('child_process');
 
 export const runAngularCli = (config: Configuration, angularCliConfig: any) => {
-    let args = [config.flags.ngCliCmdPath.value, 'serve', '-no-progress'];
+    const cliConfig = config.flags.angularCli;
+    let args = [cliConfig.cmdPath.value, 'serve', '-no-progress'];
     args.push('--port');
-    args.push(config.flags.ngCliPort.value.toString());
-    if (config.flags.ngCliApp.value) {
-        args.push(`-a=${config.flags.ngCliApp.value}`);
+    args.push(cliConfig.port.value.toString());
+    if (cliConfig.appName.value) {
+        args.push(`-a=${cliConfig.appName.value}`);
     }
-    if (config.flags.ngCliEnv.value) {
-        args.push(`-e=${config.flags.ngCliEnv.value}`);
+    if (cliConfig.environment.value) {
+        args.push(`-e=${cliConfig.environment.value}`);
     }
     if (angularCliConfig.args) {
         args = args.concat(angularCliConfig.args);

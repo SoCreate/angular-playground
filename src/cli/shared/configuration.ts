@@ -5,15 +5,12 @@ class Flag {
         public required = false
     ) {}
 }
-interface Flags {
-    [key: string]: Flag;
-}
 
 /**
  * Configuration object used to parse and assign command line arguments
  */
 export class Configuration {
-    flags: Flags = {
+    flags: any = {
         noWatch: new Flag(['--no-watch'], false),
         noServe: new Flag(['--no-serve'], false),
         checkErrors: new Flag(['--check-errors'], false),
@@ -21,10 +18,12 @@ export class Configuration {
         sourceRoot: new Flag(['--src', '-S'], null, true),
         config: new Flag(['--config', '-C'], 'angular-playground.json'),
         timeout: new Flag(['--timeout'], 90),
-        ngCliApp: new Flag(['--ng-cli-app'], 'playground'),
-        ngCliEnv: new Flag(['--ng-cli-env'], null),
-        ngCliPort: new Flag(['--ng-cli-port'], 4201),
-        ngCliCmdPath: new Flag(['--ng-cli-cmd'], 'node_modules/@angular/cli/bin/ng')
+        angularCli: {
+            appName: new Flag(['--ng-cli-app'], 'playground'),
+            environment: new Flag(['--ng-cli-env'], null),
+            port: new Flag(['--ng-cli-port'], 4201),
+            cmdPath: new Flag(['--ng-cli-cmd'], 'node_modules/@angular/cli/bin/ng')
+        }
     };
 
     // Used to tailor the version of headless chromium ran by puppeteer
@@ -53,15 +52,16 @@ export class Configuration {
      */
     applyConfigurationFile(playgroundConfig: any) {
         Object.keys(playgroundConfig).forEach(key => {
-            if (key !== 'angularCli') {
+            if (this.instanceOfFlagGroup(this.flags[key])) {
+                Object.keys(playgroundConfig[key]).forEach(nestedKey => {
+                    if (this.flags[key].hasOwnProperty(nestedKey)) {
+                        this.flags[key][nestedKey].value = playgroundConfig[key][nestedKey];
+                    }
+                });
+            } else {
                 if (this.flags.hasOwnProperty(key)) {
                     this.flags[key].value = playgroundConfig[key];
                 }
-            } else {
-                // Nested flag
-                Object.keys(playgroundConfig.angularCli).forEach(cliKey => {
-                    this.setAngularCliFlag(cliKey, playgroundConfig[key][cliKey]);
-                });
             }
         });
 
@@ -71,29 +71,15 @@ export class Configuration {
         }
     }
 
-    // TODO: Refactor to use "Flag directories" for future directory support and maintenance
-    private setAngularCliFlag(key: string, value: any) {
-        switch (key) {
-            case 'appName':
-                this.flags.ngCliApp.value = value;
-                break;
-            case 'port':
-                this.flags.ngCliPort.value = value;
-                break;
-            case 'environment':
-                this.flags.ngCliEnv.value = value;
-                break;
-            case 'cmdPath':
-                this.flags.ngCliCmdPath.value = value;
-                break;
-        }
+    private instanceOfFlagGroup(item: any) {
+        return !item.hasOwnProperty('value');
     }
 
     private findMatchingFlagName(alias: string): string {
         const matchingIndex = Object.keys(this.flags)
             .map(key => this.flags[key].aliases)
             .findIndex(aliases => aliases.indexOf(alias) !== -1);
-        return matchingIndex > -1 ? Object.keys(this.flags)[matchingIndex] : undefined;
+        return matchingIndex !== -1 ? Object.keys(this.flags)[matchingIndex] : undefined;
     }
 
     private getAnyUnfulfilledFlag(): Flag {
