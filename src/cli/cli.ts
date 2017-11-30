@@ -34,10 +34,9 @@ async function run() {
 
     if (config.flags.checkErrors.value) {
         // get port dynamically
-        findFirstFreePort('127.0.0.1', 7000, 9000, port => {
-            sandboxPort = port;
-            playgroundConfig.angularCli.port = port;
-        });
+        const port = await findFirstFreePort('127.0.0.1', 7000, 9000);
+        sandboxPort = port;
+        config.flags.ngCliPort.value = port;
     }
 
     if (!config.flags.noWatch.value) {

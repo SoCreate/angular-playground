@@ -14,7 +14,7 @@ const detect = require('async/detect');
  * @param end - Ending point for range
  * @param callback - Callback on result
  */
-export function findFirstFreePort(host: string, start: number, end: number, callback: Function) {
+export async function findFirstFreePort(host: string, start: number, end: number) {
     const ports = [];
     for (let i = start; i < end; i++) {
         ports.push(i);
@@ -55,5 +55,9 @@ export function findFirstFreePort(host: string, start: number, end: number, call
         });
     };
 
-    detect(ports, probe, callback);
+    return new Promise(resolve => {
+        detect(ports, probe, (port: number) => {
+            resolve(port);
+        });
+    });
 }
