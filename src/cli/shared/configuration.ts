@@ -32,7 +32,7 @@ export class Configuration {
     constructor(rawArgv: string[]) {
         // Apply command line arguments
         rawArgv.forEach((argv, i) => {
-            const matchingFlag = this.findMatchingFlag(argv);
+            const matchingFlag = this.findFlag(argv, this.flags);
             if (!matchingFlag) return;
 
             if (typeof matchingFlag.value === 'boolean') {
@@ -63,32 +63,19 @@ export class Configuration {
         });
     }
 
-    /**
-     * Iterates through flags and flag-groups to find the flag with a matching alias
-     * @param alias - alias from argv, e.g. --config
-     */
-    private findMatchingFlag(alias: string): Flag {
-        let result: Flag;
-
-        Object.keys(this.flags).forEach(key => {
-            const currentFlag = this.flags[key];
+    private findFlag(alias: string, flagGroup: any): Flag {
+        for (const key in flagGroup) {
+            if (!flagGroup.hasOwnProperty(key)) continue;
+            const currentFlag = flagGroup[key];
 
             if (this.instanceOfFlagGroup(currentFlag)) {
-                Object.keys(currentFlag).forEach(nestedKey => {
-                    const currentSubFlag = currentFlag[nestedKey];
-
-                    if (currentSubFlag.aliases.includes(alias)) {
-                        result = currentSubFlag;
-                    }
-                });
-            } else {
-                if (currentFlag.aliases.includes(alias)) {
-                    result = currentFlag;
-                }
+                return this.findFlag(alias, currentFlag);
+            } else if (currentFlag.aliases.includes(alias)) {
+                return currentFlag;
             }
-        });
+        }
 
-        return result;
+        return undefined;
     }
 
     /**

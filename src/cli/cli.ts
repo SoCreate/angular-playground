@@ -27,6 +27,7 @@ async function run() {
     // Parity between command line arguments and configuration file
     config.applyConfigurationFile(playgroundConfig);
     const sandboxesPath = await build(playgroundConfig.sourceRoot);
+    console.log(config)
 
     if (config.flags.checkErrors.value) {
         // get port dynamically
