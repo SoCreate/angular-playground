@@ -1,10 +1,10 @@
 import * as fs from 'fs';
-import { BambooResults, BambooStats } from './bamboo-reporter';
+import { JSONReporter } from '../reporters/json-reporter';
 import { ScenarioSummary } from '../verify-sandboxes';
 
 export const REPORT_TYPE = {
     LOG: 'log',
-    BAMBOO: 'bamboo'
+    JSON: 'json'
 };
 
 export class ErrorReporter {
@@ -37,14 +37,10 @@ export class ErrorReporter {
                     console.log(e.descriptions);
                 });
                 break;
-            case REPORT_TYPE.BAMBOO:
-                const stats = new BambooStats(this.scenarios.length, this.errors.length);
-                const result = new BambooResults(
-                    stats,
-                    this.errors,
-                    this.scenarios.map(s => `${s.name}: ${s.description}`),
-                    []);
-                fs.writeFileSync(this.filename, result.getJson());
+            case REPORT_TYPE.JSON:
+                const scenarioNames = this.scenarios.map(s => `${s.name}: ${s.description}`);
+                const results = new JSONReporter(this.errors, scenarioNames);
+                fs.writeFileSync(this.filename, results.getJson());
                 break;
         }
     }
