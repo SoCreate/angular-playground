@@ -1,3 +1,36 @@
+<a name="3.0.0"></a>
+
+# 3.0.0 (2017-12-01)
+
+### Features
+* **cli:** Added a boat-load of new CLI configuration options. Every option available
+           in the `angular-playground.json` file is now also available as a CLI argument
+           (except @angular/cli arguments). [Read more about it in our docs](http://angularplayground.it/docs/api/configuration).
+* **new docs:** Speaking of docs, check out our newly-designed
+           [docs page](http://angularplayground.it/docs/getting-started/introduction).
+* **new error checking utility:** A new CLI option has been introduced that will run and visit
+           all sandbox scenarios in headless chrome, surfacing any errors that appear in the
+           console. [Never forget to mock a dependency again!](http://angularplayground.it/docs/how-to/run-the-test-suite)
+* **report formats for builds:** Used in conjunction with the checking utility, you can now
+           generate a JSON report that your build system can read for error reporting. Read all
+           about it [here](http://angularplayground.it/docs/api/reporter-formats).
+* **command bar shows all components as default:** Got the Playground running but don't know where
+           to begin? We'll help you out by showing all of your available scenarios.
+
+### Breaking Changes
+* **no default configuration argument**: The CLI no longer supports a default configuration file argument.
+            **Note:** `angular-playground` with no arguments will still default to using the
+            `angular-playground.json` file as expected.
+
+The following:
+```
+angular-playground my-configuration-file.json
+```
+is now:
+```
+angular-playground --config my-configuration-file.json
+```
+
 <a name="2.3.0"></a>
 # 2.3.0 (2017-11-13)
 
