@@ -22,14 +22,26 @@
             **Note:** `angular-playground` with no arguments will still default to using the
             `angular-playground.json` file as expected.
 
-The following:
-```
-angular-playground my-configuration-file.json
-```
-is now:
-```
-angular-playground --config my-configuration-file.json
-```
+  Before:
+  ```
+  angular-playground my-configuration-file.json
+  ```
+  After:
+  ```
+  angular-playground --config my-configuration-file.json
+  ```
+
+* **new cli argument style**: CLI arguments now match typical npm style: `--argument` for full name, `-A` for abbreviation.
+
+  Before:
+  ```
+  -no-watch -no-serve
+  ``` 
+
+  After:
+  ```
+  --no-watch --no-serve
+  ```
 
 <a name="2.3.0"></a>
 # 2.3.0 (2017-11-13)
