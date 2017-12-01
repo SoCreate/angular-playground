@@ -9,7 +9,7 @@ require('ts-node/register');
 const asyncMap = require('async/map');
 
 
-interface ScenarioSummary {
+export interface ScenarioSummary {
     url: string;
     name: string;
     description: string;
@@ -17,7 +17,7 @@ interface ScenarioSummary {
 
 let browser: any;
 let currentScenario = '';
-const reporter = new ErrorReporter();
+let reporter: ErrorReporter;
 let hostUrl = '';
 
 // Ensure Chromium instances are destroyed on err
@@ -41,6 +41,7 @@ async function main (configuration: Configuration, sandboxesPath: string, port: 
     });
 
     const scenarios = getSandboxMetadata(hostUrl, configuration.flags.randomScenario.value, sandboxesPath);
+    reporter = new ErrorReporter(scenarios, ReportType.Bamboo, configuration.flags.reportPath.value);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
         console.log(`Checking: ${scenarios[i].name}: ${scenarios[i].description}`);
@@ -135,7 +136,7 @@ function loadSandboxMenuItems(path: string): any[] {
  */
 async function onConsoleErr(msg: any) {
     if (msg.type === 'error') {
-        console.error(`${reporter.redWrap('ERROR Found')} in ${currentScenario}`);
+        console.error(`${reporter.redWrap('ERROR:')} in ${currentScenario}`);
         const descriptions = msg.args
             .map(a => a._remoteObject)
             .filter(o => o.type === 'object')

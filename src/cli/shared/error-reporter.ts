@@ -1,11 +1,20 @@
+import * as fs from 'fs';
+import { BambooResults, BambooStats } from './bamboo-reporter';
+import { ScenarioSummary } from '../verify-sandboxes';
+
 export enum ReportType {
-    Log
+    Log,
+    Bamboo
 }
 
 export class ErrorReporter {
     private _errors: { descriptions: any, scenario: string }[] = [];
 
-    constructor(public type = ReportType.Log) {}
+    constructor(
+        public scenarios: ScenarioSummary[],
+        public type = ReportType.Log,
+        public filename: string
+    ) {}
 
     get errors() {
         return this._errors;
@@ -22,11 +31,21 @@ export class ErrorReporter {
     compileReport() {
         switch (this.type) {
             case ReportType.Log:
-                console.error(`${this.redWrap('ERROR Found')} in the following scenarios:`);
+                console.error(`${this.redWrap('ERROR:')} in the following scenarios`);
                 this._errors.forEach(e => {
                     console.log(e.scenario);
                     console.log(e.descriptions);
                 });
+                break;
+            case ReportType.Bamboo:
+                const stats = new BambooStats(this.scenarios.length, this.errors.length);
+                const result = new BambooResults(
+                    stats,
+                    this.errors,
+                    this.scenarios.map(s => `${s.name}: ${s.description}`),
+                    []);
+                fs.writeFileSync(this.filename, result.getJson());
+                break;
         }
     }
 

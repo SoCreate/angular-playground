@@ -18,6 +18,7 @@ export class Configuration {
         sourceRoot: new Flag(['--src', '-S'], './src', true),
         config: new Flag(['--config', '-C'], 'angular-playground.json'),
         timeout: new Flag(['--timeout'], 90),
+        reportPath: new Flag(['--report', '-R'], './sandbox.report.json'),
         angularCli: {
             appName: new Flag(['--ng-cli-app'], 'playground'),
             environment: new Flag(['--ng-cli-env'], null),
