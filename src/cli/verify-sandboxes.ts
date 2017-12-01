@@ -135,7 +135,7 @@ function loadSandboxMenuItems(path: string): any[] {
  */
 async function onConsoleErr(msg: any) {
     if (msg.type === 'error') {
-        console.error(`\x1b[31mERROR Found\x1b[0m in ${currentScenario}`);
+        console.error(`${reporter.redWrap('ERROR Found')} in ${currentScenario}`);
         const descriptions = msg.args
             .map(a => a._remoteObject)
             .filter(o => o.type === 'object')
