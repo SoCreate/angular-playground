@@ -1,7 +1,7 @@
 import * as puppeteer from 'puppeteer';
 import * as process from 'process';
 import * as path from 'path';
-import { ErrorReporter, ReportType } from './shared/error-reporter';
+import { ErrorReporter, REPORT_TYPE } from './shared/error-reporter';
 import { Configuration } from './shared/configuration';
 // ts-node required for runtime typescript compilation of sandboxes.ts
 require('ts-node/register');
@@ -41,7 +41,7 @@ async function main (configuration: Configuration, sandboxesPath: string, port: 
     });
 
     const scenarios = getSandboxMetadata(hostUrl, configuration.flags.randomScenario.value, sandboxesPath);
-    reporter = new ErrorReporter(scenarios, ReportType.Bamboo, configuration.flags.reportPath.value);
+    reporter = new ErrorReporter(scenarios, configuration.flags.reportPath.value, configuration.flags.reportType.value);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
         console.log(`Checking: ${scenarios[i].name}: ${scenarios[i].description}`);

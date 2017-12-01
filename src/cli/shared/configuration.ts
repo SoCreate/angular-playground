@@ -1,3 +1,5 @@
+import { REPORT_TYPE } from './error-reporter';
+
 class Flag {
     constructor(
         public aliases: string[],
@@ -18,7 +20,8 @@ export class Configuration {
         sourceRoot: new Flag(['--src', '-S'], './src', true),
         config: new Flag(['--config', '-C'], 'angular-playground.json'),
         timeout: new Flag(['--timeout'], 90),
-        reportPath: new Flag(['--report', '-R'], './sandbox.report.json'),
+        reportPath: new Flag(['--report-path', '-R'], './sandbox.report.json'),
+        reportType: new Flag(['--report-type'], REPORT_TYPE.LOG),
         angularCli: {
             appName: new Flag(['--ng-cli-app'], 'playground'),
             environment: new Flag(['--ng-cli-env'], null),
