@@ -5,6 +5,8 @@ import { ErrorReporter, ReportType } from './shared/error-reporter';
 import { Configuration } from './shared/configuration';
 // ts-node required for runtime typescript compilation of sandboxes.ts
 require('ts-node/register');
+// Legacy import
+const asyncMap = require('async/map');
 
 
 interface ScenarioSummary {
@@ -131,10 +133,15 @@ function loadSandboxMenuItems(path: string): any[] {
  * Callback when Chromium page encounters a console error
  * @param msg - Error message
  */
-function onConsoleErr(msg: any) {
+async function onConsoleErr(msg: any) {
     if (msg.type === 'error') {
-        console.error(`ERROR Found in ${currentScenario}`);
-        reporter.addError(msg, currentScenario);
+        console.error(`\x1b[31mERROR Found\x1b[0m in ${currentScenario}`);
+        const descriptions = msg.args
+            .map(a => a._remoteObject)
+            .filter(o => o.type === 'object')
+            .map(o => o.description);
+        descriptions.map(d => console.error(d));
+        reporter.addError(descriptions, currentScenario);
     }
 }
 

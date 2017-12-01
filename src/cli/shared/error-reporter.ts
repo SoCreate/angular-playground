@@ -3,7 +3,7 @@ export enum ReportType {
 }
 
 export class ErrorReporter {
-    private _errors: { error: any, scenario: string }[] = [];
+    private _errors: { descriptions: any, scenario: string }[] = [];
 
     constructor(public type = ReportType.Log) {}
 
@@ -11,15 +11,18 @@ export class ErrorReporter {
         return this._errors;
     }
 
-    addError(error: any, scenario: string) {
-        this._errors.push({ error, scenario });
+    addError(descriptions: any, scenario: string) {
+        this._errors.push({ descriptions, scenario });
     }
 
     compileReport() {
         switch (this.type) {
             case ReportType.Log:
-                console.log('Found errors in the following scenarios:');
-                this._errors.forEach(e => console.log(e.scenario));
+                console.error(`\x1b[31mERROR Found\x1b[0m in the following scenarios:`);
+                this._errors.forEach(e => {
+                    console.log(e.scenario);
+                    console.log(e.descriptions);
+                });
         }
     }
 
