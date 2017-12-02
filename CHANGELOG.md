@@ -6,21 +6,27 @@
 * **cli:** Added a boat-load of new CLI configuration options. Every option available
            in the `angular-playground.json` file is now also available as a CLI argument
            (except @angular/cli arguments). [Read more about it in our docs](http://angularplayground.it/docs/api/configuration).
+           ([9dc1066](https://github.com/SoCreate/angular-playground/pull/68/commits/9dc1066))
 * **new docs:** Speaking of docs, check out our newly-designed
            [docs page](http://angularplayground.it/docs/getting-started/introduction).
 * **new error checking utility:** A new CLI option has been introduced that will run and visit
            all sandbox scenarios in headless chrome, surfacing any errors that appear in the
            console. [Never forget to mock a dependency again!](http://angularplayground.it/docs/how-to/run-the-test-suite)
+           ([6074586](https://github.com/SoCreate/angular-playground/commit/6074586))
 * **report formats for builds:** Used in conjunction with the checking utility, you can now
            generate a JSON report that your build system can read for error reporting. Read all
            about it [here](http://angularplayground.it/docs/api/reporter-formats).
+           ([7e0f5a8](https://github.com/SoCreate/angular-playground/pull/68/commits/7e0f5a8))
+
 * **command bar shows all components as default:** Got the Playground running but don't know where
            to begin? We'll help you out by showing all of your available scenarios.
+           ([51680fd](https://github.com/SoCreate/angular-playground/commit/51680fd)
 
 ### Breaking Changes
 * **no default configuration argument**: The CLI no longer supports a default configuration file argument.
             **Note:** `angular-playground` with no arguments will still default to using the
             `angular-playground.json` file as expected.
+            ([9dc1066](https://github.com/SoCreate/angular-playground/pull/68/commits/9dc1066))
 
   Before:
   ```
