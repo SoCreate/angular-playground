@@ -1,13 +1,15 @@
 import * as puppeteer from 'puppeteer';
 import * as process from 'process';
 import * as path from 'path';
-import { ErrorReporter, ReportType } from './shared/error-reporter';
+import { ErrorReporter, REPORT_TYPE } from './shared/error-reporter';
 import { Configuration } from './shared/configuration';
 // ts-node required for runtime typescript compilation of sandboxes.ts
 require('ts-node/register');
+// Legacy import
+const asyncMap = require('async/map');
 
 
-interface ScenarioSummary {
+export interface ScenarioSummary {
     url: string;
     name: string;
     description: string;
@@ -15,31 +17,35 @@ interface ScenarioSummary {
 
 let browser: any;
 let currentScenario = '';
-const reporter = new ErrorReporter();
+let reporter: ErrorReporter;
+let hostUrl = '';
 
 // Ensure Chromium instances are destroyed on err
 process.on('unhandledRejection', () => {
     if (browser) browser.close();
 });
 
-export async function verifySandboxes(configuration: Configuration, sandboxesPath: string) {
-    await main(configuration, sandboxesPath);
+export async function verifySandboxes(configuration: Configuration, sandboxesPath: string, port: number) {
+    hostUrl = `http://localhost:${port}`;
+    await main(configuration, sandboxesPath, port);
 }
 
 /////////////////////////////////
 
-async function main (configuration: Configuration, sandboxesPath: string) {
-    let timeoutAttempts = configuration.timeoutAttempts;
+async function main (configuration: Configuration, sandboxesPath: string, port: number) {
+    const timeoutAttempts = configuration.flags.timeout.value;
     browser = await puppeteer.launch({
         headless: true,
         handleSIGINT: false,
         args: configuration.chromeArguments
     });
 
-    const scenarios = getSandboxMetadata(configuration.baseUrl, configuration.randomScenario, sandboxesPath);
+    const scenarios = getSandboxMetadata(hostUrl, configuration.flags.randomScenario.value, sandboxesPath);
+    reporter = new ErrorReporter(scenarios, configuration.flags.reportPath.value, configuration.flags.reportType.value);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
-        await openScenarioInNewPage(scenarios[i], configuration.timeoutAttempts);
+        console.log(`Checking: ${scenarios[i].name}: ${scenarios[i].description}`);
+        await openScenarioInNewPage(scenarios[i], timeoutAttempts);
     }
 
     browser.close();
@@ -61,7 +67,7 @@ async function main (configuration: Configuration, sandboxesPath: string) {
 async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts: number) {
     if (timeoutAttempts === 0) {
         await browser.close();
-        process.exit(1);
+        throw new Error('Unable to connect to Playground.');
     }
 
     const page = await browser.newPage();
@@ -69,12 +75,10 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
     currentScenario = scenario.name;
 
     try {
-        console.log(`Checking: ${currentScenario}: ${scenario.description}`);
         await page.goto(scenario.url);
     } catch (e) {
         await page.close();
-        await delay(5000);
-        console.log(`Attempting to connect. (Attempts Remaining: ${timeoutAttempts})`);
+        await delay(1000);
         await openScenarioInNewPage(scenario, timeoutAttempts - 1);
     }
 }
@@ -130,10 +134,15 @@ function loadSandboxMenuItems(path: string): any[] {
  * Callback when Chromium page encounters a console error
  * @param msg - Error message
  */
-function onConsoleErr(msg: any) {
+async function onConsoleErr(msg: any) {
     if (msg.type === 'error') {
-        console.error(`ERROR Found in ${currentScenario}`);
-        reporter.addError(msg, currentScenario);
+        console.error(`${reporter.redWrap('ERROR:')} in ${currentScenario}`);
+        const descriptions = msg.args
+            .map(a => a._remoteObject)
+            .filter(o => o.type === 'object')
+            .map(o => o.description);
+        descriptions.map(d => console.error(d));
+        reporter.addError(descriptions, currentScenario);
     }
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "angular-playground",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -45,7 +45,10 @@
     "zone.js": ">=0.8.14"
   },
   "dependencies": {
-    "node-watch": "^0.4.1"
+    "async": "^2.6.0",
+    "node-watch": "^0.4.1",
+    "ts-node": "^3.3.0",
+    "puppeteer": "^0.13.0"
   },
   "devDependencies": {
     "@angular/common": "^5.0.0",
@@ -63,9 +66,7 @@
     "glob": "^7.1.2",
     "gulp": "^3.9.1",
     "gulp-inline-ng2-template": "^4.0.0",
-    "puppeteer": "^0.13.0",
     "rxjs": "^5.5.2",
-    "ts-node": "^3.3.0",
     "tslint": "5.3.2",
     "typescript": "2.4.2",
     "zone.js": "0.8.4"
