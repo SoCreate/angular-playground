@@ -1,82 +1,106 @@
+import { REPORT_TYPE } from './error-reporter';
+
+class Flag {
+    constructor(
+        public aliases: string[],
+        public value: any,
+        public required = false
+    ) {}
+}
+
 /**
  * Configuration object used to parse and assign command line arguments
  */
 export class Configuration {
-    private supportedFlags = {
-        noWatch: '--no-watch',
-        noServe: '--no-serve',
-        checkErrs: '--check-errors',
-        randomScenario: '--random-scenario'
+    flags: any = {
+        noWatch: new Flag(['--no-watch'], false),
+        noServe: new Flag(['--no-serve'], false),
+        checkErrors: new Flag(['--check-errors'], false),
+        randomScenario: new Flag(['--random-scenario'], false),
+        sourceRoot: new Flag(['--src', '-S'], './src', true),
+        config: new Flag(['--config', '-C'], 'angular-playground.json'),
+        timeout: new Flag(['--timeout'], 90),
+        reportPath: new Flag(['--report-path', '-R'], './sandbox.report.json'),
+        reportType: new Flag(['--report-type'], REPORT_TYPE.LOG),
+        angularCli: {
+            appName: new Flag(['--ng-cli-app'], 'playground'),
+            environment: new Flag(['--ng-cli-env'], null),
+            port: new Flag(['--ng-cli-port'], 4201),
+            cmdPath: new Flag(['--ng-cli-cmd'], 'node_modules/@angular/cli/bin/ng')
+        }
     };
 
-    private supportedArguments = {
-        config: '--config'
-    };
-
-    runWatch: boolean;
-    runAngularCliServe: boolean;
-    runCheckErrors: boolean;
-    randomScenario: boolean;
-    configFilePath: string;
-    port: number;
-    timeoutAttempts = 20;
+    // Used to tailor the version of headless chromium ran by puppeteer
     chromeArguments = [ '--disable-gpu', '--no-sandbox' ];
 
     constructor(rawArgv: string[]) {
-        const { flags, args } = this.getParsedArguments(rawArgv);
-        this.configureFlags(flags);
-        this.configureArguments(args);
+        // Apply command line arguments
+        rawArgv.forEach((argv, i) => {
+            const matchingFlag = this.findFlag(argv, this.flags);
+            if (!matchingFlag) return;
+
+            if (typeof matchingFlag.value === 'boolean') {
+                matchingFlag.value = true;
+            } else {
+                matchingFlag.value = rawArgv[i + 1];
+            }
+        });
     }
 
-    get baseUrl(): string {
-        return `http://localhost:${this.port}`;
+    /**
+     * Override flags and switches with angular playground configuration JSON file
+     * @param playgroundConfig
+     */
+    applyConfigurationFile(playgroundConfig: any) {
+        const applyToFlags = (config: any, flagGroup: any) => {
+            Object.keys(config).forEach(key => {
+                if (!flagGroup.hasOwnProperty(key)) return;
+                const flag = flagGroup[key];
+
+                if (this.instanceOfFlagGroup(flag)) {
+                    applyToFlags(config[key], flag);
+                }
+
+                flag.value = config[key];
+            });
+        };
+
+        applyToFlags(playgroundConfig, this.flags);
     }
 
-    // Boolean flags
-    private configureFlags(flags: string[]) {
-        this.runWatch = flags.indexOf(this.supportedFlags.noWatch) === -1;
-        this.runAngularCliServe = flags.indexOf(this.supportedFlags.noServe) === -1;
-        this.runCheckErrors = flags.indexOf(this.supportedFlags.checkErrs) !== -1;
-        this.randomScenario = flags.indexOf(this.supportedFlags.randomScenario) !== -1;
+    /**
+     * Return a flag that contains the provided alias or undefined if none found
+     * @param alias - Alias provided by argv. e.g. --config
+     * @param flagGroup - Grouping of flags to check
+     */
+    private findFlag(alias: string, flagGroup: any): Flag {
+        return this.getValues(flagGroup).find(flag => {
+            if (this.instanceOfFlagGroup(flag)) {
+                return this.findFlag(alias, flag);
+            }
+
+            return flag.aliases.includes(alias);
+        });
     }
 
-    // Arguments that may have values attached
-    private configureArguments(args: string[]) {
-        const configIndex = args.indexOf(this.supportedArguments.config);
-        if (configIndex !== -1) {
-            this.configFilePath = this.getArgValue(configIndex, args);
-        } else if (args.length > 0) {
-            this.configFilePath = args[0];
-        } else {
-            this.configFilePath = 'angular-playground.json';
+    // Shim for Object.values()
+    private getValues(obj: any): any[] {
+        const vals = [];
+
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                vals.push(obj[key]);
+            }
         }
+
+        return vals;
     }
 
     /**
-     * Separates accepted command line arguments from other ts-node arguments
-     * @param supportedFlags - Accepted command line flags
-     * @param args - Process arguments
+     * Determines if provided item is a Flag or Flag-group
+     * @param item - Flag or Flag-group
      */
-    private getParsedArguments(args: string[]): { flags: string[], args: string[] } {
-        const flags: string[] = [];
-
-        args = args.reduce((accr, value) => {
-            Object.keys(this.supportedFlags)
-                .map(key => this.supportedFlags[key])
-                .indexOf(value) > -1 ? flags.push(value) : accr.push(value);
-            return accr;
-        }, []);
-
-        return { flags, args };
-    }
-
-    /**
-     * Gets the value of an argument from list of args (next consecutive argument)
-     * e.g. --config ./src/
-     * @param startingIndex - Index of argument
-     * @param args - list of args
-     */
-    private getArgValue(startingIndex: number, args: string[]): string {
-        return args[startingIndex + 1];
+    private instanceOfFlagGroup(item: any) {
+        return !item.hasOwnProperty('value');
     }
 }

@@ -1,7 +1,7 @@
 const path = require('path');
 const watch = require('node-watch');
 
-export const startWatch = (config, cb) => {
+export const startWatch = (sourceRoot, cb) => {
     let filter = (fn) => {
         return (filename) => {
             if (!/node_modules/.test(filename) && /\.sandbox.ts$/.test(filename)) {
@@ -9,5 +9,5 @@ export const startWatch = (config, cb) => {
             }
         };
     };
-    watch([path.resolve(config.sourceRoot)], filter(cb));
+    watch([path.resolve(sourceRoot)], filter(cb));
 };
