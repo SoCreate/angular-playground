@@ -45,11 +45,11 @@ export async function build(rootPath): Promise<any> {
     content.addLine(`switch(path) {`);
     sandboxes.forEach(({ key }) => {
         content.addLine(`case '${key}':`);
-        content.addLine(`return import('${key}').then(sandbox => { return sandbox.default.serialize('${key}'); });`);
+        content.addLine(`return import('${home}/${key}').then(sandbox => { return sandbox.default.serialize('${key}'); });`);
     });
     content.addLine(`}}`);
 
-    let filePath = path.resolve(home, './sandboxes.ts');
+    let filePath = path.resolve('./sandboxes.ts');
 
     return new Promise((resolve, reject) => {
         fs.writeFile(filePath, content.dump(), function (err) {
