@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sandbox, Scenario, SelectedSandboxAndScenarioKeys } from '../shared/app-state';
-import { SANDBOX_LOADER } from '../shared/tokens';
+import { LoaderService } from '../shared/loader.service';
 
 @Component({
   selector: 'ap-scenario',
@@ -21,7 +21,7 @@ export class ScenarioComponent {
   @Input() set selectedSandboxAndScenarioKeys(selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys) {
     this.view.clear();
     if (selectedSandboxAndScenarioKeys) {
-      this.sandboxLoader(selectedSandboxAndScenarioKeys.sandboxKey).then(sandbox => {
+      this.loaderService.loadSandbox(selectedSandboxAndScenarioKeys.sandboxKey).then(sandbox => {
         if (sandbox) {
           let scenario = sandbox.scenarios.find((s: Scenario) => s.key === selectedSandboxAndScenarioKeys.scenarioKey);
           if (scenario) {
@@ -32,7 +32,7 @@ export class ScenarioComponent {
     }
   }
 
-  constructor(@Inject(SANDBOX_LOADER) private sandboxLoader: (key: string) => Promise<Sandbox>,
+  constructor(private loaderService: LoaderService,
               private compiler: Compiler,
               private injector: Injector,
               private view: ViewContainerRef) {

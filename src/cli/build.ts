@@ -15,11 +15,10 @@ interface SandboxFileInformation {
 }
 
 export async function build(rootPath): Promise<any> {
-    let home = path.resolve(rootPath);
-
+    const home = path.resolve(rootPath);
     const sandboxes = getSandboxFileInformation(home);
-    const filePath = path.resolve(home, './sandboxes.ts');
-    const fileContent = buildSandboxFileContents(sandboxes);
+    const filePath = path.resolve(__dirname, '../build/app/shared/sandboxes.js');
+    const fileContent = buildSandboxFileContents(sandboxes, home);
 
     return new Promise((resolve, reject) => {
         fs.writeFile(filePath, fileContent, function (err) {
@@ -68,20 +67,22 @@ export function getSandboxFileInformation(home: string): SandboxFileInformation[
     return sandboxes;
 }
 
-export function buildSandboxFileContents(sandboxes: SandboxFileInformation[]): string {
+export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string): string {
     const content = new StringBuilder();
-    content.addLine(`export function getSandboxMenuItems() {`);
+    content.addLine(`function getSandboxMenuItems() {`);
     content.addLine(`return ${JSON.stringify(sandboxes)};`);
     content.addLine(`}`);
 
-    content.addLine(`export function getSandbox(path: string) {`);
+    content.addLine(`function getSandbox(path) {`);
+    content.addLine('let sandbox;');
     content.addLine(`switch(path) {`);
 
     sandboxes.forEach(({ key }) => {
         content.addLine(`case '${key}':`);
-        content.addLine(`return import('${key}').then(sandbox => { return sandbox.default.serialize('${key}'); });`);
+        content.addLine(`  return new Promise(function (res, rej) { require(['${path.join(home, key).replace(/\\/g, '\\\\')}'], res, rej); }).then(function (sandbox) { return sandbox.default.serialize('${key}'); });`);
     });
-
     content.addLine(`}}`);
+    content.addLine('export { getSandbox, getSandboxMenuItems };');
+
     return content.dump();
 }
