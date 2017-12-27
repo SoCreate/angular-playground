@@ -1,3 +1,32 @@
+<a name="3.1.0"></a>
+
+### Bug Fixes
+* **sandboxes.ts:** The `sandboxes.ts` file is no longer generated in the root of the consuming application's
+                    project. Instead, `sandboxes.ts` is modified and referenced entirely within
+                    `angular-playground` ([1fda77f](https://github.com/SoCreate/angular-playground/commit/1fda77f)).
+* **sandbox chunking:** Sandbox scenarios are individually chunked and loaded, meaning that your
+                        component sandboxes are once again truly isolated. This functionality
+                        was affected by the `@angular/cli` 1.6.2 update
+                        ([1fda77f](https://github.com/SoCreate/angular-playground/commit/1fda77f)).
+
+  Before we had you change `tsconfig.app.json` to use `esnext` modules:
+  ```
+  # tsconfig.app.json
+  {
+    ...
+    "module": "esnext"
+  }
+  ```
+
+  Now there's no need to change it from the Angular CLI's default:
+  ```
+  # tsconfig.app.json
+  {
+    ...
+    "module": "es2015"
+  }
+  ```
+
 <a name="3.0.0"></a>
 
 # 3.0.0 (2017-12-01)
