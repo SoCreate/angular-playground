@@ -81,7 +81,8 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ho
         let fullPath = path.join(home, key);
         fullPath = slash(fullPath);
         content.addLine(`case '${key}':`);
-        content.addLine(`  return new Promise(function (res, rej) { require(['${fullPath}'], res, rej); }).then(function (sandbox) { return sandbox.default.serialize('${key}'); });`);
+        content.addLine(`  return new Promise(function (res, rej) { require(['${fullPath}'], res, rej); })`);
+        content.addLine(`    .then(function (sandbox) { return sandbox.default.serialize('${key}'); });`);
     });
     content.addLine(`}}`);
     content.addLine('export { getSandbox, getSandboxMenuItems };');
@@ -90,7 +91,7 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ho
 }
 
 // https://github.com/sindresorhus/slash
-function slash(input) {
+function slash(input: string) {
     const isExtendedLengthPath = /^\\\\\?\\/.test(input);
     const hasNonAscii = /[^\u0000-\u0080]+/.test(input);
 
