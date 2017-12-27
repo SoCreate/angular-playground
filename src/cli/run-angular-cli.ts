@@ -9,6 +9,8 @@ export const runAngularCli = (config: Configuration, angularCliConfig: any) => {
     let args = [cliConfig.cmdPath.value, 'serve', '-no-progress'];
     args.push('--port');
     args.push(cliConfig.port.value.toString());
+    // Disable circular dependency warnings (caused by sandboxes.ts references)
+    args.push('-scd=false');
     if (cliConfig.appName.value) {
         args.push(`-a=${cliConfig.appName.value}`);
     }

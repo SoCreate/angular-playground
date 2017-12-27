@@ -3,10 +3,38 @@ import { StringBuilder } from './string-builder';
 import * as fs from 'fs';
 import * as path from 'path';
 
+interface SandboxFileInformation {
+    key: string;
+    searchKey: string;
+    name: string;
+    label: string;
+    scenarioMenuItems: {
+        key: string;
+        description: string;
+    }[];
+}
+
 export async function build(rootPath): Promise<any> {
-    let content = new StringBuilder();
     let home = path.resolve(rootPath);
-    let sandboxes = [];
+
+    const sandboxes = getSandboxFileInformation(home);
+    const filePath = path.resolve(home, './sandboxes.ts');
+    const fileContent = buildSandboxFileContents(sandboxes);
+
+    return new Promise((resolve, reject) => {
+        fs.writeFile(filePath, fileContent, function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                console.log(`Created file: ${filePath}`);
+                resolve(filePath);
+            }
+        });
+    });
+}
+
+export function getSandboxFileInformation(home: string): SandboxFileInformation[] {
+    const sandboxes = [];
 
     fromDir(home, /\.sandbox.ts$/, (filename) => {
         let sandboxPath = filename.replace(home, '.').replace(/.ts$/, '').replace(/\\/g, '/');
@@ -37,28 +65,23 @@ export async function build(rootPath): Promise<any> {
         }
     });
 
+    return sandboxes;
+}
+
+export function buildSandboxFileContents(sandboxes: SandboxFileInformation[]): string {
+    const content = new StringBuilder();
     content.addLine(`export function getSandboxMenuItems() {`);
     content.addLine(`return ${JSON.stringify(sandboxes)};`);
     content.addLine(`}`);
 
     content.addLine(`export function getSandbox(path: string) {`);
     content.addLine(`switch(path) {`);
+
     sandboxes.forEach(({ key }) => {
         content.addLine(`case '${key}':`);
         content.addLine(`return import('${key}').then(sandbox => { return sandbox.default.serialize('${key}'); });`);
     });
+
     content.addLine(`}}`);
-
-    let filePath = path.resolve(home, './sandboxes.ts');
-
-    return new Promise((resolve, reject) => {
-        fs.writeFile(filePath, content.dump(), function (err) {
-            if (err) {
-                reject(err);
-            } else {
-                console.log(`Created file: ${filePath}`);
-                resolve(filePath);
-            }
-        });
-    });
+    return content.dump();
 }

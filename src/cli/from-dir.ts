@@ -3,16 +3,17 @@ import * as path from 'path';
 
 export const fromDir = (startPath, filter, callback) => {
     if (!fs.existsSync(startPath)) {
-        console.log("no dir ", startPath);
-        return;
+        throw new Error(`No Directory Found: ${startPath}`);
     }
-    let files = fs.readdirSync(startPath);
+
+    const files = fs.readdirSync(startPath);
     for (let i = 0; i < files.length; i++) {
-        let filename = path.join(startPath, files[i]);
-        let stat = fs.lstatSync(filename);
+        const filename = path.join(startPath, files[i]);
+        const stat = fs.lstatSync(filename);
         if (stat.isDirectory()) {
-            fromDir(filename, filter, callback); //recurse
+            fromDir(filename, filter, callback);
+        } else if (filter.test(filename)) {
+            callback(filename);
         }
-        else if (filter.test(filename)) callback(filename);
     }
 };
