@@ -116,7 +116,7 @@ function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean, path
 }
 
 /**
- * Attemtp to load sandboxes.ts and provide menu items
+ * Attempt to load sandboxes.ts and provide menu items
  * @param path - Path to sandboxes.ts
  */
 function loadSandboxMenuItems(path: string): any[] {

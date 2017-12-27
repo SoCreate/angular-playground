@@ -16,7 +16,7 @@ interface SandboxFileInformation {
 
 export async function build(rootPath): Promise<any> {
     const home = path.resolve(rootPath);
-    const sandboxes = getSandboxFileInformation(home);
+    const sandboxes = findSandboxes(home);
     const filePath = path.resolve(__dirname, '../build/app/shared/sandboxes.js');
     const fileContent = buildSandboxFileContents(sandboxes, home);
 
@@ -32,7 +32,7 @@ export async function build(rootPath): Promise<any> {
     });
 }
 
-export function getSandboxFileInformation(home: string): SandboxFileInformation[] {
+export function findSandboxes(home: string): SandboxFileInformation[] {
     const sandboxes = [];
 
     fromDir(home, /\.sandbox.ts$/, (filename) => {
@@ -74,22 +74,25 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ho
     content.addLine(`}`);
 
     content.addLine(`function getSandbox(path) {`);
-    content.addLine('let sandbox;');
     content.addLine(`switch(path) {`);
 
     sandboxes.forEach(({ key }) => {
         let fullPath = path.join(home, key);
+        // Normalize slash syntax for Windows/Unix filepaths
         fullPath = slash(fullPath);
         content.addLine(`case '${key}':`);
+        // Use promises and require instead of import for es2015 compatibility
         content.addLine(`  return new Promise(function (res, rej) { require(['${fullPath}'], res, rej); })`);
         content.addLine(`    .then(function (sandbox) { return sandbox.default.serialize('${key}'); });`);
     });
-    content.addLine(`}}`);
+    content.addLine(`}`);
+    content.addLine(`}`);
     content.addLine('export { getSandbox, getSandboxMenuItems };');
 
     return content.dump();
 }
 
+// Turns windows URL string ('c:\\etc\\') into URL node expects ('c:/etc/')
 // https://github.com/sindresorhus/slash
 function slash(input: string) {
     const isExtendedLengthPath = /^\\\\\?\\/.test(input);
