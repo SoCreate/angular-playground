@@ -78,11 +78,25 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ho
     content.addLine(`switch(path) {`);
 
     sandboxes.forEach(({ key }) => {
+        let fullPath = path.join(home, key);
+        fullPath = slash(fullPath);
         content.addLine(`case '${key}':`);
-        content.addLine(`  return new Promise(function (res, rej) { require(['${path.join(home, key).replace(/\\/g, '\\\\')}'], res, rej); }).then(function (sandbox) { return sandbox.default.serialize('${key}'); });`);
+        content.addLine(`  return new Promise(function (res, rej) { require(['${fullPath}'], res, rej); }).then(function (sandbox) { return sandbox.default.serialize('${key}'); });`);
     });
     content.addLine(`}}`);
     content.addLine('export { getSandbox, getSandboxMenuItems };');
 
     return content.dump();
+}
+
+// https://github.com/sindresorhus/slash
+function slash(input) {
+    const isExtendedLengthPath = /^\\\\\?\\/.test(input);
+    const hasNonAscii = /[^\u0000-\u0080]+/.test(input);
+
+    if (isExtendedLengthPath || hasNonAscii) {
+        return input;
+    }
+
+    return input.replace(/\\/g, '/');
 }
