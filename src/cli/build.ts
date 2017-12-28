@@ -81,9 +81,8 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ho
         // Normalize slash syntax for Windows/Unix filepaths
         fullPath = slash(fullPath);
         content.addLine(`case '${key}':`);
-        // Use promises and require instead of import for es2015 compatibility
-        content.addLine(`  return new Promise(function (res, rej) { require(['${fullPath}'], res, rej); })`);
-        content.addLine(`    .then(function (sandbox) { return sandbox.default.serialize('${key}'); });`);
+        content.addLine(`  return import('${fullPath}')`);
+        content.addLine(`    .then(function (sandbox) { return sandbox.default.serialize('${key}'); })`);
     });
     content.addLine(`}`);
     content.addLine(`}`);
