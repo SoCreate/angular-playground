@@ -1,4 +1,3 @@
-import * as puppeteer from 'puppeteer';
 import * as process from 'process';
 import * as path from 'path';
 import { ErrorReporter, REPORT_TYPE } from './shared/error-reporter';
@@ -34,6 +33,7 @@ export async function verifySandboxes(configuration: Configuration, sandboxesPat
 
 async function main (configuration: Configuration, sandboxesPath: string, port: number) {
     const timeoutAttempts = configuration.flags.timeout.value;
+    const puppeteer = await import('puppeteer');
     browser = await puppeteer.launch({
         headless: true,
         handleSIGINT: false,
@@ -116,7 +116,7 @@ function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean, path
 }
 
 /**
- * Attemtp to load sandboxes.ts and provide menu items
+ * Attempt to load sandboxes.ts and provide menu items
  * @param path - Path to sandboxes.ts
  */
 function loadSandboxMenuItems(path: string): any[] {

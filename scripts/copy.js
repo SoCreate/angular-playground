@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs-extra');
 
-const examples = ['example-app-angular-cli', 'example-app-embed-mode', 'example-app-webpack'];
+const examples = ['example-app-embed-mode', 'example-app-webpack', 'cli-example'];
 
 moveDistToExamples(examples)
     .then(() => console.log('Build successfully copied.'))

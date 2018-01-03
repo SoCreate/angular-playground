@@ -1,12 +1,14 @@
 import { Inject, Injectable } from '@angular/core';
 import { Location } from '@angular/common';
-import { SANDBOX_MENU_ITEMS } from './tokens';
 import { SandboxMenuItem } from './app-state';
+import { LoaderService } from './loader.service';
 
 @Injectable()
 export class UrlService {
   private _embed: boolean = null;
   private _select: any = null;
+
+  sandboxMenuItems: SandboxMenuItem[];
 
   get embed() {
     return this._embed;
@@ -16,11 +18,12 @@ export class UrlService {
     return this._select;
   }
 
-  constructor(@Inject(SANDBOX_MENU_ITEMS) private sandboxMenuItems: SandboxMenuItem[],
+  constructor(private loaderService: LoaderService,
               private location: Location) {
+    this.sandboxMenuItems = this.loaderService.getSandboxMenuItems();
     let urlPath = location.path();
     this._embed = /[?|&]embed=1/.exec(urlPath) !== null;
-    this._select = this.parse('scenario', sandboxMenuItems, urlPath);
+    this._select = this.parse('scenario', this.sandboxMenuItems, urlPath);
     if (this._select) {
       if (this._select.sandboxKey === null && this._select.scenarioKey === null) {
         this.location.replaceState('');

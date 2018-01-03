@@ -3,10 +3,40 @@ import { StringBuilder } from './string-builder';
 import * as fs from 'fs';
 import * as path from 'path';
 
+interface SandboxFileInformation {
+    key: string;
+    searchKey: string;
+    name: string;
+    label: string;
+    scenarioMenuItems: {
+        key: string;
+        description: string;
+    }[];
+}
+
 export async function build(rootPath): Promise<any> {
-    let content = new StringBuilder();
-    let home = path.resolve(rootPath);
-    let sandboxes = [];
+    const home = path.resolve(rootPath);
+    const sandboxes = findSandboxes(home);
+    const filePath = path.resolve(__dirname, '../build/app/shared/sandboxes.js');
+    const fileContent = buildSandboxFileContents(sandboxes, home);
+
+    // TODO: Remove next release post 3.1.0
+    deleteDeprecatedSandboxFileIfNecessary(home);
+
+    return new Promise((resolve, reject) => {
+        fs.writeFile(filePath, fileContent, function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                console.log(`Created file: ${filePath}`);
+                resolve(filePath);
+            }
+        });
+    });
+}
+
+export function findSandboxes(home: string): SandboxFileInformation[] {
+    const sandboxes = [];
 
     fromDir(home, /\.sandbox.ts$/, (filename) => {
         let sandboxPath = filename.replace(home, '.').replace(/.ts$/, '').replace(/\\/g, '/');
@@ -37,28 +67,50 @@ export async function build(rootPath): Promise<any> {
         }
     });
 
-    content.addLine(`export function getSandboxMenuItems() {`);
+    return sandboxes;
+}
+
+export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string): string {
+    const content = new StringBuilder();
+    content.addLine(`function getSandboxMenuItems() {`);
     content.addLine(`return ${JSON.stringify(sandboxes)};`);
     content.addLine(`}`);
 
-    content.addLine(`export function getSandbox(path: string) {`);
+    content.addLine(`function getSandbox(path) {`);
     content.addLine(`switch(path) {`);
+
     sandboxes.forEach(({ key }) => {
+        let fullPath = path.join(home, key);
+        // Normalize slash syntax for Windows/Unix filepaths
+        fullPath = slash(fullPath);
         content.addLine(`case '${key}':`);
-        content.addLine(`return import('${key}').then(sandbox => { return sandbox.default.serialize('${key}'); });`);
+        content.addLine(`  return import('${fullPath}')`);
+        content.addLine(`    .then(function (sandbox) { return sandbox.default.serialize('${key}'); })`);
     });
-    content.addLine(`}}`);
+    content.addLine(`}`);
+    content.addLine(`}`);
+    content.addLine('export { getSandbox, getSandboxMenuItems };');
 
-    let filePath = path.resolve(home, './sandboxes.ts');
+    return content.dump();
+}
 
-    return new Promise((resolve, reject) => {
-        fs.writeFile(filePath, content.dump(), function (err) {
-            if (err) {
-                reject(err);
-            } else {
-                console.log(`Created file: ${filePath}`);
-                resolve(filePath);
-            }
-        });
-    });
+// Provided for minor release post sandboxes.ts resolution changes
+function deleteDeprecatedSandboxFileIfNecessary(home: string) {
+    const sandboxesFile = path.resolve(home, './sandboxes.ts');
+    if (fs.existsSync(sandboxesFile)) {
+        fs.unlinkSync(sandboxesFile);
+    }
+}
+
+// Turns windows URL string ('c:\\etc\\') into URL node expects ('c:/etc/')
+// https://github.com/sindresorhus/slash
+function slash(input: string) {
+    const isExtendedLengthPath = /^\\\\\?\\/.test(input);
+    const hasNonAscii = /[^\u0000-\u0080]+/.test(input);
+
+    if (isExtendedLengthPath || hasNonAscii) {
+        return input;
+    }
+
+    return input.replace(/\\/g, '/');
 }
