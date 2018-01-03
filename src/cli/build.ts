@@ -20,6 +20,9 @@ export async function build(rootPath): Promise<any> {
     const filePath = path.resolve(__dirname, '../build/app/shared/sandboxes.js');
     const fileContent = buildSandboxFileContents(sandboxes, home);
 
+    // TODO: Remove next release post 3.1.0
+    deleteDeprecatedSandboxFileIfNecessary(home);
+
     return new Promise((resolve, reject) => {
         fs.writeFile(filePath, fileContent, function (err) {
             if (err) {
@@ -89,6 +92,14 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ho
     content.addLine('export { getSandbox, getSandboxMenuItems };');
 
     return content.dump();
+}
+
+// Provided for minor release post sandboxes.ts resolution changes
+function deleteDeprecatedSandboxFileIfNecessary(home: string) {
+    const sandboxesFile = path.resolve(home, './sandboxes.ts');
+    if (fs.existsSync(sandboxesFile)) {
+        fs.unlinkSync(sandboxesFile);
+    }
 }
 
 // Turns windows URL string ('c:\\etc\\') into URL node expects ('c:/etc/')
