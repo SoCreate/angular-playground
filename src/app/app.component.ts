@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from './shared/app-state';
-import { SANDBOX_MENU_ITEMS } from './shared/tokens';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { StateService } from './shared/state.service';
@@ -9,6 +8,7 @@ import { EventManager } from '@angular/platform-browser';
 import { UrlService } from './shared/url.service';
 import { fuzzySearch } from './shared/fuzzy-search.function';
 import { LevenshteinDistance } from './shared/levenshtein-distance';
+import { LoaderService } from './shared/loader.service';
 
 @Component({
   selector: 'ap-root',
@@ -25,11 +25,12 @@ export class AppComponent {
   shortcuts = this.getShortcuts();
   @ViewChildren('scenarioElement') scenarioLinkElements: QueryList<ElementRef>;
 
-  constructor(@Inject(SANDBOX_MENU_ITEMS) sandboxMenuItems: SandboxMenuItem[],
+  constructor(private loaderService: LoaderService,
               private stateService: StateService,
               private urlService: UrlService,
               private eventManager: EventManager,
               private levenshteinDistance: LevenshteinDistance) {
+    const sandboxMenuItems = this.loaderService.getSandboxMenuItems();
 
     if (this.urlService.embed) {
       this.selectedSandboxAndScenarioKeys = {
