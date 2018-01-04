@@ -1,3 +1,15 @@
+# 3.2.0 (2018-01-04)
+
+<a name="3.2.0"></a>
+
+### Features
+* **cli:** Added an option to disable sandbox chunking for apps with a large number of sandbox files.
+
+  Usage:
+  ```
+  angular-playground --no-chunk
+  ```
+
 # 3.1.0 (2018-01-03)
 
 <a name="3.1.0"></a>
