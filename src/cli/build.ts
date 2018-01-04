@@ -1,7 +1,8 @@
-import { fromDir } from './from-dir';
-import { StringBuilder } from './string-builder';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fromDir } from './from-dir';
+import { StringBuilder } from './string-builder';
+import { Configuration } from './shared/configuration';
 
 interface SandboxFileInformation {
     key: string;
@@ -14,11 +15,12 @@ interface SandboxFileInformation {
     }[];
 }
 
-export async function build(rootPath): Promise<any> {
+export async function build(rootPath, noChunk: boolean): Promise<any> {
+    const chunkMode = noChunk ? 'eager' : 'lazy';
     const home = path.resolve(rootPath);
     const sandboxes = findSandboxes(home);
     const filePath = path.resolve(__dirname, '../build/app/shared/sandboxes.js');
-    const fileContent = buildSandboxFileContents(sandboxes, home);
+    const fileContent = buildSandboxFileContents(sandboxes, home, chunkMode);
 
     // TODO: Remove next release post 3.1.0
     deleteDeprecatedSandboxFileIfNecessary(home);
@@ -70,7 +72,7 @@ export function findSandboxes(home: string): SandboxFileInformation[] {
     return sandboxes;
 }
 
-export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string): string {
+export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string, chunkMode: string): string {
     const content = new StringBuilder();
     content.addLine(`function getSandboxMenuItems() {`);
     content.addLine(`return ${JSON.stringify(sandboxes)};`);
@@ -79,14 +81,12 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ho
     content.addLine(`function getSandbox(path) {`);
     content.addLine(`switch(path) {`);
 
-    sandboxes.forEach(({ key }) => {
+    sandboxes.forEach(({ key }, i) => {
         let fullPath = path.join(home, key);
         // Normalize slash syntax for Windows/Unix filepaths
         fullPath = slash(fullPath);
         content.addLine(`case '${key}':`);
-        content.addLine(`  return Promise.resolve()`);
-        content.addLine(`    .then(function () { return require('${fullPath}'); })`);
-        content.addLine(`    .then(function (sandbox) { return sandbox.default.serialize('${key}'); });`);
+        content.addLine(`  return import( /* webpackMode: "${chunkMode}" */ '${fullPath}').then(_ => _.default.serialize('${key}'));`);
     });
     content.addLine(`}`);
     content.addLine(`}`);

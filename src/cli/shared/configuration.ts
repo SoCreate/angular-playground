@@ -15,6 +15,7 @@ export class Configuration {
     flags: any = {
         noWatch: new Flag(['--no-watch'], false),
         noServe: new Flag(['--no-serve'], false),
+        noChunk: new Flag(['--no-chunk'], false),
         checkErrors: new Flag(['--check-errors'], false),
         randomScenario: new Flag(['--random-scenario'], false),
         sourceRoot: new Flag(['--src', '-S'], './src', true),
