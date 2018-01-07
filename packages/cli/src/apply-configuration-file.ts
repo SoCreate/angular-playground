@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { resolve as resolvePath } from 'path';
 import { exit } from 'process';
+import { existsSync } from 'fs';
 
 export interface Config {
     sourceRoot: string;
@@ -18,11 +19,10 @@ export function applyConfigurationFile(program: any): Config {
 
 function loadConfig(path: string) {
     const configPath = resolvePath(path);
-    try {
-        return require(configPath.replace(/.json$/, ''));
-    } catch (e) {
-        console.log(chalk.red(`Failed to load config file ${configPath}`));
-        exit(1);
+    if (!existsSync(configPath)) {
+        throw new Error(chalk.red(`Failed to load config file ${configPath}`));
     }
+
+    return require(configPath.replace(/.json$/, ''));
 }
 
