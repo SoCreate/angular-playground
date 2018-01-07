@@ -26,7 +26,7 @@ async function run() {
 
     // Parity between command line arguments and configuration file
     config.applyConfigurationFile(playgroundConfig);
-    const sandboxesPath = await build(playgroundConfig.sourceRoot);
+    const sandboxesPath = await build(playgroundConfig.sourceRoot, config.flags.noChunk.value);
 
     if (config.flags.checkErrors.value) {
         // get port dynamically
@@ -36,7 +36,7 @@ async function run() {
     }
 
     if (!config.flags.noWatch.value) {
-        startWatch(config.flags.sourceRoot.value, () => build(config.flags.sourceRoot.value));
+        startWatch(config.flags.sourceRoot.value, () => build(config.flags.sourceRoot.value, config.flags.noChunk.value));
     }
 
     if (!config.flags.noServe.value && playgroundConfig.angularCli) {
