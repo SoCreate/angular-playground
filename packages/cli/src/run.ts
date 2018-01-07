@@ -1,5 +1,6 @@
 import * as program from 'commander';
 import { applyConfigurationFile } from './apply-configuration-file';
+import { Config } from './apply-configuration-file';
 
 export function run() {
     program
@@ -27,5 +28,5 @@ export function run() {
         .option('--ng-cli-cmd <path>', 'Path to @angular/cli executable');
 
     program.parse(process.argv);
-    applyConfigurationFile(program);
+    const config: Config = applyConfigurationFile(program);
 }

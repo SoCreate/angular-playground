@@ -2,8 +2,20 @@ import chalk from 'chalk';
 import { resolve as resolvePath } from 'path';
 import { exit } from 'process';
 
-export function applyConfigurationFile(program: any) {
+export interface Config {
+    sourceRoot: string;
+    angularAppName: string;
+}
+
+const CONFIG_GROUPS = [ 'angularCli' ];
+
+export function applyConfigurationFile(program: any): Config {
     const playgroundConfig = loadConfig(program.config);
+    // TODO: Missing value error reporting
+    return {
+        sourceRoot: playgroundConfig.sourceRoot || program.src,
+        angularAppName: playgroundConfig.angularCli.appName || program.ngCliApp
+    };
 }
 
 function loadConfig(path: string) {
@@ -15,3 +27,4 @@ function loadConfig(path: string) {
         exit(1);
     }
 }
+
