@@ -16,8 +16,8 @@
     "build": "npm run app:build && npm run cli:build",
     "app:build": "gulp build",
     "cli:build": "tsc -p ./src/cli/tsconfig.json",
-    "cli2:build": "tsc -p ./packages/cli/tsconfig.json",
-    "cli2": "npm run cli2:build && node dist/bin/cli.js --help",
+    "cli2:build": "rm -rf ./dist/ && tsc -p ./packages/cli/tsconfig.json",
+    "cli2": "npm run cli2:build && node dist/bin/index.js",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "async": "^2.6.0",
+    "chalk": "^2.3.0",
     "commander": "^2.12.2",
     "node-watch": "^0.4.1",
     "puppeteer": "^0.13.0",
