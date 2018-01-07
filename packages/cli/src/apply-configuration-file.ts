@@ -7,8 +7,6 @@ export interface Config {
     angularAppName: string;
 }
 
-const CONFIG_GROUPS = [ 'angularCli' ];
-
 export function applyConfigurationFile(program: any): Config {
     const playgroundConfig = loadConfig(program.config);
     // TODO: Missing value error reporting
