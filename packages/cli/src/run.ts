@@ -1,8 +1,11 @@
 import * as program from 'commander';
 import { applyConfigurationFile } from './apply-configuration-file';
+import { buildSandboxes } from './build-sandboxes';
 import { Config } from './apply-configuration-file';
+import { startWatch } from './start-watch';
+import { runAngularCli } from './run-angular-cli';
 
-export function run() {
+export async function run() {
     program
         .name('angular-playground')
         .version('3.2.0')
@@ -10,9 +13,9 @@ export function run() {
         .option('-S, --src <path>', 'Specify component source directory', './src/')
 
         // Build options
-        .option('--no-watch', 'Disable sandboxes watch')
-        .option('--no-serve', 'Disable cli serve')
-        .option('--no-chunk', 'Don\'t chunk sandbox files individually')
+        .option('--no-watch', 'Disable sandboxes watch', false)
+        .option('--no-serve', 'Disable cli serve', false)
+        .option('--no-chunk', 'Don\'t chunk sandbox files individually', false)
 
         // Verify sandboxes options
         .option('--check-errors', 'Check sandboxes for errors in Chromium')
@@ -25,8 +28,18 @@ export function run() {
         .option('--ng-cli-app <appName>', '@angular/cli appName')
         .option('--ng-cli-env <path>', 'Path to @angular/cli environment')
         .option('--ng-cli-port <n>', '@angular/cli serve port', 4201)
-        .option('--ng-cli-cmd <path>', 'Path to @angular/cli executable');
+        .option('--ng-cli-cmd <path>', 'Path to @angular/cli executable', 'node_modules/@angular/cli/bin/ng')
+        .option('--ng-cli-args <list>', 'Additional @angular/cli arguments');
 
     program.parse(process.argv);
     const config: Config = applyConfigurationFile(program);
+    const sandboxesPath: string = await buildSandboxes(config.sourceRoot, config.noChunk);
+
+    if (!config.noWatch) {
+        startWatch(config.sourceRoot, () => buildSandboxes(config.sourceRoot, config.noChunk));
+    }
+
+    if (!config.noServe) {
+        runAngularCli(config);
+    }
 }

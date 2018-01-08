@@ -15,21 +15,29 @@ interface SandboxFileInformation {
     }[];
 }
 
-export async function buildSandboxes(srcPath: string, noChunk: boolean) {
+export function buildSandboxes(srcPath: string, noChunk: boolean): Promise<string> {
     const chunkMode = noChunk ? 'eager' : 'lazy';
-    const filePath = '';
-    const fileContent = '';
+    const home = resolvePath(srcPath);
+    const sandboxes = findSandboxes(home);
+    const filePath = resolvePath(__dirname, '../../build/app/shared/sandboxes.js');
+    const fileContent = buildSandboxFileContents(sandboxes, home, chunkMode);
+
+    // TODO: Remove next release post 3.1.0
+    deleteDeprecatedSandboxFileIfNecessary(home);
 
     return new Promise((resolve, reject) => {
         writeFile(filePath, fileContent, err => {
-            if (err) reject(err);
+            if (err) {
+                console.log(chalk.red('Unable to write sandboxes.\n'));
+                throw new Error(err.message);
+            }
             console.log(chalk.bgBlue('Successfully read sandboxes.'));
             resolve(filePath);
         });
     });
 }
 
-export function findSandboxes(home: string): SandboxFileInformation[] {
+function findSandboxes(home: string): SandboxFileInformation[] {
     const sandboxes = [];
 
     fromDir(home, /\.sandbox.ts$/, (filename) => {
@@ -64,7 +72,7 @@ export function findSandboxes(home: string): SandboxFileInformation[] {
     return sandboxes;
 }
 
-export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string, chunkMode: string): string {
+function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string, chunkMode: string): string {
     const content = new StringBuilder();
     content.addLine(`function getSandboxMenuItems() {`);
     content.addLine(`return ${JSON.stringify(sandboxes)};`);
@@ -87,6 +95,7 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ho
     return content.dump();
 }
 
+// TODO: Remove
 // Provided for minor release post sandboxes.ts resolution changes
 function deleteDeprecatedSandboxFileIfNecessary(home: string) {
     const sandboxesFile = resolvePath(home, './sandboxes.ts');

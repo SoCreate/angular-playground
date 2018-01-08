@@ -9,7 +9,7 @@ it('should throw error when failing to load a configuration file', () => {
 });
 
 it('should return config object from configuration file', () => {
-    const programMock = { config: './packages/cli/test/test-config.json' };
+    const programMock = { config: './packages/cli/test/angular-test-config.json' };
     const config = applyConfigurationFile(programMock);
     expect(config).not.toBeUndefined();
 });
