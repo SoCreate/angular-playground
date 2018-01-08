@@ -9,11 +9,6 @@ export interface Config {
     noChunk: boolean;
     noWatch: boolean;
     noServe: boolean;
-    checkErrors: boolean;
-    randomScenario: boolean;
-    timeout: number;
-    reportType: string;
-    reportPath: string;
     angularCliPath: string;
     angularCliPort: number;
     angularCliEnv: string | undefined;
@@ -29,11 +24,6 @@ export function applyConfigurationFile(program: any): Config {
         noChunk: playgroundConfig.noChunk || program.noChunk,
         noWatch: playgroundConfig.noWatch || program.noWatch,
         noServe: playgroundConfig.noServe || program.noServe,
-        checkErrors: playgroundConfig.checkErrors || program.checkErrors,
-        randomScenario: playgroundConfig.randomScenario || program.randomScenario,
-        timeout: playgroundConfig.timeout || program.timeout,
-        reportType: playgroundConfig.reportType || program.reportType,
-        reportPath: playgroundConfig.reportPath || program.reportPath,
         angularCliPath: playgroundConfig.angularCli.cmdPath || program.ngCliCmd,
         angularCliPort: parseInt(playgroundConfig.angularCli.port, 10) || program.ngCliPort,
         angularCliEnv: playgroundConfig.angularCli.env || program.ngCliEnv,
