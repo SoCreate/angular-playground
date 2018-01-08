@@ -1,12 +1,12 @@
-import * as process from 'process';
-import * as path from 'path';
 import { ErrorReporter, REPORT_TYPE } from '../lib/error-reporter';
 import { Config } from '../src/apply-configuration-file';
+import chalk from 'chalk';
 // ts-node required for runtime typescript compilation of sandboxes.ts
 require('ts-node/register');
 // Legacy import
 // const asyncMap = require('async/map');
-import { map as asyncMap } from 'async';
+// import { map as asyncMap } from 'async';
+// import map from 'async/map';
 
 // Used to tailor the version of headless chromium ran by puppeteer
 const CHROME_ARGS = [ '--disable-gpu', '--no-sandbox' ];
@@ -126,10 +126,12 @@ function loadSandboxMenuItems(path: string): any[] {
     try {
         return require(path).getSandboxMenuItems();
     } catch (err) {
-        console.error('Failed to load sandboxes.ts file.');
-        console.error(err);
-        console.log('Terminating process.');
-        process.exit(1);
+        console.log(chalk.red('Failed to load sandbox menu items.'));
+        throw new Error(err);
+    //     console.error('Failed to load sandboxes.ts file.');
+    //     console.error(err);
+    //     console.log('Terminating process.');
+    //     process.exit(1);
     }
 }
 

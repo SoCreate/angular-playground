@@ -10,6 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "playground": "node ./node_modules/angular-playground/dist/bin/index.js",
+    "playground:check": "node ./node_modules/angular-playground/dist/bin/index.js --check-errors",
     "playground:build": "npm run build --prefix ../../ && node ../../scripts/copy.js && npm run playground"
   },
   "private": true,

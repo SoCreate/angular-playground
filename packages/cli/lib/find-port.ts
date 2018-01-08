@@ -1,7 +1,8 @@
 import { createServer } from 'net';
 // Legacy import
 // const detect = require('async/detect');
-import { detect } from 'async';
+// import { detect } from 'async';
+import { detect } from 'async/detect';
 
 /**
  * Function that detects the first port not in use in a given range
