@@ -31,8 +31,7 @@ export class Configuration {
         }
     };
 
-    // Used to tailor the version of headless chromium ran by puppeteer
-    chromeArguments = [ '--disable-gpu', '--no-sandbox' ];
+
 
     constructor(rawArgv: string[]) {
         // Apply command line arguments

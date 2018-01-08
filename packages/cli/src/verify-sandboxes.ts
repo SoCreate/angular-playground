@@ -1,12 +1,15 @@
 import * as process from 'process';
 import * as path from 'path';
-import { ErrorReporter, REPORT_TYPE } from './shared/error-reporter';
-import { Configuration } from './shared/configuration';
+import { ErrorReporter, REPORT_TYPE } from '../lib/error-reporter';
+import { Config } from '../src/apply-configuration-file';
 // ts-node required for runtime typescript compilation of sandboxes.ts
 require('ts-node/register');
 // Legacy import
-const asyncMap = require('async/map');
+// const asyncMap = require('async/map');
+import { map as asyncMap } from 'async';
 
+// Used to tailor the version of headless chromium ran by puppeteer
+const CHROME_ARGS = [ '--disable-gpu', '--no-sandbox' ];
 
 export interface ScenarioSummary {
     url: string;
@@ -24,24 +27,24 @@ process.on('unhandledRejection', () => {
     if (browser) browser.close();
 });
 
-export async function verifySandboxes(configuration: Configuration, sandboxesPath: string, port: number) {
+export async function verifySandboxes(configuration: Config, sandboxesPath: string, port: number) {
     hostUrl = `http://localhost:${port}`;
     await main(configuration, sandboxesPath, port);
 }
 
 /////////////////////////////////
 
-async function main (configuration: Configuration, sandboxesPath: string, port: number) {
-    const timeoutAttempts = configuration.flags.timeout.value;
+async function main(config: Config, sandboxesPath: string, port: number) {
+    const timeoutAttempts = config.timeout;
     const puppeteer = await import('puppeteer');
     browser = await puppeteer.launch({
         headless: true,
         handleSIGINT: false,
-        args: configuration.chromeArguments
+        args: CHROME_ARGS
     });
 
-    const scenarios = getSandboxMetadata(hostUrl, configuration.flags.randomScenario.value, sandboxesPath);
-    reporter = new ErrorReporter(scenarios, configuration.flags.reportPath.value, configuration.flags.reportType.value);
+    const scenarios = getSandboxMetadata(hostUrl, config.randomScenario, sandboxesPath);
+    reporter = new ErrorReporter(scenarios, config.reportPath, config.reportType);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
         console.log(`Checking: ${scenarios[i].name}: ${scenarios[i].description}`);

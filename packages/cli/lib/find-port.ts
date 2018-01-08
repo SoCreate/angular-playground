@@ -1,6 +1,7 @@
-import * as net from 'net';
+import { createServer } from 'net';
 // Legacy import
-const detect = require('async/detect');
+// const detect = require('async/detect');
+import { detect } from 'async';
 
 /**
  * Function that detects the first port not in use in a given range
@@ -24,7 +25,7 @@ export async function findFirstFreePort(host: string, start: number, end: number
         let calledOnce = false;
         let connected = false;
 
-        const server = net.createServer().listen(port, host);
+        const server = createServer().listen(port, host);
         const timeoutRef = setTimeout(() => {
             calledOnce = true;
             cb(port, false);

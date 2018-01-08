@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import { JSONReporter } from '../reporters/json-reporter';
-import { ScenarioSummary } from '../verify-sandboxes';
+import { writeFileSync } from 'fs';
+import { JSONReporter } from './reporters/json-reporter';
+import { ScenarioSummary } from '../src/verify-sandboxes';
 
 export const REPORT_TYPE = {
     LOG: 'log',
@@ -40,7 +40,7 @@ export class ErrorReporter {
             case REPORT_TYPE.JSON:
                 const scenarioNames = this.scenarios.map(s => `${s.name}: ${s.description}`);
                 const results = new JSONReporter(this.errors, scenarioNames);
-                fs.writeFileSync(this.filename, results.getJson());
+                writeFileSync(this.filename, results.getJson());
                 break;
         }
     }

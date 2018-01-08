@@ -20,7 +20,7 @@ export async function run() {
         // Verify sandboxes options
         .option('--check-errors', 'Check sandboxes for errors in Chromium')
         .option('--random-scenario', 'Used with --check-errors, pick a random scenario for each sandbox')
-        .option('--timeout', 'Timeout interval for --check-errors')
+        .option('--timeout', 'Timeout interval for --check-errors', 90)
         .option('--report-type', 'Type of --check-errors output report')
         .option('--report-path', 'File path for --check-errors report output')
 
