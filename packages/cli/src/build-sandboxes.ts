@@ -77,6 +77,7 @@ function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: str
     content.addLine(`function getSandboxMenuItems() {`);
     content.addLine(`return ${JSON.stringify(sandboxes)};`);
     content.addLine(`}`);
+    content.addLine('exports.getSandboxMenuItems = getSandboxMenuItems;');
 
     content.addLine(`function getSandbox(path) {`);
     content.addLine(`switch(path) {`);
@@ -90,7 +91,7 @@ function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: str
     });
     content.addLine(`}`);
     content.addLine(`}`);
-    content.addLine('export { getSandbox, getSandboxMenuItems };');
+    content.addLine('exports.getSandbox = getSandbox;');
 
     return content.dump();
 }
