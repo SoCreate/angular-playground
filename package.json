@@ -76,7 +76,6 @@
     "@types/node": "6.0.60",
     "@types/puppeteer": "^0.13.3",
     "codelyzer": "3.0.1",
-    "copyfiles": "^1.2.0",
     "fs-extra": "^4.0.1",
     "glob": "^7.1.2",
     "gulp": "^3.9.1",

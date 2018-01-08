@@ -4,8 +4,7 @@ import { buildSandboxes } from './build-sandboxes';
 import { Config } from './apply-configuration-file';
 import { startWatch } from './start-watch';
 import { runAngularCli } from './run-angular-cli';
-import { REPORT_TYPE } from 'lib/error-reporter';
-import { verifySandboxes } from 'src/verify-sandboxes';
+import { REPORT_TYPE } from '../lib/error-reporter';
 
 export async function run() {
     program
@@ -45,7 +44,8 @@ export async function run() {
         runAngularCli(config);
     }
 
-    if (config.checkErrors) {
-        verifySandboxes(config, sandboxesPath, config.angularCliPort);
-    }
+    // TODO:
+    // if (config.checkErrors) {
+    //     verifySandboxes(config, sandboxesPath, config.angularCliPort);
+    // }
 }
