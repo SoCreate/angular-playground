@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef } from "@angular/core";
+import { Directive, Input, ElementRef } from '@angular/core';
 
 @Directive({
   selector: '[apFocus]'

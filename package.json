@@ -26,9 +26,7 @@
     "clean": "node ./scripts/clean.js",
     "build": "npm run app:build && npm run cli:build",
     "app:build": "gulp build",
-    "cli:build": "tsc -p ./src/cli/tsconfig.json",
-    "cli2:build": "rm -rf ./dist/ && tsc -p ./packages/cli/tsconfig.json",
-    "cli2": "npm run cli2:build && node dist/bin/index.js",
+    "cli:build": "tsc -p ./packages/cli/tsconfig.json",
     "prepublish": "npm run build",
     "test": "jest"
   },

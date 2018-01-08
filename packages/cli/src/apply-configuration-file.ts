@@ -25,7 +25,7 @@ export function applyConfigurationFile(program: any): Config {
         noWatch: playgroundConfig.noWatch || program.noWatch,
         noServe: playgroundConfig.noServe || program.noServe,
         angularCliPath: playgroundConfig.angularCli.cmdPath || program.ngCliCmd,
-        angularCliPort: parseInt(playgroundConfig.angularCli.port, 10) || program.port,
+        angularCliPort: parseInt(playgroundConfig.angularCli.port, 10) || program.ngCliPort,
         angularCliEnv: playgroundConfig.angularCli.env || program.ngCliEnv,
         angularCliAdditionalArgs: playgroundConfig.angularCli.args || program.ngCliArgs
     };

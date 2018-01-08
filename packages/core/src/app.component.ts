@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from './shared/app-state';
+import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from '../lib/app-state';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { StateService } from './shared/state.service';

@@ -11,12 +11,18 @@ export function runAngularCli(config: Config) {
         handler.write(`[ng serve]: ${message}\n`);
     };
 
-    ngServe.stdout.on('data', data => write(process.stdout, data));
-    ngServe.stderr.on('data', data => write(process.stderr, data));
+    ngServe.stdout.on('data', data => {
+        write(process.stdout, data);
+    });
+
+    ngServe.stderr.on('data', data => {
+        write(process.stderr, data);
+    });
 }
 
 function configureArguments(config: Config) {
     let args = [config.angularCliPath, 'serve', '-no-progress'];
+
     args.push(`--port=${config.angularCliPort}`);
 
     if (config.angularAppName) {

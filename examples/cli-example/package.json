@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "playground": "node ./node_modules/angular-playground/dist/bin/cli.js",
+    "playground": "node ./node_modules/angular-playground/dist/bin/index.js",
     "playground:build": "npm run build --prefix ../../ && node ../../scripts/copy.js && npm run playground"
   },
   "private": true,

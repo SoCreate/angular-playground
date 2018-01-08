@@ -9,7 +9,7 @@ import {
   Inject
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Sandbox, Scenario, SelectedSandboxAndScenarioKeys } from '../shared/app-state';
+import { Sandbox, Scenario, SelectedSandboxAndScenarioKeys } from '../../lib/app-state';
 import { LoaderService } from '../shared/loader.service';
 
 @Component({

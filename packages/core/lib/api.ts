@@ -1,4 +1,4 @@
-import { Sandbox } from '../app/shared/app-state';
+import { Sandbox } from './app-state';
 
 export interface SandboxOfConfig {
   label?: string;

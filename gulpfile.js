@@ -13,8 +13,8 @@ gulp.task('clean', () => {
 });
 
 gulp.task('inline', ['clean'], () => {
-    return gulp.src('./src/**/*.ts')
-        .pipe(inlineNg2Template({ base: '/src/app' }))
+    return gulp.src('./packages/core/**/*.ts')
+        .pipe(inlineNg2Template({ base: '/packages/core/src' }))
         .pipe(gulp.dest('./build'));
 });
 
