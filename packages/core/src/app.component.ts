@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from '../lib/app-state';
+import { EventManager } from '@angular/platform-browser';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from './lib/app-state';
 import { StateService } from './shared/state.service';
-import { EventManager } from '@angular/platform-browser';
 import { UrlService } from './shared/url.service';
 import { fuzzySearch } from './shared/fuzzy-search.function';
 import { LevenshteinDistance } from './shared/levenshtein-distance';

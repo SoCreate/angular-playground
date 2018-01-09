@@ -2,7 +2,7 @@
 
 # compiled output
 /dist/
-/build/
+/packages/core/build/
 /src/**/*.ngfactory.ts
 *.ngsummary.json
 

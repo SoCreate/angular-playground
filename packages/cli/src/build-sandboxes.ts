@@ -19,7 +19,7 @@ export function buildSandboxes(srcPath: string, noChunk: boolean): Promise<strin
     const chunkMode = noChunk ? 'eager' : 'lazy';
     const home = resolvePath(srcPath);
     const sandboxes = findSandboxes(home);
-    const filePath = resolvePath(__dirname, '../../build/src/shared/sandboxes.js');
+    const filePath = resolvePath(__dirname, '../../build/shared/sandboxes.js');
     const fileContent = buildSandboxFileContents(sandboxes, home, chunkMode);
 
     // TODO: Remove next release post 3.1.0

@@ -3,7 +3,7 @@
     "baseUrl": "",
     "sourceMap": true,
     "declaration": true,
-    "outDir": "dist",
+    "outDir": "../../dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["es6", "dom"],
@@ -18,11 +18,5 @@
   },
   "include": [
     "index.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "example-app-angular-cli",
-    "example-app-webpack",
-    "example-app-embed-mode"
   ]
 }

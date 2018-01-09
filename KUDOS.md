@@ -5,3 +5,5 @@
 
 * Thanks goes out for the awesome fuzzy search code by [Nicolás Bevacqua](https://twitter.com/nzgb)  
 <https://github.com/bevacqua/fuzzysearch>
+
+* Thanks goes out for Windows/Unix path normalization from <https://github.com/sindresorhus/slash>

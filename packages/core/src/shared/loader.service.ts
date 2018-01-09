@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SandboxMenuItem } from '../../lib/app-state';
+import { SandboxMenuItem } from '../lib/app-state';
 import { getSandbox, getSandboxMenuItems } from './sandboxes';
 
 @Injectable()
