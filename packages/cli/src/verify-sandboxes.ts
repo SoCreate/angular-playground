@@ -8,8 +8,8 @@ import { Config } from './configure';
 
 // Used to tailor the version of headless chromium ran by puppeteer
 const CHROME_ARGS = [ '--disable-gpu', '--no-sandbox' ];
-const SANDBOX_PATH = resolvePath(__dirname, '../../angular-playground/dist/build/src/shared/sandboxes.js');
-const SANDBOX_DEST = '';
+const SANDBOX_PATH = resolvePath(__dirname, '../../build/src/shared/sandboxes.js');
+const SANDBOX_DEST = resolvePath(__dirname, '../../sandboxes_modified.js');
 
 export interface ScenarioSummary {
     url: string;
@@ -128,7 +128,7 @@ function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean): Sce
  */
 function loadSandboxMenuItems(): any[] {
     try {
-        return require('../../sandboxes.js').getSandboxMenuItems();
+        return require(SANDBOX_DEST).getSandboxMenuItems();
     } catch (err) {
         console.log(chalk.red('Failed to load sandbox menu items.'));
         console.error(err);
