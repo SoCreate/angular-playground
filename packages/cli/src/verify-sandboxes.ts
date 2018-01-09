@@ -3,7 +3,7 @@ import { resolve as resolvePath } from 'path';
 import chalk from 'chalk';
 import { copyFileSync } from 'fs';
 import { ErrorReporter, REPORT_TYPE } from './error-reporter';
-import { removeDynamicImports } from 'src/remove-dynamic-imports';
+import { removeDynamicImports } from './remove-dynamic-imports';
 import { Config } from './configure';
 
 // Used to tailor the version of headless chromium ran by puppeteer
@@ -142,7 +142,7 @@ function loadSandboxMenuItems(): any[] {
  */
 async function onConsoleErr(msg: any) {
     if (msg.type === 'error') {
-        console.error(`${reporter.redWrap('ERROR:')} in ${currentScenario}`);
+        console.error(chalk.red(`Error in ${currentScenario}:`));
         const descriptions = msg.args
             .map(a => a._remoteObject)
             .filter(o => o.type === 'object')

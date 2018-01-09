@@ -12,7 +12,7 @@
     "playground": "node ./node_modules/angular-playground/dist/bin/index.js",
     "playground:check": "node ./node_modules/angular-playground/dist/bin/index.js --check-errors",
     "playground:build": "npm run build --prefix ../../ && node ../../scripts/copy.js && npm run playground",
-    "check-errors": "check-sandboxes"
+    "check-errors": "node ./node_modules/angular-playground/dist/bin/index.js --verify"
   },
   "private": true,
   "dependencies": {

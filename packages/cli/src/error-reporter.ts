@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { writeFileSync } from 'fs';
 import { ScenarioSummary } from './verify-sandboxes';
 import { JSONReporter } from './reporters/json-reporter';
@@ -20,10 +21,6 @@ export class ErrorReporter {
         return this._errors;
     }
 
-    redWrap(msg: string): string {
-        return `\x1b[31m${msg}\x1b[0m`;
-    }
-
     addError(descriptions: any, scenario: string) {
         this._errors.push({ descriptions, scenario });
     }
@@ -31,7 +28,7 @@ export class ErrorReporter {
     compileReport() {
         switch (this.type) {
             case REPORT_TYPE.LOG:
-                console.error(`${this.redWrap('ERROR:')} in the following scenarios`);
+                console.error(chalk.red('Error in the following scenarios'));
                 this._errors.forEach(e => {
                     console.log(e.scenario);
                     console.log(e.descriptions);

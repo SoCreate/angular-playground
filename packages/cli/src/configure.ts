@@ -28,7 +28,7 @@ export function configure(argv: any): Config {
         .option('--no-chunk', 'Don\'t chunk sandbox files individually', false)
 
         // Sandbox verification
-        .option('verify', '', false)
+        .option('--verify', '', false)
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
@@ -52,7 +52,7 @@ export function applyConfigurationFile(program: any): Config {
         noServe: playgroundConfig.noServe || program.noServe,
         verifySandboxes: playgroundConfig.verifySandboxes || program.verify,
         angularCliPath: playgroundConfig.angularCli.cmdPath || program.ngCliCmd,
-        angularCliPort: parseInt(playgroundConfig.angularCli.port, 10) || program.ngCliPort,
+        angularCliPort: playgroundConfig.angularCli.port || program.ngCliPort,
         angularCliEnv: playgroundConfig.angularCli.env || program.ngCliEnv,
         angularCliAdditionalArgs: playgroundConfig.angularCli.args || program.ngCliArgs
     };

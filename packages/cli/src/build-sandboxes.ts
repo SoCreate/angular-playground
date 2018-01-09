@@ -31,7 +31,7 @@ export function buildSandboxes(srcPath: string, noChunk: boolean): Promise<strin
                 console.log(chalk.red('Unable to compile sandboxes.\n'));
                 throw new Error(err.message);
             }
-            console.log(chalk.bgWhite('Successfully compiled sandbox files.'));
+            console.log('Successfully compiled sandbox files.');
             resolve(filePath);
         });
     });
