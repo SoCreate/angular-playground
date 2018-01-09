@@ -7,9 +7,9 @@ import { REPORT_TYPE } from './error-reporter';
 export interface Config {
     sourceRoot: string;
     angularAppName: string;
-    noChunk: boolean;
-    noWatch: boolean;
-    noServe: boolean;
+    chunk: boolean;
+    watch: boolean;
+    serve: boolean;
 
     verifySandboxes: boolean;
     randomScenario: boolean;
@@ -57,9 +57,9 @@ export function applyConfigurationFile(program: any): Config {
     // TODO: Missing value error reporting
     return {
         sourceRoot: playgroundConfig.sourceRoot || program.src,
-        noChunk: playgroundConfig.noChunk || program.noChunk,
-        noWatch: playgroundConfig.noWatch || program.noWatch,
-        noServe: playgroundConfig.noServe || program.noServe,
+        chunk: negate(playgroundConfig.noChunk) || program.chunk,
+        watch: negate(playgroundConfig.noWatch) || program.watch,
+        serve: negate(playgroundConfig.noServe) || program.serve,
 
         verifySandboxes: playgroundConfig.verifySandboxes || program.verify,
         randomScenario: playgroundConfig.randomScenario || program.randomScenario,
@@ -82,4 +82,12 @@ function loadConfig(path: string) {
     }
 
     return require(configPath.replace(/.json$/, ''));
+}
+
+function negate(value: boolean) {
+    if (value === undefined) {
+        return value;
+    }
+
+    return !value;
 }

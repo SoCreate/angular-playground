@@ -15,8 +15,8 @@ interface SandboxFileInformation {
     }[];
 }
 
-export function buildSandboxes(srcPath: string, noChunk: boolean): Promise<string> {
-    const chunkMode = noChunk ? 'eager' : 'lazy';
+export function buildSandboxes(srcPath: string, chunk: boolean): Promise<string> {
+    const chunkMode = chunk ? 'lazy' : 'eager';
     const home = resolvePath(srcPath);
     const sandboxes = findSandboxes(home);
     const filePath = resolvePath(__dirname, '../../build/shared/sandboxes.js');
