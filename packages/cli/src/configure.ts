@@ -2,6 +2,7 @@ import * as program from 'commander';
 import chalk from 'chalk';
 import { resolve as resolvePath } from 'path';
 import { existsSync } from 'fs';
+import { REPORT_TYPE } from './error-reporter';
 
 export interface Config {
     sourceRoot: string;
@@ -9,7 +10,13 @@ export interface Config {
     noChunk: boolean;
     noWatch: boolean;
     noServe: boolean;
+
     verifySandboxes: boolean;
+    randomScenario: boolean;
+    timeout: number;
+    reportType: string;
+    reportPath: string;
+
     angularCliPath: string;
     angularCliPort: number;
     angularCliEnv: string | undefined;
@@ -29,6 +36,10 @@ export function configure(argv: any): Config {
 
         // Sandbox verification
         .option('--verify', '', false)
+        .option('--random-scenario', '', false)
+        .option('--timeout', '', 90)
+        .option('--report-type', '', REPORT_TYPE.LOG)
+        .option('--report-path', '')
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
@@ -46,11 +57,17 @@ export function applyConfigurationFile(program: any): Config {
     // TODO: Missing value error reporting
     return {
         sourceRoot: playgroundConfig.sourceRoot || program.src,
-        angularAppName: playgroundConfig.angularCli.appName || program.ngCliApp,
         noChunk: playgroundConfig.noChunk || program.noChunk,
         noWatch: playgroundConfig.noWatch || program.noWatch,
         noServe: playgroundConfig.noServe || program.noServe,
+
         verifySandboxes: playgroundConfig.verifySandboxes || program.verify,
+        randomScenario: playgroundConfig.randomScenario || program.randomScenario,
+        timeout: playgroundConfig.timeout || program.timeout,
+        reportPath: playgroundConfig.reportPath || program.reportPath,
+        reportType: playgroundConfig.reportType || program.reportType,
+
+        angularAppName: playgroundConfig.angularCli.appName || program.ngCliApp,
         angularCliPath: playgroundConfig.angularCli.cmdPath || program.ngCliCmd,
         angularCliPort: playgroundConfig.angularCli.port || program.ngCliPort,
         angularCliEnv: playgroundConfig.angularCli.env || program.ngCliEnv,

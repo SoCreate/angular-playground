@@ -37,20 +37,16 @@ export function verifySandboxes(config: Config) {
 /////////////////////////////////
 
 async function main(config: Config) {
-    // const timeoutAttempts = program.timeout;
-    const timeoutAttempts = 90;
+    const timeoutAttempts = config.timeout;
     browser = await puppeteer.launch({
         headless: true,
         handleSIGINT: false,
         args: CHROME_ARGS
     });
 
-    // TODO:
-    // const scenarios = getSandboxMetadata(hostUrl, program.randomScenario);
-    const scenarios = getSandboxMetadata(hostUrl, false);
+    const scenarios = getSandboxMetadata(hostUrl, config.randomScenario);
 
-    // reporter = new ErrorReporter(scenarios, program.reportPath, program.reportType);
-    reporter = new ErrorReporter(scenarios, null, REPORT_TYPE.LOG);
+    reporter = new ErrorReporter(scenarios, config.reportPath, config.reportType);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
         console.log(`Checking: ${scenarios[i].name}: ${scenarios[i].description}`);
