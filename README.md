@@ -1,6 +1,6 @@
 [![npm version](https://badge.fury.io/js/angular-playground.svg)](https://badge.fury.io/js/angular-playground)
 
-# Playground for Angular
+# Angular Playground
 
 A drop in entry module for your app to develop Angular components, directives and pipes 
 in isolation (aka Scenario Driven Development). 

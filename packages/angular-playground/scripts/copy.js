@@ -12,7 +12,7 @@ moveDistToExamples(examples)
 function moveDistToExamples(examples) {
     console.log('Copying build to examples...');
     const promises = examples
-        .map(examplePath => path.join(__dirname, `../examples/${examplePath}/node_modules/angular-playground/`))
+        .map(examplePath => path.join(__dirname, `../../../examples/${examplePath}/node_modules/angular-playground/`))
         .map(examplePath => [ copyDist(examplePath), copyPackageFile(examplePath) ])
     return Promise.all(promises);
 }

@@ -3,7 +3,7 @@
     "baseUrl": "",
     "sourceMap": true,
     "declaration": true,
-    "outDir": "../../dist",
+    "outDir": "./dist/",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["es6", "dom"],

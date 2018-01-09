@@ -35,7 +35,7 @@ export function configure(argv: any): Config {
         .option('--no-chunk', 'Don\'t chunk sandbox files individually', false)
 
         // Sandbox verification
-        .option('--verify', '', false)
+        .option('--check-errors', '', false)
         .option('--random-scenario', '', false)
         .option('--timeout', '', 90)
         .option('--report-type', '', REPORT_TYPE.LOG)
@@ -61,7 +61,7 @@ export function applyConfigurationFile(program: any): Config {
         watch: negate(playgroundConfig.noWatch) || program.watch,
         serve: negate(playgroundConfig.noServe) || program.serve,
 
-        verifySandboxes: playgroundConfig.verifySandboxes || program.verify,
+        verifySandboxes: playgroundConfig.verifySandboxes || program.checkErrors,
         randomScenario: playgroundConfig.randomScenario || program.randomScenario,
         timeout: playgroundConfig.timeout || program.timeout,
         reportPath: playgroundConfig.reportPath || program.reportPath,
