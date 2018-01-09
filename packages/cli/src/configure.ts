@@ -1,6 +1,6 @@
+import * as program from 'commander';
 import chalk from 'chalk';
 import { resolve as resolvePath } from 'path';
-import { exit } from 'process';
 import { existsSync } from 'fs';
 
 export interface Config {
@@ -9,10 +9,36 @@ export interface Config {
     noChunk: boolean;
     noWatch: boolean;
     noServe: boolean;
+    verifySandboxes: boolean;
     angularCliPath: string;
     angularCliPort: number;
     angularCliEnv: string | undefined;
     angularCliAdditionalArgs: string[];
+}
+
+export function configure(argv: any): Config {
+    program
+        .name('angular-playground')
+        .option('-C, --config <path>', 'Configuration file', './angular-playground.json')
+        .option('-S, --src <path>', 'Specify component source directory', './src/')
+
+        // Build options
+        .option('--no-watch', 'Disable sandboxes watch', false)
+        .option('--no-serve', 'Disable cli serve', false)
+        .option('--no-chunk', 'Don\'t chunk sandbox files individually', false)
+
+        // Sandbox verification
+        .option('verify', '', false)
+
+        // @angular/cli options
+        .option('--ng-cli-app <appName>', '@angular/cli appName')
+        .option('--ng-cli-env <path>', 'Path to @angular/cli environment')
+        .option('--ng-cli-port <n>', '@angular/cli serve port', 4201)
+        .option('--ng-cli-cmd <path>', 'Path to @angular/cli executable', 'node_modules/@angular/cli/bin/ng')
+        .option('--ng-cli-args <list>', 'Additional @angular/cli arguments');
+
+    program.parse(argv);
+    return applyConfigurationFile(program);
 }
 
 export function applyConfigurationFile(program: any): Config {
@@ -24,6 +50,7 @@ export function applyConfigurationFile(program: any): Config {
         noChunk: playgroundConfig.noChunk || program.noChunk,
         noWatch: playgroundConfig.noWatch || program.noWatch,
         noServe: playgroundConfig.noServe || program.noServe,
+        verifySandboxes: playgroundConfig.verifySandboxes || program.verify,
         angularCliPath: playgroundConfig.angularCli.cmdPath || program.ngCliCmd,
         angularCliPort: parseInt(playgroundConfig.angularCli.port, 10) || program.ngCliPort,
         angularCliEnv: playgroundConfig.angularCli.env || program.ngCliEnv,
@@ -39,4 +66,3 @@ function loadConfig(path: string) {
 
     return require(configPath.replace(/.json$/, ''));
 }
-

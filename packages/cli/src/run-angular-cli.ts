@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { spawn, SpawnOptions } from 'child_process';
-import { Config } from './apply-configuration-file';
+import { Config } from './configure';
 
 export function runAngularCli(config: Config) {
     const args = configureArguments(config);

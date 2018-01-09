@@ -1,4 +1,4 @@
-import { applyConfigurationFile } from '../src/apply-configuration-file';
+import { applyConfigurationFile } from '../src/configure';
 
 it('should throw error when failing to load a configuration file', () => {
     const programMock = { config: './no-config.json' };

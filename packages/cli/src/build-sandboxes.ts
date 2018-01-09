@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import { writeFile, readFileSync, existsSync, unlinkSync } from 'fs';
 import { join as joinPath, resolve as resolvePath } from 'path';
-import { fromDir } from '../lib/from-dir';
-import { StringBuilder } from '../lib/string-builder';
+import { fromDir } from './from-dir';
+import { StringBuilder } from './string-builder';
 
 interface SandboxFileInformation {
     key: string;

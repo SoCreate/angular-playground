@@ -1,4 +1,4 @@
-import { StringBuilder } from '../lib/string-builder';
+import { StringBuilder } from '../src/string-builder';
 
 it('should append newlines to each added line', () => {
     const builder = new StringBuilder();
