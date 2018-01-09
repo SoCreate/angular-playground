@@ -4,7 +4,7 @@
 
 ### Maintenance
 * Refactored source into packages/, supporting infrastructure for multiple exported projects (preparation for
-  schematics) ([]()).
+  schematics) ([083a83f](https://github.com/SoCreate/angular-playground/commit/083a83f)).
 
 # 3.2.0 (2018-01-04)
 

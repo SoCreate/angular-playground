@@ -16,4 +16,4 @@ your build system to build your components, directives and pipes.
 
 
 ### For the latest changes visit:
-[Changelog](/CHANGELOG.md)
+[Changelog](/packages/angular-playground/CHANGELOG.md)
