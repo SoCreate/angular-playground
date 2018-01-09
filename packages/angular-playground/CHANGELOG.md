@@ -3,8 +3,16 @@
 <a name="3.3.0"></a>
 
 ### Maintenance
-* Refactored source into packages/, supporting infrastructure for multiple exported projects (preparation for
-  schematics) ([083a83f](https://github.com/SoCreate/angular-playground/commit/083a83f)).
+* Regrouped source into `packages/`, supporting infrastructure for multiple exported projects (preparation for
+  @angular/cli schematics) ([083a83f](https://github.com/SoCreate/angular-playground/commit/083a83f)).
+* Introduced infrastructure for unit tests with Jest. More unit tests will be gradually added to the project in future releases,
+  making up for the present lack of test coverage ([28e4755](https://github.com/SoCreate/angular-playground/commit/28e4755)).
+* Refactored CLI for unit testability ([69cc522](https://github.com/SoCreate/angular-playground/commit/69cc522)).
+
+### Bug Fixes
+* **check-errors:** Fixed issue where sandbox verification wasn't properly reading from the `sandboxes.js` file
+                    due to `esnext` dyanmic import module syntax
+                    ([cd9f18c](https://github.com/SoCreate/angular-playground/commit/cd9f18c)).
 
 # 3.2.0 (2018-01-04)
 

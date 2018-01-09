@@ -13,7 +13,8 @@ your build system to build your components, directives and pipes.
 ### For setup and documentation visit:
 
 ### <http://www.angularplayground.it>
+(Angular CLI Schematics are on the way!)
 
 
 ### For the latest changes visit:
-[Changelog](/packages/angular-playground/CHANGELOG.md)
+[Playground Changelog](/packages/angular-playground/CHANGELOG.md)
