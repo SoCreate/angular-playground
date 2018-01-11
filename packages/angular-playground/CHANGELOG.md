@@ -7,7 +7,7 @@
            ([cf38864](https://github.com/SoCreate/angular-playground/pull/81/commits/cf38864)).
 
   Use the `--build` flag to build Playground for production. Note that this requires all of the same setup
-  to enable Service Workers as outlined by the Angular CLI--see [our docs](http://localhost:4200/docs/how-to/build-prod)
+  to enable Service Workers as outlined by the Angular CLI--see [our docs](http://angularplayground.it/docs/how-to/build-prod)
   for more details.
 
 # 3.3.0 (2018-01-09)
