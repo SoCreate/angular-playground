@@ -1,11 +1,18 @@
 import chalk from 'chalk';
 import { exec } from 'child_process';
+import { join as joinPath } from 'path';
 
-export function buildAngularCli() {
+export async function buildAngularCli(appName: string) {
     try {
+        // Check package is installed locally
         require.resolve('@angular/service-worker');
+
+        const playgroundIndex = getAppIndex(appName);
+        await toggleServiceWorker(playgroundIndex);
+
         console.log('Building with sandboxes...');
-        exec('ng build --prod', (err, stdout, stderr) => {
+        // Cannot build w/ AOT due to runtime compiler dependency
+        exec(`ng build -a=${appName} --prod --aot=false`, (err, stdout, stderr) => {
             if (err) throw err;
             console.log(stdout);
         });
@@ -14,4 +21,21 @@ export function buildAngularCli() {
         console.log('https://github.com/angular/angular-cli/wiki/build#service-worker');
         process.exit(1);
     }
+}
+
+function getAppIndex(appName: string): number {
+    // Assumes .angular-cli.json is at root
+    const cliFile = joinPath(process.cwd(), '.angular-cli.json').replace(/.json$/, '');
+    const cliConfig = require(cliFile);
+
+    return cliConfig.apps.findIndex(app => app.name === appName);
+}
+
+async function toggleServiceWorker(appIndex: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+        exec(`ng set apps.${appIndex}.serviceWorker=true`, (err, stdout, stderr) => {
+            if (err) reject(err);
+            resolve(true);
+        });
+    });
 }

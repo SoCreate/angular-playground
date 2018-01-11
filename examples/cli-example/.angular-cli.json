@@ -42,6 +42,7 @@
       "polyfills": "polyfills.ts",
       "tsconfig": "tsconfig.app.json",
       "prefix": "app",
+      "serviceWorker": true,
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

@@ -12,7 +12,7 @@ export async function run() {
     await buildSandboxes(config.sourceRoot, config.chunk);
 
     if (config.buildWithServiceWorkers) {
-        return buildAngularCli();
+        return buildAngularCli(config.angularAppName);
     }
 
     if (config.verifySandboxes) {
