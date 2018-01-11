@@ -10,7 +10,7 @@ export async function buildAngularCli(appName: string) {
         const playgroundIndex = getAppIndex(appName);
         await toggleServiceWorker(playgroundIndex);
 
-        console.log('Building with sandboxes...');
+        console.log('Building for production with sandboxes...');
         // Cannot build w/ AOT due to runtime compiler dependency
         exec(`ng build -a=${appName} --prod --aot=false`, (err, stdout, stderr) => {
             if (err) throw err;
