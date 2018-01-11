@@ -11,8 +11,8 @@
     "e2e": "ng e2e",
     "playground": "node ./node_modules/angular-playground/dist/bin/index.js",
     "playground:check": "node ./node_modules/angular-playground/dist/bin/index.js --check-errors",
-    "playground:build": "npm run build --prefix ../../packages/angular-playground/ && node ../../packages/angular-playground/scripts/copy.js && npm run playground",
-    "check-errors": "node ./node_modules/angular-playground/dist/bin/index.js --verify"
+    "playground:build": "(cd ../../ && sh ./scripts/build.sh)",
+    "check-errors": "node ./node_modules/angular-playground/dist/bin/index.js --check-errors"
   },
   "private": true,
   "dependencies": {

@@ -8,7 +8,7 @@ import { Config } from './configure';
 
 // Used to tailor the version of headless chromium ran by puppeteer
 const CHROME_ARGS = [ '--disable-gpu', '--no-sandbox' ];
-const SANDBOX_PATH = resolvePath(__dirname, '../../build/src/shared/sandboxes.js');
+const SANDBOX_PATH = resolvePath(__dirname, '../../build/shared/sandboxes.js');
 const SANDBOX_DEST = resolvePath(__dirname, '../../sandboxes_modified.js');
 
 export interface ScenarioSummary {

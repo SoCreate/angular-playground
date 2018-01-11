@@ -23,7 +23,6 @@
   },
   "scripts": {
     "ngc": "ngc",
-    "clean": "node ./scripts/clean.js",
     "build": "npm run app:build && npm run cli:build",
     "app:build": "gulp build",
     "cli:build": "tsc -p ./cli/tsconfig.json",
