@@ -1,0 +1,89 @@
+{
+  "name": "angular-playground",
+  "version": "3.3.0",
+  "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "bin": {
+    "angular-playground": "dist/bin/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "jest": {
+    "transform": {
+      "\\.ts$": "ts-jest"
+    },
+    "testRegex": "/test/.*\\.ts$",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ]
+  },
+  "scripts": {
+    "ngc": "ngc",
+    "clean": "node ./scripts/clean.js",
+    "build": "npm run app:build && npm run cli:build",
+    "app:build": "gulp build",
+    "cli:build": "tsc -p ./cli/tsconfig.json",
+    "prepublish": "npm run build",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SoCreate/angular-playground.git"
+  },
+  "keywords": [
+    "angular"
+  ],
+  "author": {
+    "name": "SoCreate",
+    "url": "https://SoCreate.it"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SoCreate/angular-playground/issues"
+  },
+  "homepage": "http://www.angularplayground.it",
+  "peerDependencies": {
+    "@angular/common": ">=4.2.0 || >=5.0.0",
+    "@angular/compiler": ">=4.2.0 || >=5.0.0",
+    "@angular/core": ">=4.2.0 || >=5.0.0",
+    "@angular/forms": ">=4.2.0 || >=5.0.0",
+    "@angular/platform-browser": ">=4.2.0 || >=5.0.0",
+    "@angular/platform-browser-dynamic": ">=4.2.0 || >=5.0.0",
+    "rxjs": ">=5.4.2",
+    "zone.js": ">=0.8.14"
+  },
+  "dependencies": {
+    "async": "^2.6.0",
+    "chalk": "^2.3.0",
+    "commander": "^2.12.2",
+    "node-watch": "^0.4.1",
+    "puppeteer": "^0.13.0"
+  },
+  "devDependencies": {
+    "@angular/common": "^5.0.0",
+    "@angular/compiler": "^5.0.0",
+    "@angular/compiler-cli": "^5.0.0",
+    "@angular/core": "^5.0.0",
+    "@angular/forms": "^5.0.0",
+    "@angular/platform-browser": "^5.0.0",
+    "@angular/platform-browser-dynamic": "^5.0.0",
+    "@types/jest": "^22.0.1",
+    "@types/node": "^9.3.0",
+    "@types/puppeteer": "^0.13.3",
+    "codelyzer": "3.0.1",
+    "fs-extra": "^4.0.1",
+    "glob": "^7.1.2",
+    "gulp": "^3.9.1",
+    "gulp-inline-ng2-template": "^4.0.0",
+    "jest": "^22.0.4",
+    "rxjs": "^5.5.2",
+    "ts-jest": "^22.0.1",
+    "tslint": "5.3.2",
+    "typescript": "2.4.2",
+    "zone.js": "0.8.4"
+  }
+}
