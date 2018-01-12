@@ -1,3 +1,15 @@
+# 3.4.0 (2018-01-11)
+
+<a name="3.4.0"></a>
+
+### Features
+* **cli:** You can now build Playground apps for production with service workers 
+           ([cf38864](https://github.com/SoCreate/angular-playground/pull/81/commits/cf38864)).
+
+  Use the `--build` flag to build Playground for production. Note that this requires all of the same setup
+  to enable Service Workers as outlined by the Angular CLI--see [our docs](http://angularplayground.it/docs/how-to/build-prod)
+  for more details.
+
 # 3.3.0 (2018-01-09)
 
 <a name="3.3.0"></a>
