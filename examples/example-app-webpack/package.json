@@ -2,7 +2,7 @@
   "name": "example-app-webpack",
   "version": "0.0.1",
   "scripts": {
-    "playground:copy": "node ../../scripts/copy.js",
+    "playground:copy": "(cd ../../ && sh ./scripts/build.sh)",
     "playground:run": "node ./node_modules/angular-playground/dist/bin/cli.js",
     "playground": "npm run playground:copy && concurrently \"npm run playground:run\" \"npm run playground:serve\"",
     "playground:serve": "webpack-dev-server --inline --port 8081 --config config/webpack.playground.js",

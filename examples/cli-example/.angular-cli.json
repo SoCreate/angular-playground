@@ -18,6 +18,7 @@
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
+      "serviceWorker": true,
       "styles": [
         "styles.css"
       ],
@@ -41,6 +42,7 @@
       "polyfills": "polyfills.ts",
       "tsconfig": "tsconfig.app.json",
       "prefix": "app",
+      "serviceWorker": true,
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
@@ -74,6 +76,7 @@
   },
   "defaults": {
     "styleExt": "css",
-    "component": {}
+    "component": {
+    }
   }
 }
