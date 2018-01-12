@@ -1,9 +1,9 @@
 import chalk from 'chalk';
-import { spawn, SpawnOptions } from 'child_process';
+import { spawn, SpawnOptions, ChildProcess } from 'child_process';
 import { Config } from './configure';
 
-export function runAngularCli(config: Config) {
-    const args = configureArguments(config);
+export async function serveAngularCli(config: Config) {
+    const args: string[] = configureArguments(config);
     const ngServe = spawn('node', args);
 
     const write = (handler: any, data: any) => {
@@ -20,7 +20,7 @@ export function runAngularCli(config: Config) {
     });
 }
 
-function configureArguments(config: Config) {
+function configureArguments(config: Config): string[] {
     let args = [config.angularCliPath, 'serve', '-no-progress'];
 
     args.push(`--port=${config.angularCliPort}`);
