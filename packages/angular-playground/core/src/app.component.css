@@ -85,6 +85,7 @@
       margin-top: 9px;
       overflow: auto;
       position: relative;
+      max-height: calc(100vh - 109px);
     }
 
     .command-bar__sandboxes::-webkit-scrollbar {
