@@ -3,8 +3,10 @@
 <a name="3.4.1"></a>
 
 ### Bug Fixes
-* **app:** Fixed IE11 buidl due to ES2015 arrow functions ([0609340](https://github.com/SoCreate/angular-playground/commit/0609340))
-* **app:** Fixed IE11 command bar appearing on pages after being closed ([8e0f099](https://github.com/SoCreate/angular-playground/commit/8e0f099))
+* **app:** Fixed IE11 buidl due to ES2015 arrow functions ([0609340](https://github.com/SoCreate/angular-playground/commit/0609340)).
+* **app:** Fixed IE11 command bar appearing on pages after being closed ([8e0f099](https://github.com/SoCreate/angular-playground/commit/8e0f099)).
+* **app:** Switched the "quick switch" key to `control` from `alt` for firefox compatibility
+           ([8b5b386](https://github.com/SoCreate/angular-playground/commit/8b5b386)).
 
 # 3.4.0 (2018-01-11)
 
