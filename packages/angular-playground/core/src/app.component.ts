@@ -105,13 +105,15 @@ export class AppComponent {
     }
   }
 
-  onScenarioLinkAltDown(scenarioElement: any, event: any) {
+  onScenarioLinkControlDown(scenarioElement: any, event: any) {
+    if (!this.commandBarActive) return;
     event.preventDefault();
     let elementRef = this.goDown(scenarioElement);
     this.showScenario(elementRef);
   }
 
-  onScenarioLinkAltUp(scenarioElement: any, event: any) {
+  onScenarioLinkControlUp(scenarioElement: any, event: any) {
+    if (!this.commandBarActive) return;
     event.preventDefault();
     let elementRef = this.goUp(scenarioElement);
     this.showScenario(elementRef);
@@ -153,7 +155,9 @@ export class AppComponent {
 
   onCommandBarStartPreview(event: any) {
     event.preventDefault();
-    this.commandBarPreview = true;
+    if (this.commandBarActive) {
+      this.commandBarPreview = true;
+    }
   }
 
   onCommandBarStopPreview() {
@@ -287,7 +291,7 @@ export class AppComponent {
         description: 'Navigate up or down in command bar list',
       },
       {
-        keys: ['alt + \u2191', 'alt + \u2193'],
+        keys: ['ctrl + \u2191', 'ctrl + \u2193'],
         description: 'Switch scenarios while navigating up or down in command bar list',
       }
     ];
