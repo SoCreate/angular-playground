@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Location } from '@angular/common';
-import { SandboxMenuItem } from '../lib/app-state';
+import { SandboxMenuItem } from '../../lib/app-state';
 import { LoaderService } from './loader.service';
 
 @Injectable()

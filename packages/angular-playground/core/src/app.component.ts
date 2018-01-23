@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { EventManager } from '@angular/platform-browser';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from './lib/app-state';
+import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from '../lib/app-state';
 import { StateService } from './shared/state.service';
 import { UrlService } from './shared/url.service';
 import { fuzzySearch } from './shared/fuzzy-search.function';
