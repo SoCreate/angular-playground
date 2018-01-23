@@ -16,6 +16,7 @@ import { LoaderService } from './shared/loader.service';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+    @ViewChildren('scenarioElement') scenarioLinkElements: QueryList<ElementRef>;
     commandBarActive = false;
     commandBarPreview = false;
     totalSandboxes: number;
@@ -23,13 +24,14 @@ export class AppComponent {
     selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = { sandboxKey: null, scenarioKey: null };
     filter = new FormControl();
     shortcuts = this.getShortcuts();
-    @ViewChildren('scenarioElement') scenarioLinkElements: QueryList<ElementRef>;
 
     constructor(private loaderService: LoaderService,
         private stateService: StateService,
         private urlService: UrlService,
         private eventManager: EventManager,
-        private levenshteinDistance: LevenshteinDistance) {
+        private levenshteinDistance: LevenshteinDistance) { }
+
+    ngOnInit() {
         const sandboxMenuItems = this.loaderService.getSandboxMenuItems();
 
         if (this.urlService.embed) {
