@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 npm run build --prefix ./packages/angular-playground
 
 declare -a examples=( 'cli-example' 'example-app-embed-mode' 'example-app-webpack' )
