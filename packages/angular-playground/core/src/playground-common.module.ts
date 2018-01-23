@@ -15,27 +15,27 @@ import { PinComponent } from './pin/pin.component';
 declare let require: any;
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
-  providers: [
-    Location,
-    {provide: LocationStrategy, useClass: PathLocationStrategy},
-    LoaderService,
-    StateService,
-    UrlService,
-    LevenshteinDistance
-  ],
-  declarations: [
-    AppComponent,
-    ScenarioComponent,
-    FocusDirective,
-    HighlightSearchMatchPipe,
-    LogoComponent,
-    PinComponent
-  ],
-  exports: [AppComponent]
+    imports: [
+        CommonModule,
+        ReactiveFormsModule
+    ],
+    providers: [
+        Location,
+        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        LoaderService,
+        StateService,
+        UrlService,
+        LevenshteinDistance
+    ],
+    declarations: [
+        AppComponent,
+        ScenarioComponent,
+        FocusDirective,
+        HighlightSearchMatchPipe,
+        LogoComponent,
+        PinComponent
+    ],
+    exports: [AppComponent]
 })
 export class PlaygroundCommonModule {
 }
