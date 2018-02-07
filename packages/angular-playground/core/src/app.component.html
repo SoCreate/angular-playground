@@ -1,7 +1,7 @@
 <div class="shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
     <div class="command-bar" *ngIf="filteredSandboxMenuItems"
-      (keydown.alt)="onCommandBarStartPreview($event)"
-      (keyup.alt)="onCommandBarStopPreview()"
+      (keydown.control)="onCommandBarStartPreview($event)"
+      (keyup.control)="onCommandBarStopPreview()"
       [class.command-bar--open]="commandBarActive"
       [class.command-bar--preview]="commandBarPreview">
       <input
@@ -15,8 +15,8 @@
         (keyup.Esc)="commandBarActive = false"
         (keydown.arrowup)="onFilterBoxArrowUp($event)"
         (keydown.arrowdown)="onFilterBoxArrowDown($event)"
-        (keydown.alt.arrowup)="onFilterBoxArrowUp($event, true)"
-        (keydown.alt.arrowdown)="onFilterBoxArrowDown($event, true)">
+        (keydown.control.arrowup)="onFilterBoxArrowUp($event, true)"
+        (keydown.control.arrowdown)="onFilterBoxArrowDown($event, true)">
       <div *ngIf="filteredSandboxMenuItems && filteredSandboxMenuItems.length > 0" class="command-bar__sandboxes">
         <div class="command-bar__sandbox"
              *ngFor="let sandboxMenuItem of filteredSandboxMenuItems; index as menuItemIndex">
@@ -33,8 +33,8 @@
               [tabindex]="scenarioMenuItem.tabIndex"
               [attr.sandboxMenuItemKey]="sandboxMenuItem.key"
               [attr.scenarioMenuItemkey]="scenarioMenuItem.key"
-              (keydown.alt.arrowup)="onScenarioLinkAltUp(scenarioElement, $event)"
-              (keydown.alt.arrowdown)="onScenarioLinkAltDown(scenarioElement, $event)"
+              (keydown.control.arrowup)="onScenarioLinkControlUp(scenarioElement, $event)"
+              (keydown.control.arrowdown)="onScenarioLinkControlDown(scenarioElement, $event)"
               (keydown.arrowup)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
               (keydown.arrowdown)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
               (keydown.esc)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
