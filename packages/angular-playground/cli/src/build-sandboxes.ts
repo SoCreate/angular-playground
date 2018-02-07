@@ -50,7 +50,7 @@ function findSandboxes(home: string): SandboxFileInformation[] {
             const labelText = /label\s*:\s*['"](.+)['"]/g.exec(matchSandboxOf[0]);
 
             let scenarioMenuItems = [];
-            const scenarioRegex = /\.add\s*\(['"](.+)['"]\s*,\s*{/g;
+            const scenarioRegex = /\.add\s*\(\s*['"](.+)['"]\s*,\s*{/g;
             let scenarioMatches;
             let scenarioIndex = 1;
             while ((scenarioMatches = scenarioRegex.exec(contents)) !== null) {
