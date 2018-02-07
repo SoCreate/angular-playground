@@ -176,15 +176,6 @@
       outline-style: none;
     }
 
-    .command-bar__scenario-icon {
-      display: inline-block;
-      fill: white;
-      height: 20px;
-      margin: 2px 6px 0 0;
-      opacity: .2;
-      width: 20px;
-    }
-
     .command-bar__scenario-link:hover .command-bar__scenario-icon,
     .command-bar__scenario-link:active .command-bar__scenario-icon,
     .command-bar__scenario-link:focus .command-bar__scenario-icon {
@@ -201,11 +192,6 @@
     .command-bar__scenario-link--selected {
       background: rgba(255, 255, 255, .1);
       color: white;
-    }
-
-    .command-bar__scenario-icon--selected {
-      fill: #0097fb;
-      opacity: 1;
     }
 
     .command-bar__scenario-link:hover .command-bar__scenario-icon--selected,
@@ -231,21 +217,6 @@
       position: absolute;
       top: 0;
       width: 100%;
-    }
-
-    .command-bar__logo {
-      height: 30px;
-      width: 140px;
-    }
-
-    .command-bar__logo__box {
-      fill: rgba(255, 255, 255, .1);
-      transition: fill 0.2s ease-out;
-    }
-
-    .command-bar__logo__letter {
-      fill: rgba(255, 255, 255, .5);
-      transition: fill 0.2s ease-out;
     }
 
     .command-bar__brand:hover .command-bar__logo__box {
