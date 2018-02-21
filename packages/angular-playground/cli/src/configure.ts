@@ -55,7 +55,14 @@ export function configure(argv: any): Config {
 }
 
 export function applyConfigurationFile(program: any): Config {
-    const playgroundConfig = loadConfig(program.config);
+    let playgroundConfig;
+
+    try {
+        playgroundConfig = loadConfig(program.config);
+    } catch (err) {
+        process.stderr.write(err.message + "\n");
+    }
+
     // TODO: Missing value error reporting
     return {
         sourceRoot: playgroundConfig.sourceRoot || program.src,
