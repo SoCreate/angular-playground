@@ -8,7 +8,8 @@ export async function serveAngularCli(config: Config) {
     try {
         args = configureArguments(config);
     } catch (err) {
-        process.stderr.write(err.message + "\n");
+        console.error(err.message);
+        process.exit(1);
     }
 
     const ngServe = spawn('node', args);
