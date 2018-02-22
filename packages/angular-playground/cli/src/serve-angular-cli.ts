@@ -3,7 +3,15 @@ import { spawn, SpawnOptions, ChildProcess } from 'child_process';
 import { Config } from './configure';
 
 export async function serveAngularCli(config: Config) {
-    const args: string[] = configureArguments(config);
+    let args: string[];
+
+    try {
+        args = configureArguments(config);
+    } catch (err) {
+        console.error(err.message);
+        process.exit(1);
+    }
+
     const ngServe = spawn('node', args);
 
     const write = (handler: any, data: any) => {
