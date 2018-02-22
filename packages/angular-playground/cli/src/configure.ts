@@ -60,7 +60,8 @@ export function applyConfigurationFile(program: any): Config {
     try {
         playgroundConfig = loadConfig(program.config);
     } catch (err) {
-        process.stderr.write(err.message + "\n");
+        console.error(err.message);
+        process.exit(1);
     }
 
     // TODO: Missing value error reporting
