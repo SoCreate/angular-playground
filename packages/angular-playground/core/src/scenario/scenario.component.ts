@@ -1,4 +1,4 @@
-import { Component, Input, NgZone, NgModule, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, NgZone, NgModule, OnChanges, OnInit, SimpleChanges, NgModuleRef } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { LoaderService } from '../shared/loader.service';
 import { Scenario, SelectedSandboxAndScenarioKeys } from '../../lib/app-state';
@@ -13,6 +13,11 @@ export class ScenarioComponent implements OnInit, OnChanges {
      * The selected sandbox and scenario provided from the app dropdown
      */
     @Input() selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys;
+
+    /**
+     * Collection of bootstrapped apps
+     */
+    private activeApps: NgModuleRef<any>[] = [];
 
     constructor(private zone: NgZone) {
     }
@@ -39,10 +44,16 @@ export class ScenarioComponent implements OnInit, OnChanges {
                     .find((s: Scenario) => s.key === selectedSandboxAndScenarioKeys.scenarioKey);
 
                 if (scenario) {
+                    if (this.activeApps.length > 0) {
+                        const app = this.activeApps.pop();
+                        app.destroy();
+                    }
+
                     // Don't bootstrap a new Angular application within an existing zone
                     this.zone.runOutsideAngular(() => {
                         const module = this.createModule(sandbox, scenario);
                         platformBrowserDynamic().bootstrapModule(module)
+                            .then(app => this.activeApps.push(app))
                             .catch(err => console.error(err));
                     });
                 }
