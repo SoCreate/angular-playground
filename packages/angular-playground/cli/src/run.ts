@@ -1,4 +1,3 @@
-import * as program from 'commander';
 import { configure, Config } from './configure';
 import { buildSandboxes } from './build-sandboxes';
 import { startWatch } from './start-watch';

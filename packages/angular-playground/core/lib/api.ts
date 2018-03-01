@@ -38,9 +38,9 @@ export class SandboxBuilder {
             key: sandboxPath,
             type: this._type,
             scenarios: this._scenarios,
-            imports: this._config.imports || null,
-            declarations: this._config.declarations || null,
-            providers: this._config.providers || null,
+            imports: this._config.imports || [],
+            declarations: this._config.declarations || [],
+            providers: this._config.providers || [],
             declareComponent: this._config.declareComponent !== undefined ? this._config.declareComponent : true,
         };
     }

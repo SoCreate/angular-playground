@@ -25,14 +25,13 @@ export class AppComponent {
     filter = new FormControl();
     shortcuts = this.getShortcuts();
 
-    constructor(private loaderService: LoaderService,
-        private stateService: StateService,
-        private urlService: UrlService,
-        private eventManager: EventManager,
-        private levenshteinDistance: LevenshteinDistance) { }
+    constructor(private stateService: StateService,
+                private urlService: UrlService,
+                private eventManager: EventManager,
+                private levenshteinDistance: LevenshteinDistance) { }
 
     ngOnInit() {
-        const sandboxMenuItems = this.loaderService.getSandboxMenuItems();
+        const sandboxMenuItems = LoaderService.getSandboxMenuItems();
 
         if (this.urlService.embed) {
             this.selectedSandboxAndScenarioKeys = {

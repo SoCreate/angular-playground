@@ -18,9 +18,8 @@ export class UrlService {
         return this._select;
     }
 
-    constructor(private loaderService: LoaderService,
-        private location: Location) {
-        this.sandboxMenuItems = this.loaderService.getSandboxMenuItems();
+    constructor(private location: Location) {
+        this.sandboxMenuItems = LoaderService.getSandboxMenuItems();
         let urlPath = location.path();
         this._embed = /[?|&]embed=1/.exec(urlPath) !== null;
         this._select = this.parse('scenario', this.sandboxMenuItems, urlPath);

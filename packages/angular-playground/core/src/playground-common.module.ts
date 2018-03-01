@@ -8,7 +8,6 @@ import { UrlService } from './shared/url.service';
 import { AppComponent } from './app.component';
 import { LevenshteinDistance } from './shared/levenshtein-distance';
 import { HighlightSearchMatchPipe } from './shared/highlight-search-match.pipe';
-import { LoaderService } from './shared/loader.service';
 import { LogoComponent } from './logo/logo.component';
 import { PinComponent } from './pin/pin.component';
 
@@ -22,7 +21,6 @@ declare let require: any;
     providers: [
         Location,
         { provide: LocationStrategy, useClass: PathLocationStrategy },
-        LoaderService,
         StateService,
         UrlService,
         LevenshteinDistance

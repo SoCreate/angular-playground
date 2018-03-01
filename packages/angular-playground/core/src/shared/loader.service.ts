@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
 import { SandboxMenuItem } from '../../lib/app-state';
 import { getSandbox, getSandboxMenuItems } from './sandboxes';
 
-@Injectable()
 export class LoaderService {
-    loadSandbox(path: string): any {
+    static loadSandbox(path: string): any {
         return getSandbox(path);
     }
 
-    getSandboxMenuItems(): SandboxMenuItem[] {
+    static getSandboxMenuItems(): SandboxMenuItem[] {
         return getSandboxMenuItems();
     }
 }
