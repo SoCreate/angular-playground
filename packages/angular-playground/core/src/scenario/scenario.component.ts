@@ -28,6 +28,11 @@ export class ScenarioComponent implements OnInit, OnChanges {
      */
     private activeMiddlewares = [];
 
+    /**
+     * Whether the playground host element is added to the body of the platform
+     */
+    private elementAddedToBody = false;
+
     constructor(private zone: NgZone, @Inject(MIDDLEWARES) private middlewares) {
     }
 
@@ -78,12 +83,15 @@ export class ScenarioComponent implements OnInit, OnChanges {
      */
     private createModule(sandboxMeta, scenario) {
         const hostComp = this.createComponent(scenario);
+        const self = this;
 
         class DynamicModule {
             ngDoBootstrap(app) {
-                // TODO: Destroy other app instances
-                const compEl = document.createElement('playground-host');
-                document.body.appendChild(compEl);
+                if (!self.elementAddedToBody) {
+                    const compEl = document.createElement('playground-host');
+                    document.body.appendChild(compEl);
+                    self.elementAddedToBody = true;
+                }
                 app.bootstrap(hostComp);
             }
         }
