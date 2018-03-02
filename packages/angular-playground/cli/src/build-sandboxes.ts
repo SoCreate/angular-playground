@@ -22,9 +22,6 @@ export function buildSandboxes(srcPath: string, chunk: boolean): Promise<string>
     const filePath = resolvePath(__dirname, '../../build/src/shared/sandboxes.js');
     const fileContent = buildSandboxFileContents(sandboxes, home, chunkMode);
 
-    // TODO: Remove next release post 3.1.0
-    deleteDeprecatedSandboxFileIfNecessary(home);
-
     return new Promise((resolve, reject) => {
         writeFile(filePath, fileContent, err => {
             if (err) {
@@ -94,15 +91,6 @@ function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: str
     content.addLine('exports.getSandbox = getSandbox;');
 
     return content.dump();
-}
-
-// TODO: Remove
-// Provided for minor release post sandboxes.ts resolution changes
-function deleteDeprecatedSandboxFileIfNecessary(home: string) {
-    const sandboxesFile = resolvePath(home, './sandboxes.ts');
-    if (existsSync(sandboxesFile)) {
-        unlinkSync(sandboxesFile);
-    }
 }
 
 // Turns windows URL string ('c:\\etc\\') into URL node expects ('c:/etc/')
