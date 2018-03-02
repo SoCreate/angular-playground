@@ -1,8 +1,12 @@
-import { Component, Input, NgZone, NgModule, OnChanges, OnInit, SimpleChanges, NgModuleRef } from '@angular/core';
+import {
+    Component, Input, NgZone, NgModule, OnChanges, OnInit, SimpleChanges, NgModuleRef,
+    Inject
+} from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { LoaderService } from '../shared/loader.service';
 import { Scenario, SelectedSandboxAndScenarioKeys } from '../../lib/app-state';
 import { BrowserModule } from '@angular/platform-browser';
+import { MIDDLEWARES } from '../../lib/middlewares';
 
 @Component({
     selector: 'ap-scenario',
@@ -19,10 +23,18 @@ export class ScenarioComponent implements OnInit, OnChanges {
      */
     private activeApps: NgModuleRef<any>[] = [];
 
-    constructor(private zone: NgZone) {
+    /**
+     * Modules that are applied across every sandbox instance
+     */
+    private activeMiddlewares = [];
+
+    constructor(private zone: NgZone, @Inject(MIDDLEWARES) private middlewares) {
     }
 
     ngOnInit() {
+        this.middlewares
+            .subscribe(middlewares => this.activeMiddlewares = middlewares);
+
         if (this.selectedSandboxAndScenarioKeys) {
             this.bootstrapSandbox(this.selectedSandboxAndScenarioKeys);
         }
@@ -77,7 +89,11 @@ export class ScenarioComponent implements OnInit, OnChanges {
         }
 
         return NgModule({
-            imports: [BrowserModule, ...sandboxMeta.imports],
+            imports: [
+                BrowserModule,
+                ...sandboxMeta.imports,
+                ...this.activeMiddlewares
+            ],
             declarations: [
                 hostComp,
                 sandboxMeta.declareComponent ? sandboxMeta.type : [],
