@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { writeFile, readFileSync, existsSync, unlinkSync } from 'fs';
+import { writeFile, readFileSync } from 'fs';
 import { join as joinPath, resolve as resolvePath } from 'path';
 import { fromDir } from './from-dir';
 import { StringBuilder } from './string-builder';

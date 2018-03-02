@@ -2,7 +2,7 @@ import * as puppeteer from 'puppeteer';
 import { resolve as resolvePath } from 'path';
 import chalk from 'chalk';
 import { copyFileSync } from 'fs';
-import { ErrorReporter, REPORT_TYPE } from './error-reporter';
+import { ErrorReporter } from './error-reporter';
 import { removeDynamicImports } from './remove-dynamic-imports';
 import { Config } from './configure';
 

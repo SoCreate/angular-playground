@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { spawn, SpawnOptions, ChildProcess } from 'child_process';
+import { spawn } from 'child_process';
 import { Config } from './configure';
 
 export async function serveAngularCli(config: Config) {

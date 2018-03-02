@@ -1,14 +1,13 @@
 const gulp = require('gulp');
 const inlineNg2Template = require('gulp-inline-ng2-template');
 const path = require('path');
-const fs = require('fs-extra');
-const glob = require('glob');
+const del = require('del');
 const exec = require('child_process').exec;
 
 gulp.task('clean', () => {
-    return Promise.all([
-        fs.remove(path.join(__dirname, './dist/')),
-        fs.remove(path.join(__dirname, './build/')),
+    return del([
+        path.join(__dirname, './dist/'),
+        path.join(__dirname, './build/')
     ]);
 });
 
