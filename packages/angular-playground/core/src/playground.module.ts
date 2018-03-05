@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { PlaygroundCommonModule } from './playground-common.module';
@@ -21,7 +21,11 @@ const middleware = _middleware.asObservable();
     bootstrap: [AppComponent]
 })
 export class PlaygroundModule {
-    static applyMiddleware(middlewares) {
-        _middleware.next(middlewares);
+    static registerRootModules(...modules) {
+        _middleware.next(modules);
+    }
+
+    static applyMiddleware() {
+        // TODO
     }
 }

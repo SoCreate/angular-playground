@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 initializePlayground('app-root');
 
-PlaygroundModule.applyMiddleware(BrowserAnimationsModule);
+PlaygroundModule.registerRootModules(BrowserAnimationsModule);
 
-platformBrowserDynamic().bootstrapModule(PlaygroundModule);
+platformBrowserDynamic().bootstrapModule(PlaygroundModule)
+  .catch(err => console.error(err));

@@ -28,11 +28,6 @@ export class ScenarioComponent implements OnInit, OnChanges {
      */
     private activeMiddlewares = [];
 
-    /**
-     * Whether the playground host element is added to the body of the platform
-     */
-    private elementAddedToBody = false;
-
     constructor(private zone: NgZone, @Inject(MIDDLEWARES) private middlewares) {
     }
 
@@ -87,10 +82,10 @@ export class ScenarioComponent implements OnInit, OnChanges {
 
         class DynamicModule {
             ngDoBootstrap(app) {
-                if (!self.elementAddedToBody) {
+                const hostEl = document.querySelector('playground-host');
+                if (!hostEl) {
                     const compEl = document.createElement('playground-host');
                     document.body.appendChild(compEl);
-                    self.elementAddedToBody = true;
                 }
                 app.bootstrap(hostComp);
             }
