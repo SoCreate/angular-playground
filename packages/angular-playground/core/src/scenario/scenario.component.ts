@@ -1,6 +1,5 @@
 import {
-    Component, Input, NgZone, NgModule, OnChanges, OnInit, SimpleChanges, NgModuleRef,
-    Inject
+    Component, Input, NgZone, NgModule, OnChanges, OnInit, SimpleChanges, NgModuleRef, Inject
 } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { LoaderService } from '../shared/loader.service';
@@ -78,7 +77,6 @@ export class ScenarioComponent implements OnInit, OnChanges {
      */
     private createModule(sandboxMeta, scenario) {
         const hostComp = this.createComponent(scenario);
-        const self = this;
 
         class DynamicModule {
             ngDoBootstrap(app) {
