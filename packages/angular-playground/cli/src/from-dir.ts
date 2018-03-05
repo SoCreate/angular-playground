@@ -1,6 +1,10 @@
 import { existsSync, readdirSync, lstatSync } from 'fs';
 import { join as joinPath } from 'path';
 
+/**
+ * Recursively apply callback to files in a directory (and sub-directories) that match the
+ * provided regular expression
+ */
 export function fromDir (startPath: string, filter: RegExp, callback: Function) {
   if (!existsSync(startPath)) {
       throw new Error(`No Directory Found: ${startPath}`);

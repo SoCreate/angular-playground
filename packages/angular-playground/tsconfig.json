@@ -14,7 +14,8 @@
     "newLine": "LF",
     "typeRoots": [
       "node_modules/@types"
-    ]
+    ],
+    "types": ["jest"]
   },
   "include": [
     "index.ts"

@@ -1,14 +1,18 @@
 import { applyConfigurationFile, Config } from '../src/configure';
+import {} from 'jest';
 
 describe('applyConfigurationFile', () => {
     it('should throw error when failing to load a configuration file', () => {
         const exitSpy = spyOn(process, 'exit');
+        const consoleSpy = spyOn(console, 'error');
         const programMock = { config: './no-config.json' };
 
-        expect(() => {
+        const t = () => {
             applyConfigurationFile(programMock);
-        }).toThrow();
+        };
+        expect(t).toThrow();
         expect(exitSpy).toHaveBeenCalledWith(1);
+        expect(consoleSpy).toHaveBeenCalled();
     });
 
     it('should return config object from configuration file', () => {
