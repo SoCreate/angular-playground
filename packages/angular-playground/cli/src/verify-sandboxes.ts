@@ -1,9 +1,8 @@
 import * as puppeteer from 'puppeteer';
 import { resolve as resolvePath } from 'path';
 import chalk from 'chalk';
-import { copyFileSync } from 'fs';
+import { copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { ErrorReporter } from './error-reporter';
-import { removeDynamicImports } from './remove-dynamic-imports';
 import { Config } from './configure';
 
 // Used to tailor the version of headless chromium ran by puppeteer
@@ -67,7 +66,6 @@ async function main(config: Config) {
  * Creates a Chromium page and navigates to a scenario (URL).
  * If Chromium is not able to connect to the provided page, it will issue a series
  * of retries before it finally fails.
- * @param scenario - Scenario to visit
  */
 async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts: number) {
     if (timeoutAttempts === 0) {
@@ -134,7 +132,6 @@ function loadSandboxMenuItems(): any[] {
 
 /**
  * Callback when Chromium page encounters a console error
- * @param msg - Error message
  */
 async function onConsoleErr(msg: any) {
     if (msg.type === 'error') {
@@ -151,10 +148,17 @@ async function onConsoleErr(msg: any) {
 /**
  * Returns a random value between 1 and the provided length.
  * Note: indexing of keys starts at 1, not 0
- * @param menuItemsLength - Maximum number of items
  */
 function getRandomKey(menuItemsLength: number): number {
     return Math.floor(Math.random() * (menuItemsLength - 1) + 1);
+}
+
+function removeDynamicImports(sandboxPath: string) {
+    const data = readFileSync(sandboxPath, 'utf-8');
+    const dataArray = data.split('\n');
+    const getSandboxIndex = dataArray.findIndex(val => val.includes('getSandbox(path)'));
+    const result = dataArray.slice(0, getSandboxIndex).join('\n');
+    writeFileSync(sandboxPath, result, { encoding: 'utf-8' });
 }
 
 function delay(ms: number) {
