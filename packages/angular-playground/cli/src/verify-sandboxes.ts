@@ -1,4 +1,4 @@
-import * as puppeteer from 'puppeteer';
+import puppeteer = require('puppeteer');
 import { resolve as resolvePath } from 'path';
 import chalk from 'chalk';
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';

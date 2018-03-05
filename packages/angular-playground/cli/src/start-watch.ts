@@ -1,5 +1,5 @@
 import { resolve as resolvePath } from 'path';
-import * as watch from 'node-watch';
+import watch = require('node-watch');
 
 export function startWatch(sourceRoot: string, cb: Function) {
     const filter = (fn: Function) => {

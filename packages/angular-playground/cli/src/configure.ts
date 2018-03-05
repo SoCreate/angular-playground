@@ -1,4 +1,4 @@
-import * as program from 'commander';
+import program = require('commander');
 import chalk from 'chalk';
 import { resolve as resolvePath } from 'path';
 import { existsSync } from 'fs';

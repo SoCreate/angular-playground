@@ -14,37 +14,24 @@ describe('fromDir', () => {
 
     it('should apply callback to each file process matching regex', () => {
         const regex = /\.json$/;
-        const foo = {
-            cb: () => {
-            }
-        };
-        const cbSpy = spyOn(foo, 'cb');
-
-        fromDir(dir, regex, foo.cb);
-        expect(cbSpy).toHaveBeenCalledTimes(2);
+        const mockCb = jest.fn();
+        fromDir(dir, regex, mockCb);
+        expect(mockCb.mock.calls.length).toBe(2);
     });
 
     it('should not apply callback to files that don\' match regex', () => {
         const regex = /\.spec.ts$/;
-        const foo = {
-            cb: () => {
-            }
-        };
-        const cbSpy = spyOn(foo, 'cb');
+        const mockCb = jest.fn();
 
-        fromDir(dir, regex, foo.cb);
-        expect(cbSpy).not.toHaveBeenCalled();
+        fromDir(dir, regex, mockCb);
+        expect(mockCb.mock.calls.length).toBe(0);
     });
 
     it('should apply recursively to sub-directories', () => {
         const regex = /\.csv$/;
-        const foo = {
-            cb: () => {
-            }
-        };
-        const cbSpy = spyOn(foo, 'cb');
+        const mockCb = jest.fn();
 
-        fromDir(dir, regex, foo.cb);
-        expect(cbSpy).toHaveBeenCalledTimes(1);
+        fromDir(dir, regex, mockCb);
+        expect(mockCb.mock.calls.length).toBe(1);
     });
 });
