@@ -1,17 +1,19 @@
 import {
-    Component, Input, NgZone, NgModule, OnChanges, OnInit, SimpleChanges, NgModuleRef, Inject
+    Component, Input, NgZone, NgModule, OnChanges, OnInit, SimpleChanges, NgModuleRef, Inject, OnDestroy
 } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { LoaderService } from '../shared/loader.service';
 import { Scenario, SelectedSandboxAndScenarioKeys } from '../../lib/app-state';
 import { BrowserModule } from '@angular/platform-browser';
-import { MIDDLEWARES } from '../../lib/middlewares';
+import { Middleware, MIDDLEWARE } from '../../lib/middlewares';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'ap-scenario',
     template: `<ng-template></ng-template>`
 })
-export class ScenarioComponent implements OnInit, OnChanges {
+export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
     /**
      * The selected sandbox and scenario provided from the app dropdown
      */
@@ -25,14 +27,20 @@ export class ScenarioComponent implements OnInit, OnChanges {
     /**
      * Modules that are applied across every sandbox instance
      */
-    private activeMiddlewares = [];
+    private activeMiddleware: Middleware;
 
-    constructor(private zone: NgZone, @Inject(MIDDLEWARES) private middlewares) {
+    /**
+     * Unsubscribe all subscriptions on component destroy
+     */
+    private onDestroy = new Subject<void>();
+
+    constructor(private zone: NgZone, @Inject(MIDDLEWARE) private middleware) {
     }
 
     ngOnInit() {
-        this.middlewares
-            .subscribe(middlewares => this.activeMiddlewares = middlewares);
+        this.middleware
+            .pipe(takeUntil(this.onDestroy))
+            .subscribe(middlewares => this.activeMiddleware = middlewares);
 
         if (this.selectedSandboxAndScenarioKeys) {
             this.bootstrapSandbox(this.selectedSandboxAndScenarioKeys);
@@ -43,6 +51,10 @@ export class ScenarioComponent implements OnInit, OnChanges {
         if (changes.selectedSandboxAndScenarioKeys) {
             this.bootstrapSandbox(changes.selectedSandboxAndScenarioKeys.currentValue)
         }
+    }
+
+    ngOnDestroy() {
+        this.onDestroy.next();
     }
 
     /**
@@ -93,7 +105,7 @@ export class ScenarioComponent implements OnInit, OnChanges {
             imports: [
                 BrowserModule,
                 ...sandboxMeta.imports,
-                ...this.activeMiddlewares
+                ...this.activeMiddleware.modules
             ],
             declarations: [
                 hostComp,
