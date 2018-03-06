@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EventManager } from '@angular/platform-browser';
 import 'rxjs/add/operator/debounceTime';
@@ -8,7 +8,7 @@ import { StateService } from './shared/state.service';
 import { UrlService } from './shared/url.service';
 import { fuzzySearch } from './shared/fuzzy-search.function';
 import { LevenshteinDistance } from './shared/levenshtein-distance';
-import { LoaderService } from './shared/loader.service';
+import { SandboxLoader } from './shared/sandbox-loader';
 
 @Component({
     selector: 'ap-root',
@@ -31,7 +31,7 @@ export class AppComponent {
                 private levenshteinDistance: LevenshteinDistance) { }
 
     ngOnInit() {
-        const sandboxMenuItems = LoaderService.getSandboxMenuItems();
+        const sandboxMenuItems = SandboxLoader.getSandboxMenuItems();
 
         if (this.urlService.embed) {
             this.selectedSandboxAndScenarioKeys = {

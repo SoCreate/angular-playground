@@ -2,7 +2,7 @@ import {
     Component, Input, NgZone, NgModule, OnChanges, OnInit, SimpleChanges, NgModuleRef, Inject, OnDestroy
 } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { LoaderService } from '../shared/loader.service';
+import { SandboxLoader } from '../shared/sandbox-loader';
 import { Scenario, SelectedSandboxAndScenarioKeys } from '../../lib/app-state';
 import { BrowserModule } from '@angular/platform-browser';
 import { Middleware, MIDDLEWARE } from '../../lib/middlewares';
@@ -61,7 +61,7 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
      * Bootstrap a new Angular application with the sandbox's required dependencies
      */
     private bootstrapSandbox(selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys) {
-        LoaderService.loadSandbox(selectedSandboxAndScenarioKeys.sandboxKey).then(sandbox => {
+        SandboxLoader.loadSandbox(selectedSandboxAndScenarioKeys.sandboxKey).then(sandbox => {
             if (sandbox) {
                 const scenario = sandbox.scenarios
                     .find((s: Scenario) => s.key === selectedSandboxAndScenarioKeys.scenarioKey);

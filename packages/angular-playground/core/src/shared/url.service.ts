@@ -1,7 +1,7 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { SandboxMenuItem } from '../../lib/app-state';
-import { LoaderService } from './loader.service';
+import { SandboxLoader } from './sandbox-loader';
 
 @Injectable()
 export class UrlService {
@@ -19,7 +19,7 @@ export class UrlService {
     }
 
     constructor(private location: Location) {
-        this.sandboxMenuItems = LoaderService.getSandboxMenuItems();
+        this.sandboxMenuItems = SandboxLoader.getSandboxMenuItems();
         let urlPath = location.path();
         this._embed = /[?|&]embed=1/.exec(urlPath) !== null;
         this._select = this.parse('scenario', this.sandboxMenuItems, urlPath);
