@@ -1,4 +1,5 @@
 :host {
     position: fixed;
     border: 1px solid black;
+    z-index: 10000;
 }

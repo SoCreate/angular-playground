@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { exec } from 'child_process';
 import { join as joinPath } from 'path';
 
-export async function buildAngularCli(appName: string) {
+export async function buildAngularCli(appName: string, baseHref: string) {
     try {
         // Check package is installed locally
         require.resolve('@angular/service-worker');
@@ -12,7 +12,7 @@ export async function buildAngularCli(appName: string) {
 
         console.log('Building for production with sandboxes...');
         // Cannot build w/ AOT due to runtime compiler dependency
-        exec(`ng build -a=${appName} --prod --aot=false`, (err, stdout, stderr) => {
+        exec(`ng build -a=${appName} --prod --aot=false --base-href=${baseHref}`, (err, stdout, stderr) => {
             if (err) throw err;
             console.log(stdout);
         });

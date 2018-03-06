@@ -11,7 +11,8 @@ export async function run() {
     await buildSandboxes(config.sourceRoot, config.chunk);
 
     if (config.buildWithServiceWorkers) {
-        return buildAngularCli(config.angularAppName);
+        console.log(config.baseHref);
+        return buildAngularCli(config.angularAppName, config.baseHref);
     }
 
     if (config.verifySandboxes) {
