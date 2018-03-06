@@ -26,7 +26,7 @@ export function buildSandboxes(srcPath: string, chunk: boolean): Promise<string>
         writeFile(filePath, fileContent, err => {
             if (err) {
                 console.log(chalk.red('Unable to compile sandboxes.\n'));
-                throw new Error(err.message);
+                reject(err);
             }
             console.log('Successfully compiled sandbox files.');
             resolve(filePath);

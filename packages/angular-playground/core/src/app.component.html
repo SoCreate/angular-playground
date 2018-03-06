@@ -1,10 +1,10 @@
 <div class="shield" *ngIf="commandBarActive" (click)="toggleCommandBar()"></div>
-    <div class="command-bar" *ngIf="filteredSandboxMenuItems"
-      (keydown.control)="onCommandBarStartPreview($event)"
-      (keyup.control)="onCommandBarStopPreview()"
-      [class.command-bar--open]="commandBarActive"
-      [class.command-bar--preview]="commandBarPreview">
-      <input
+<div class="command-bar" *ngIf="filteredSandboxMenuItems"
+     (keydown.control)="onCommandBarStartPreview($event)"
+     (keyup.control)="onCommandBarStopPreview()"
+     [class.command-bar--open]="commandBarActive"
+     [class.command-bar--preview]="commandBarPreview">
+    <input
         class="command-bar__filter"
         type="text"
         name="filter"
@@ -17,72 +17,75 @@
         (keydown.arrowdown)="onFilterBoxArrowDown($event)"
         (keydown.control.arrowup)="onFilterBoxArrowUp($event, true)"
         (keydown.control.arrowdown)="onFilterBoxArrowDown($event, true)">
-      <div *ngIf="filteredSandboxMenuItems && filteredSandboxMenuItems.length > 0" class="command-bar__sandboxes">
+    <div *ngIf="filteredSandboxMenuItems && filteredSandboxMenuItems.length > 0" class="command-bar__sandboxes">
         <div class="command-bar__sandbox"
              *ngFor="let sandboxMenuItem of filteredSandboxMenuItems; index as menuItemIndex">
-          <h2 class="command-bar__title" title="{{sandboxMenuItem.label}} {{sandboxMenuItem.name}}"
-              [class.command-bar__sandbox-title--selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandboxMenuItem.key">
-            <span class="command-bar__name" [innerHtml]="sandboxMenuItem.name | apHighlightSearchMatch : sandboxMenuItem.indexMatches"></span>
-            <span class="command-bar__label" *ngIf="sandboxMenuItem.label" [innerHtml]="sandboxMenuItem.label | apHighlightSearchMatch : sandboxMenuItem.indexMatches : sandboxMenuItem.name.length"></span>
-          </h2>
-          <div class="command-bar__scenarios"
-               *ngFor="let scenarioMenuItem of sandboxMenuItem.scenarioMenuItems; index as scenarioMenuItemIndex">
-            <a
-              class="command-bar__scenario-link"
-              #scenarioElement
-              [tabindex]="scenarioMenuItem.tabIndex"
-              [attr.sandboxMenuItemKey]="sandboxMenuItem.key"
-              [attr.scenarioMenuItemkey]="scenarioMenuItem.key"
-              (keydown.control.arrowup)="onScenarioLinkControlUp(scenarioElement, $event)"
-              (keydown.control.arrowdown)="onScenarioLinkControlDown(scenarioElement, $event)"
-              (keydown.arrowup)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
-              (keydown.arrowdown)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
-              (keydown.esc)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
-              (keydown.enter)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
-              (keyup.esc)="onScenarioLinkKeyUp(scenarioElement, $event)"
-              (keyup.enter)="onScenarioLinkKeyUp(scenarioElement, $event)"
-              (click)="onScenarioClick(sandboxMenuItem.key, scenarioMenuItem.key, $event); toggleCommandBar()"
-              [class.command-bar__scenario-link--selected]="isSelected(sandboxMenuItem, scenarioMenuItem)">
-                <ap-pin [selected]="isSelected(sandboxMenuItem, scenarioMenuItem)"></ap-pin>
-                <span class="command-bar__scenario-label">
+            <h2 class="command-bar__title" title="{{sandboxMenuItem.label}} {{sandboxMenuItem.name}}"
+                [class.command-bar__sandbox-title--selected]="selectedSandboxAndScenarioKeys.sandboxKey === sandboxMenuItem.key">
+                <span class="command-bar__name"
+                      [innerHtml]="sandboxMenuItem.name | apHighlightSearchMatch : sandboxMenuItem.indexMatches"></span>
+                <span class="command-bar__label" *ngIf="sandboxMenuItem.label"
+                      [innerHtml]="sandboxMenuItem.label | apHighlightSearchMatch : sandboxMenuItem.indexMatches : sandboxMenuItem.name.length"></span>
+            </h2>
+            <div class="command-bar__scenarios"
+                 *ngFor="let scenarioMenuItem of sandboxMenuItem.scenarioMenuItems; index as scenarioMenuItemIndex">
+                <a
+                    class="command-bar__scenario-link"
+                    #scenarioElement
+                    [tabindex]="scenarioMenuItem.tabIndex"
+                    [attr.sandboxMenuItemKey]="sandboxMenuItem.key"
+                    [attr.scenarioMenuItemkey]="scenarioMenuItem.key"
+                    (keydown.control.arrowup)="onScenarioLinkControlUp(scenarioElement, $event)"
+                    (keydown.control.arrowdown)="onScenarioLinkControlDown(scenarioElement, $event)"
+                    (keydown.arrowup)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
+                    (keydown.arrowdown)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
+                    (keydown.esc)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
+                    (keydown.enter)="onScenarioLinkKeyDown(scenarioElement, filterElement, $event)"
+                    (keyup.esc)="onScenarioLinkKeyUp(scenarioElement, $event)"
+                    (keyup.enter)="onScenarioLinkKeyUp(scenarioElement, $event)"
+                    (click)="onScenarioClick(sandboxMenuItem.key, scenarioMenuItem.key, $event); toggleCommandBar()"
+                    [class.command-bar__scenario-link--selected]="isSelected(sandboxMenuItem, scenarioMenuItem)">
+                    <ap-pin [selected]="isSelected(sandboxMenuItem, scenarioMenuItem)"></ap-pin>
+                    <span class="command-bar__scenario-label">
                   {{scenarioMenuItem.description}}
                 </span>
-            </a>
-          </div>
+                </a>
+            </div>
         </div>
-      </div>
-      <a *ngIf="filteredSandboxMenuItems && filteredSandboxMenuItems.length > 0" class="command-bar__brand"
-         href="http://www.angularplayground.it/" target="_blank">
-        <ap-logo></ap-logo>
-      </a>
     </div>
-    <section class="content">
-      <div class="content__none" *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey">
+    <a *ngIf="filteredSandboxMenuItems && filteredSandboxMenuItems.length > 0" class="command-bar__brand"
+       href="http://www.angularplayground.it/" target="_blank">
+        <ap-logo></ap-logo>
+    </a>
+</div>
+<section class="content">
+    <ap-drawer *ngIf="activeMiddleware.uiActive" (openCommandBarClick)="toggleCommandBar()"></ap-drawer>
+    <div class="content__none" *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey">
         <div class="content__none-message">
-          <p *ngIf="totalSandboxes > 0">
-            The playground has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}}
-          </p>
-          <p *ngIf="totalSandboxes === 0">
-            The playground does not have any sandboxed components
-          </p>
-          <div class="content__shortcuts">
-          <div class="content__shortcut" *ngFor="let shortcut of shortcuts">
-            <div class="content__shortcut-label">
-              <ng-container *ngFor="let key of shortcut.keys; let i = index">
-                <code>
-                  {{key}}
-                </code>
-                <ng-container *ngIf="shortcut.keys.length > 1 && i < shortcut.keys.length - 1">&nbsp;&nbsp;/&nbsp;&nbsp;</ng-container>
-              </ng-container>
+            <p *ngIf="totalSandboxes > 0">
+                The playground has {{totalSandboxes}} sandboxed component{{totalSandboxes > 1 ? 's' : ''}}
+            </p>
+            <p *ngIf="totalSandboxes === 0">
+                The playground does not have any sandboxed components
+            </p>
+            <div class="content__shortcuts">
+                <div class="content__shortcut" *ngFor="let shortcut of shortcuts">
+                    <div class="content__shortcut-label">
+                        <ng-container *ngFor="let key of shortcut.keys; let i = index">
+                            <code>
+                                {{key}}
+                            </code>
+                            <ng-container *ngIf="shortcut.keys.length > 1 && i < shortcut.keys.length - 1">&nbsp;&nbsp;/&nbsp;&nbsp;</ng-container>
+                        </ng-container>
+                    </div>
+                    <div class="content__shortcut-value">
+                        {{shortcut.description}}
+                    </div>
+                </div>
             </div>
-            <div class="content__shortcut-value">
-              {{shortcut.description}}
-            </div>
-          </div>
         </div>
-        </div>
-      </div>
-      <ng-container *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
+    </div>
+    <ng-container *ngIf="selectedSandboxAndScenarioKeys.sandboxKey">
         <ap-scenario [selectedSandboxAndScenarioKeys]="selectedSandboxAndScenarioKeys"></ap-scenario>
-      </ng-container>
+    </ng-container>
 </section>

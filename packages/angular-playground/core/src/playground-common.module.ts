@@ -10,6 +10,7 @@ import { LevenshteinDistance } from './shared/levenshtein-distance';
 import { HighlightSearchMatchPipe } from './shared/highlight-search-match.pipe';
 import { LogoComponent } from './logo/logo.component';
 import { PinComponent } from './pin/pin.component';
+import { DrawerComponent } from './drawer/drawer.component';
 
 declare let require: any;
 
@@ -31,7 +32,8 @@ declare let require: any;
         FocusDirective,
         HighlightSearchMatchPipe,
         LogoComponent,
-        PinComponent
+        PinComponent,
+        DrawerComponent
     ],
     exports: [AppComponent]
 })

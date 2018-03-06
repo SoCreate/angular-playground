@@ -14,5 +14,7 @@ PlaygroundModule.registerRootModules(
   environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : []
 );
 
+PlaygroundModule.enableUI();
+
 platformBrowserDynamic().bootstrapModule(PlaygroundModule)
   .catch(err => console.error(err));

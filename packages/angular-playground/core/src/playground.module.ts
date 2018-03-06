@@ -8,7 +8,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 declare let require: any;
 
 const _middleware = new BehaviorSubject<Middleware>({
-    modules: []
+    modules: [],
+    uiActive: false
 });
 const middleware = _middleware.asObservable();
 
@@ -25,11 +26,19 @@ const middleware = _middleware.asObservable();
 export class PlaygroundModule {
     static registerRootModules(...modules) {
         _middleware.next({
+            ..._middleware.value,
             modules
         });
     }
 
     static applyMiddleware() {
         // TODO
+    }
+
+    static enableUI() {
+        _middleware.next({
+            ..._middleware.value,
+            uiActive: true
+        });
     }
 }
