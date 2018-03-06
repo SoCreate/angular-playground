@@ -2,8 +2,9 @@
 
 Build Angular components, directives, and pipes in isolation.
 
-Playground builds off of your existing Angular configuration to mount components in isolation,
-allowing you to develop and test them without the weight of your entire application.
+Playground is a living styleguide for your Angular components, taking the components you already
+wrote and providing an environment that makes it easy to visualize changes, document variations, and
+fix broken UI.
 
 [![npm version](https://badge.fury.io/js/angular-playground.svg)](https://badge.fury.io/js/angular-playground)
 
