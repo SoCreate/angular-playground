@@ -6,7 +6,7 @@
 * **Plugins:** New plugin API allows developers to easily configure and provide modules to the Playground application.
            This is a feature that we're especially excited about at SoCreate and plan on extending the functionality
            further based on what type of plugins people would like to develop. Right now, the plugin system provides
-           a wrapper around distributing modules to all sandboxes globally and enabling a command-bar overlay.
+           a wrapper around distributing modules to all sandboxes globally and enabling a command-bar overlay. ([1db080f](https://github.com/SoCreate/angular-playground/commit/1db080f))
            
   When declaring the Playground entry point in `main.playground.ts`, use `PlaygroundModule` to provide plugins:
   ```typescript
@@ -47,9 +47,9 @@
   ```
 
 * **app:** Added an opt-in overlay that allows users to open the command bar via click/touch. To enable this, use the
-        `PlaygroundModule.enableUI()` plugin (see above for code example).
+        `PlaygroundModule.enableUI()` plugin (see above for code example). ([f047453](https://github.com/SoCreate/angular-playground/commit/f047453))
 * **cli:** Added base-href support for productions builds. This works in the same way as @angular/cli's `ng build --base-href` command does.
-        Pass it in when running a build:
+        Pass it in when running a build: ([0af9fbc](https://github.com/SoCreate/angular-playground/commit/0af9fbc))
   ```
   angular-playground --build --base-href=my/path/to
   ```
