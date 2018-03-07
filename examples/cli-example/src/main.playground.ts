@@ -9,12 +9,12 @@ initializePlayground('app-root');
 
 enableProdMode();
 
-PlaygroundModule.registerRootModules(
-  BrowserAnimationsModule,
-  environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : []
-);
-
-PlaygroundModule.enableUI();
+PlaygroundModule
+  .registerRootModules(
+      BrowserAnimationsModule,
+      environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : []
+  )
+  .enableOverlay();
 
 platformBrowserDynamic().bootstrapModule(PlaygroundModule)
   .catch(err => console.error(err));

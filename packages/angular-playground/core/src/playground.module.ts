@@ -29,16 +29,18 @@ export class PlaygroundModule {
             ..._middleware.value,
             modules
         });
+        return this;
     }
 
     static applyMiddleware() {
         // TODO
     }
 
-    static enableUI() {
+    static enableOverlay() {
         _middleware.next({
             ..._middleware.value,
             uiActive: true
         });
+        return this;
     }
 }

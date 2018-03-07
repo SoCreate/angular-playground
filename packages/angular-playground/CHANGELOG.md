@@ -13,14 +13,14 @@
   // main.playground.ts
   initializePlayground('app-root');
   
-  // Register modules that are available to all sandboxes
-  PlaygroundModule.registerRootModules(
-    BrowserAnimationsModule,
-    environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : []
-  );
-  
-  // Enable a drawer UI for access to the command bar in mobile/ipad
-  PlaygroundModule.enableUI();
+  PlaygroundModule
+    // Register modules that are available to all sandboxes
+    .registerRootModules(
+      BrowserAnimationsModule,
+      environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : []
+    )
+    // Enable an overlay UI for access to the command bar in mobile/ipad
+    .enableOverlay();
   
   platformBrowserDynamic().bootstrapModule(PlaygroundModule)
     .catch(err => console.error(err));
