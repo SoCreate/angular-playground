@@ -4,13 +4,13 @@ import { join as joinPath, resolve as resolvePath } from 'path';
 import { fromDir } from './from-dir';
 import { StringBuilder } from './string-builder';
 
-interface SandboxFileInformation {
+export interface SandboxFileInformation {
     key: string;
     searchKey: string;
     name: string;
     label: string;
     scenarioMenuItems: {
-        key: string;
+        key: number;
         description: string;
     }[];
 }
@@ -69,7 +69,7 @@ export function findSandboxes(home: string): SandboxFileInformation[] {
     return sandboxes;
 }
 
-function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string, chunkMode: string): string {
+export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string, chunkMode: string): string {
     const content = new StringBuilder();
     content.addLine(`function getSandboxMenuItems() {`);
     content.addLine(`return ${JSON.stringify(sandboxes)};`);
@@ -95,7 +95,7 @@ function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: str
 
 // Turns windows URL string ('c:\\etc\\') into URL node expects ('c:/etc/')
 // https://github.com/sindresorhus/slash
-function slash(input: string) {
+export function slash(input: string) {
     const isExtendedLengthPath = /^\\\\\?\\/.test(input);
     const hasNonAscii = /[^\u0000-\u0080]+/.test(input);
 
