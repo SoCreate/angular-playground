@@ -32,9 +32,8 @@ describe('findSandboxes', () => {
         expect(sandboxes[0].scenarioMenuItems[1].description).toBe('With Wrapper');
     });
 
-    // TODO:
-    // it('should ignore commented-out scenarios', () => {
-    //     // Example 2 component contains commented-out scenario
-    //     expect(sandboxes[1].scenarioMenuItems.length).toBe(1);
-    // });
+    it('should ignore commented-out scenarios', () => {
+        // Example 2 component contains commented-out scenario
+        expect(sandboxes[1].scenarioMenuItems.length).toBe(2);
+    });
 });
