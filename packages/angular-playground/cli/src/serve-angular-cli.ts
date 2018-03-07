@@ -1,17 +1,8 @@
-import chalk from 'chalk';
 import { spawn } from 'child_process';
 import { Config } from './configure';
 
 export async function serveAngularCli(config: Config) {
-    let args: string[];
-
-    try {
-        args = configureArguments(config);
-    } catch (err) {
-        console.error(err.message);
-        process.exit(1);
-    }
-
+    const args = configureArguments(config);
     const ngServe = spawn('node', args);
 
     const write = (handler: any, data: any) => {
@@ -36,7 +27,7 @@ function configureArguments(config: Config): string[] {
     if (config.angularAppName) {
         args.push(`-a=${config.angularAppName}`);
     } else {
-        throw new Error(chalk.red('Please provide Playground\'s appName in your angular-playground.json file.'));
+        throw new Error('Please provide Playground\'s appName in your angular-playground.json file.');
     }
 
     if (config.angularCliEnv) {

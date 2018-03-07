@@ -8,11 +8,15 @@ import { buildAngularCli } from './build-angular-cli';
 
 export async function run() {
     const config: Config = configure(process.argv);
-    await buildSandboxes(config.sourceRoot, config.chunk);
+
+    try {
+        await buildSandboxes(config.sourceRoot, config.chunk);
+    } catch (err) {
+        throw err;
+    }
 
     if (config.buildWithServiceWorkers) {
-        console.log(config.baseHref);
-        return buildAngularCli(config.angularAppName, config.baseHref);
+        return await buildAngularCli(config.angularAppName, config.baseHref);
     }
 
     if (config.verifySandboxes) {
@@ -24,7 +28,11 @@ export async function run() {
     }
 
     if (config.serve || config.verifySandboxes) {
-        serveAngularCli(config);
+        try {
+            await serveAngularCli(config);
+        } catch (err) {
+            throw err;
+        }
     }
 
     if (config.verifySandboxes) {

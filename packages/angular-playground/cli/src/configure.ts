@@ -57,14 +57,7 @@ export function configure(argv: any): Config {
 }
 
 export function applyConfigurationFile(program: any): Config {
-    let playgroundConfig;
-
-    try {
-        playgroundConfig = loadConfig(program.config);
-    } catch (err) {
-        console.error(err.message);
-        process.exit(1);
-    }
+    const playgroundConfig = loadConfig(program.config);
 
     const config: Config = {
         sourceRoot: playgroundConfig.sourceRoot || program.src,
@@ -95,7 +88,7 @@ export function applyConfigurationFile(program: any): Config {
 function loadConfig(path: string) {
     const configPath = resolvePath(path);
     if (!existsSync(configPath)) {
-        throw new Error(chalk.red(`Failed to load config file ${configPath}`));
+        throw new Error(`Failed to load config file ${configPath}`);
     }
 
     return require(configPath.replace(/.json$/, ''));

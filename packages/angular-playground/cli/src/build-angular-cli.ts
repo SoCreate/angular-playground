@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import { exec } from 'child_process';
 import { join as joinPath } from 'path';
 
@@ -17,9 +16,8 @@ export async function buildAngularCli(appName: string, baseHref: string) {
             console.log(stdout);
         });
     } catch (err) {
-        console.error(chalk.red('Error: --build requires @angular/service-worker to be installed locally.'));
-        console.log('https://github.com/angular/angular-cli/wiki/build#service-worker');
-        process.exit(1);
+        throw new Error('Error: --build requires @angular/service-worker to be installed locally: ' +
+            'https://github.com/angular/angular-cli/wiki/build#service-worker');
     }
 }
 

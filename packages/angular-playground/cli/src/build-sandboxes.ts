@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import { writeFile, readFileSync } from 'fs';
 import { join as joinPath, resolve as resolvePath } from 'path';
 import { fromDir } from './from-dir';
@@ -25,8 +24,7 @@ export function buildSandboxes(srcPath: string, chunk: boolean): Promise<string>
     return new Promise((resolve, reject) => {
         writeFile(filePath, fileContent, err => {
             if (err) {
-                console.log(chalk.red('Unable to compile sandboxes.\n'));
-                reject(err);
+                reject(new Error('Unable to compile sandboxes.'));
             }
             console.log('Successfully compiled sandbox files.');
             resolve(filePath);
