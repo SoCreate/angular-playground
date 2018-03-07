@@ -2,13 +2,13 @@ import puppeteer = require('puppeteer');
 import { resolve as resolvePath } from 'path';
 import chalk from 'chalk';
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';
-import { ErrorReporter } from './error-reporter';
-import { Config } from './configure';
+import { ErrorReporter } from '../error-reporter';
+import { Config } from '../configure';
 
 // Used to tailor the version of headless chromium ran by puppeteer
 const CHROME_ARGS = [ '--disable-gpu', '--no-sandbox' ];
-const SANDBOX_PATH = resolvePath(__dirname, '../../build/shared/sandboxes.js');
-const SANDBOX_DEST = resolvePath(__dirname, '../../sandboxes_modified.js');
+const SANDBOX_PATH = resolvePath(__dirname, '../../../build/src/shared/sandboxes.js');
+const SANDBOX_DEST = resolvePath(__dirname, '../../../sandboxes_modified.js');
 
 export interface ScenarioSummary {
     url: string;
@@ -124,9 +124,7 @@ function loadSandboxMenuItems(): any[] {
     try {
         return require(SANDBOX_DEST).getSandboxMenuItems();
     } catch (err) {
-        console.log(chalk.red('Failed to load sandbox menu items.'));
-        console.error(err);
-        throw err;
+        throw new Error(`Failed to load sandbox menu items. ${err}`);
     }
 }
 
