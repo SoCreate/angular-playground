@@ -66,8 +66,6 @@ export function applyConfigurationFile(program: any): Config {
         process.exit(1);
     }
 
-    // TODO: Missing value error reporting
-
     const config: Config = {
         sourceRoot: playgroundConfig.sourceRoot || program.src,
         chunk: negate(playgroundConfig.noChunk) || program.chunk,

@@ -15,6 +15,7 @@
     "types": ["jest"]
   },
   "exclude": [
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "**/test/**"
   ]
 }
