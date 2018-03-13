@@ -62,7 +62,7 @@ npm i
 
 Then install dependencies for the example-app:
 ```
-cd ../..
+cd ../../
 cd ./examples/cli-example/
 npm i
 ```
@@ -77,6 +77,11 @@ but you will need to stop the playground from running and re-run it (which will
 handle re-installing the latest changes for the package).
 If you need to work on the `cli.ts` code you will need to 
 run `npm run build` from the project root after your changes.
+
+### Tooling
+To run bash scripts on Windows, add the [Git for Windows](https://git-scm.com/) `/bin/`
+folder (defaults to `C:\Program Files\Git\bin`) to your path, or install a terminal emulator like
+[Cygwin](https://cygwin.com/).
 
 
 [github]: https://github.com/socreate/angular-playground
