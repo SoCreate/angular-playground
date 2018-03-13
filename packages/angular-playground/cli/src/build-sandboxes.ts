@@ -1,16 +1,15 @@
-import chalk from 'chalk';
-import { writeFile, readFileSync, existsSync, unlinkSync } from 'fs';
+import { writeFile, readFileSync } from 'fs';
 import { join as joinPath, resolve as resolvePath } from 'path';
 import { fromDir } from './from-dir';
 import { StringBuilder } from './string-builder';
 
-interface SandboxFileInformation {
+export interface SandboxFileInformation {
     key: string;
     searchKey: string;
     name: string;
     label: string;
     scenarioMenuItems: {
-        key: string;
+        key: number;
         description: string;
     }[];
 }
@@ -22,14 +21,10 @@ export function buildSandboxes(srcPath: string, chunk: boolean): Promise<string>
     const filePath = resolvePath(__dirname, '../../build/src/shared/sandboxes.js');
     const fileContent = buildSandboxFileContents(sandboxes, home, chunkMode);
 
-    // TODO: Remove next release post 3.1.0
-    deleteDeprecatedSandboxFileIfNecessary(home);
-
     return new Promise((resolve, reject) => {
         writeFile(filePath, fileContent, err => {
             if (err) {
-                console.log(chalk.red('Unable to compile sandboxes.\n'));
-                throw new Error(err.message);
+                reject(new Error('Unable to compile sandboxes.'));
             }
             console.log('Successfully compiled sandbox files.');
             resolve(filePath);
@@ -37,7 +32,7 @@ export function buildSandboxes(srcPath: string, chunk: boolean): Promise<string>
     });
 }
 
-function findSandboxes(home: string): SandboxFileInformation[] {
+export function findSandboxes(home: string): SandboxFileInformation[] {
     const sandboxes = [];
 
     fromDir(home, /\.sandbox.ts$/, (filename) => {
@@ -50,7 +45,7 @@ function findSandboxes(home: string): SandboxFileInformation[] {
             const labelText = /label\s*:\s*['"](.+)['"]/g.exec(matchSandboxOf[0]);
 
             let scenarioMenuItems = [];
-            const scenarioRegex = /\.add\s*\(\s*['"](.+)['"]\s*,\s*{/g;
+            const scenarioRegex = /^(?!\/\/)\s*\.add\s*\(\s*['"](.+)['"]\s*,\s*{/gm;
             let scenarioMatches;
             let scenarioIndex = 1;
             while ((scenarioMatches = scenarioRegex.exec(contents)) !== null) {
@@ -72,7 +67,7 @@ function findSandboxes(home: string): SandboxFileInformation[] {
     return sandboxes;
 }
 
-function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string, chunkMode: string): string {
+export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string, chunkMode: string): string {
     const content = new StringBuilder();
     content.addLine(`function getSandboxMenuItems() {`);
     content.addLine(`return ${JSON.stringify(sandboxes)};`);
@@ -96,18 +91,9 @@ function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: str
     return content.dump();
 }
 
-// TODO: Remove
-// Provided for minor release post sandboxes.ts resolution changes
-function deleteDeprecatedSandboxFileIfNecessary(home: string) {
-    const sandboxesFile = resolvePath(home, './sandboxes.ts');
-    if (existsSync(sandboxesFile)) {
-        unlinkSync(sandboxesFile);
-    }
-}
-
 // Turns windows URL string ('c:\\etc\\') into URL node expects ('c:/etc/')
 // https://github.com/sindresorhus/slash
-function slash(input: string) {
+export function slash(input: string) {
     const isExtendedLengthPath = /^\\\\\?\\/.test(input);
     const hasNonAscii = /[^\u0000-\u0080]+/.test(input);
 

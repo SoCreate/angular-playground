@@ -1,5 +1,5 @@
-import * as net from 'net';
-import * as detect from 'async/detect';
+import net = require('net');
+import detect = require('async/detect');
 
 /**
  * Function that detects the first port not in use in a given range
@@ -8,10 +8,6 @@ import * as detect from 'async/detect';
  *       console.log(port)
  *   });
  *
- * @param host - Host to check ports
- * @param start - Starting point for range
- * @param end - Ending point for range
- * @param callback - Callback on result
  */
 export function findFirstFreePort(host: string, start: number, end: number): Promise<number> {
     const ports: number[] = [];
@@ -21,7 +17,6 @@ export function findFirstFreePort(host: string, start: number, end: number): Pro
 
     const probe = (port: number, cb: Function) => {
         let calledOnce = false;
-        let connected = false;
 
         const server = net.createServer().listen(port, host);
         const timeoutRef = setTimeout(() => {

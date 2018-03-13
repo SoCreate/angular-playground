@@ -1,12 +1,68 @@
-# 3.4.1 (2018-01-19)
+# 4.0.0 ()
 
-<a name="3.4.1"></a>
+<a name="4.0.0"></a>
+
+### Features
+* **Plugins:** New plugin API allows developers to easily configure and provide modules to the Playground application.
+           This is a feature that we're especially excited about at SoCreate and plan on extending the functionality
+           further based on what type of plugins people would like to develop. Right now, the plugin system provides
+           a wrapper around distributing modules to all sandboxes globally and enabling a command-bar overlay. ([1db080f](https://github.com/SoCreate/angular-playground/commit/1db080f))
+           
+  When declaring the Playground entry point in `main.playground.ts`, use `PlaygroundModule` to provide plugins:
+  ```typescript
+  // main.playground.ts
+  initializePlayground('app-root');
+  
+  PlaygroundModule
+    // Register modules that are available to all sandboxes
+    .registerRootModules(
+      BrowserAnimationsModule,
+      environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : []
+    )
+    // Enable an overlay UI for access to the command bar in mobile/ipad
+    .enableOverlay();
+  
+  platformBrowserDynamic().bootstrapModule(PlaygroundModule)
+    .catch(err => console.error(err));
+  ```
+  
+  **Note**: this new Plugin API replaces the existing "root module" syntax for providing application-wide modules
+            (like the BrowserAnimation module):
+
+  **Deprecated syntax:**
+  ```typescript
+  // my-playground.module.ts
+  @NgModule({
+    imports: [
+      BrowserModule,
+      BrowserAnimationsModule,
+      // etc.
+    ]
+  })
+  export class MyPlaygroundModule {}
+
+  // main.playground.ts
+  // Don't do this, always use PlaygroundModule:
+  platformBrowserDynamic().bootstrapModule(MyPlaygroundModule);
+  ```
+
+* **app:** Added an opt-in overlay that allows users to open the command bar via click/touch. To enable this, use the
+        `PlaygroundModule.enableUI()` plugin (see above for code example). ([f047453](https://github.com/SoCreate/angular-playground/commit/f047453))
+* **cli:** Added base-href support for productions builds. This works in the same way as @angular/cli's `ng build --base-href` command does.
+        Pass it in when running a build: ([0af9fbc](https://github.com/SoCreate/angular-playground/commit/0af9fbc))
+  ```
+  angular-playground --build --base-href=my/path/to
+  ```
 
 ### Bug Fixes
 * **app:** Fixed IE11 build due to ES2015 arrow functions ([0609340](https://github.com/SoCreate/angular-playground/commit/0609340)).
 * **app:** Fixed IE11 command bar appearing on pages after being closed ([8e0f099](https://github.com/SoCreate/angular-playground/commit/8e0f099)).
 * **app:** Switched the "quick switch" key to `control` from `alt` for firefox compatibility
            ([8b5b386](https://github.com/SoCreate/angular-playground/commit/8b5b386)).
+* **cli:** Better error reporting due to properly surfacing errors and exiting the CLI process ([53692cc](https://github.com/SoCreate/angular-playground/commit/53692cc))
+
+### Kudos
+* Thanks to **@pharaxe**, **@cvidal**, and **@michaeljfuller** for their contributions towards this release!
 
 # 3.4.0 (2018-01-11)
 

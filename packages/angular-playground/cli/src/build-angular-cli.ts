@@ -1,26 +1,28 @@
-import chalk from 'chalk';
 import { exec } from 'child_process';
 import { join as joinPath } from 'path';
 
-export async function buildAngularCli(appName: string) {
+export async function buildAngularCli(appName: string, baseHref: string) {
     try {
         // Check package is installed locally
         require.resolve('@angular/service-worker');
-
-        const playgroundIndex = getAppIndex(appName);
-        await toggleServiceWorker(playgroundIndex);
-
-        console.log('Building for production with sandboxes...');
-        // Cannot build w/ AOT due to runtime compiler dependency
-        exec(`ng build -a=${appName} --prod --aot=false`, (err, stdout, stderr) => {
-            if (err) throw err;
-            console.log(stdout);
-        });
     } catch (err) {
-        console.error(chalk.red('Error: --build requires @angular/service-worker to be installed locally.'));
-        console.log('https://github.com/angular/angular-cli/wiki/build#service-worker');
-        process.exit(1);
+        throw new Error('Error: --build requires @angular/service-worker to be installed locally: ' +
+            'https://github.com/angular/angular-cli/wiki/build#service-worker');
     }
+
+    const playgroundIndex = getAppIndex(appName);
+    try {
+        await toggleServiceWorker(playgroundIndex);
+    } catch (err) {
+        throw err;
+    }
+
+    console.log('Building for production with sandboxes...');
+    // Cannot build w/ AOT due to runtime compiler dependency
+    exec(`ng build -a=${appName} --prod --aot=false --base-href=${baseHref}`, (err, stdout, stderr) => {
+        if (err) throw err;
+        console.log(stdout);
+    });
 }
 
 function getAppIndex(appName: string): number {

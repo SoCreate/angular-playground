@@ -1,4 +1,4 @@
-import * as program from 'commander';
+import program = require('commander');
 import chalk from 'chalk';
 import { resolve as resolvePath } from 'path';
 import { existsSync } from 'fs';
@@ -6,11 +6,11 @@ import { REPORT_TYPE } from './error-reporter';
 
 export interface Config {
     sourceRoot: string;
-    angularAppName: string;
     chunk: boolean;
     watch: boolean;
     serve: boolean;
     buildWithServiceWorkers: boolean;
+    baseHref: string;
 
     verifySandboxes: boolean;
     randomScenario: boolean;
@@ -18,10 +18,11 @@ export interface Config {
     reportType: string;
     reportPath: string;
 
-    angularCliPath: string;
-    angularCliPort: number;
-    angularCliEnv: string | undefined;
-    angularCliAdditionalArgs: string[];
+    angularAppName?: string;
+    angularCliPath?: string;
+    angularCliPort?: number;
+    angularCliEnv?: string | undefined;
+    angularCliAdditionalArgs?: string[];
 }
 
 export function configure(argv: any): Config {
@@ -35,6 +36,7 @@ export function configure(argv: any): Config {
         .option('--no-serve', 'Disable cli serve', false)
         .option('--no-chunk', 'Don\'t chunk sandbox files individually', false)
         .option('--build', 'Build your sandboxes with service workers enabled. Requires @angular/service-worker', false)
+        .option('--base-href <href>', 'Specify a base-href for @angular/cli build', '/')
 
         // Sandbox verification
         .option('--check-errors', '', false)
@@ -55,41 +57,38 @@ export function configure(argv: any): Config {
 }
 
 export function applyConfigurationFile(program: any): Config {
-    let playgroundConfig;
+    const playgroundConfig = loadConfig(program.config);
 
-    try {
-        playgroundConfig = loadConfig(program.config);
-    } catch (err) {
-        console.error(err.message);
-        process.exit(1);
-    }
-
-    // TODO: Missing value error reporting
-    return {
+    const config: Config = {
         sourceRoot: playgroundConfig.sourceRoot || program.src,
         chunk: negate(playgroundConfig.noChunk) || program.chunk,
         watch: negate(playgroundConfig.noWatch) || program.watch,
         serve: negate(playgroundConfig.noServe) || program.serve,
         buildWithServiceWorkers: playgroundConfig.build || program.build,
+        baseHref: playgroundConfig.baseHref || program.baseHref,
 
         verifySandboxes: playgroundConfig.verifySandboxes || program.checkErrors,
         randomScenario: playgroundConfig.randomScenario || program.randomScenario,
         timeout: playgroundConfig.timeout || program.timeout,
         reportPath: playgroundConfig.reportPath || program.reportPath,
         reportType: playgroundConfig.reportType || program.reportType,
-
-        angularAppName: playgroundConfig.angularCli.appName || program.ngCliApp,
-        angularCliPath: playgroundConfig.angularCli.cmdPath || program.ngCliCmd,
-        angularCliPort: playgroundConfig.angularCli.port || program.ngCliPort,
-        angularCliEnv: playgroundConfig.angularCli.env || program.ngCliEnv,
-        angularCliAdditionalArgs: playgroundConfig.angularCli.args || program.ngCliArgs
     };
+
+    if (playgroundConfig.angularCli) {
+        config.angularAppName = playgroundConfig.angularCli.appName || program.ngCliApp;
+        config.angularCliPath = playgroundConfig.angularCli.cmdPath || program.ngCliCmd;
+        config.angularCliPort = playgroundConfig.angularCli.port || program.ngCliPort;
+        config.angularCliEnv = playgroundConfig.angularCli.env || program.ngCliEnv;
+        config.angularCliAdditionalArgs = playgroundConfig.angularCli.args || program.ngCliArgs;
+    }
+
+    return config;
 }
 
 function loadConfig(path: string) {
     const configPath = resolvePath(path);
     if (!existsSync(configPath)) {
-        throw new Error(chalk.red(`Failed to load config file ${configPath}`));
+        throw new Error(`Failed to load config file ${configPath}`);
     }
 
     return require(configPath.replace(/.json$/, ''));

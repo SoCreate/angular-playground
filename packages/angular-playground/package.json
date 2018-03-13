@@ -14,7 +14,7 @@
     "transform": {
       "\\.ts$": "ts-jest"
     },
-    "testRegex": "/test/.*\\.ts$",
+    "testRegex": "/test/.*\\.spec\\.ts$",
     "moduleFileExtensions": [
       "ts",
       "js",
@@ -60,7 +60,7 @@
     "chalk": "^2.3.0",
     "commander": "^2.12.2",
     "node-watch": "^0.4.1",
-    "puppeteer": "^0.13.0"
+    "puppeteer": "^1.1.1"
   },
   "devDependencies": {
     "@angular/common": "^5.0.0",
@@ -74,7 +74,7 @@
     "@types/node": "^9.3.0",
     "@types/puppeteer": "^0.13.3",
     "codelyzer": "3.0.1",
-    "fs-extra": "^4.0.1",
+    "del": "^3.0.0",
     "glob": "^7.1.2",
     "gulp": "^3.9.1",
     "gulp-inline-ng2-template": "^4.0.0",
@@ -82,7 +82,7 @@
     "rxjs": "^5.5.2",
     "ts-jest": "^22.0.1",
     "tslint": "5.3.2",
-    "typescript": "2.4.2",
+    "typescript": "^2.5.3",
     "zone.js": "0.8.4"
   }
 }

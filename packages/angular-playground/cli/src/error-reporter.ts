@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { writeFileSync } from 'fs';
-import { ScenarioSummary } from './verify-sandboxes';
-import { JSONReporter } from './reporters/json-reporter';
+import { ScenarioSummary } from './check-errors/verify-sandboxes';
+import { JSONReporter } from './check-errors/reporters/json-reporter';
 
 export const REPORT_TYPE = {
     LOG: 'log',

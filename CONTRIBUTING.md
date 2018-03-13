@@ -53,22 +53,25 @@ That's it! Thank you for your contribution!
 
 ## <a name="dev"></a> Working on the Playground source code
 ### Initial setup
-Install dependencies for the playground source code:
+Install dependencies for angular-playground:
+
 ```
-cd playground
+cd ./packages/angular-playground/
 npm i
 ```
+
 Then install dependencies for the example-app:
 ```
-cd ..
-cd example-app
+cd ../..
+cd ./examples/cli-example/
 npm i
 ```
 ### Running the example app
-From the `/example-app` dir:
+From `./examples/cli-example`:
 ```
-npm run playground:fresh
+npm run playground:build && npm run playground
 ```
+
 From this point you can work on the Playground `app` and `api` code,
 but you will need to stop the playground from running and re-run it (which will
 handle re-installing the latest changes for the package).

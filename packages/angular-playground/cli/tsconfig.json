@@ -10,10 +10,12 @@
     "target": "es2015",
     "newLine": "LF",
     "typeRoots": [
-      "../../node_modules/@types"
-    ]
+      "../node_modules/@types"
+    ],
+    "types": ["jest"]
   },
   "exclude": [
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "**/test/**"
   ]
 }

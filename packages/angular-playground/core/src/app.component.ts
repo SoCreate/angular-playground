@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EventManager } from '@angular/platform-browser';
 import 'rxjs/add/operator/debounceTime';
@@ -8,7 +8,9 @@ import { StateService } from './shared/state.service';
 import { UrlService } from './shared/url.service';
 import { fuzzySearch } from './shared/fuzzy-search.function';
 import { LevenshteinDistance } from './shared/levenshtein-distance';
-import { LoaderService } from './shared/loader.service';
+import { SandboxLoader } from './shared/sandbox-loader';
+import { Middleware, MIDDLEWARE } from '../lib/middlewares';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'ap-root',
@@ -24,15 +26,20 @@ export class AppComponent {
     selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = { sandboxKey: null, scenarioKey: null };
     filter = new FormControl();
     shortcuts = this.getShortcuts();
+    activeMiddleware: Middleware;
 
-    constructor(private loaderService: LoaderService,
-        private stateService: StateService,
-        private urlService: UrlService,
-        private eventManager: EventManager,
-        private levenshteinDistance: LevenshteinDistance) { }
+    constructor(private stateService: StateService,
+                private urlService: UrlService,
+                private eventManager: EventManager,
+                private levenshteinDistance: LevenshteinDistance,
+                @Inject(MIDDLEWARE) private middleware: Observable<Middleware>) {
+    }
 
     ngOnInit() {
-        const sandboxMenuItems = this.loaderService.getSandboxMenuItems();
+        const sandboxMenuItems = SandboxLoader.getSandboxMenuItems();
+
+        this.middleware
+            .subscribe(middleware => this.activeMiddleware = middleware);
 
         if (this.urlService.embed) {
             this.selectedSandboxAndScenarioKeys = {
@@ -128,6 +135,7 @@ export class AppComponent {
                 break;
         }
     }
+
     onScenarioLinkKeyUp(scenarioElement: any, event: any) {
         event.preventDefault();
         switch (event.key) {
@@ -171,6 +179,10 @@ export class AppComponent {
     isSelected(sandbox: any, scenario: any) {
         return this.selectedSandboxAndScenarioKeys.scenarioKey === scenario.key
             && this.selectedSandboxAndScenarioKeys.sandboxKey.toLowerCase() === sandbox.key.toLowerCase();
+    }
+
+    toggleCommandBar() {
+        this.commandBarActive = !this.commandBarActive;
     }
 
     private blockEvent(e: KeyboardEvent) {
@@ -266,10 +278,6 @@ export class AppComponent {
             .map(sandboxMenuItem => Object.assign({}, sandboxMenuItem, { tabIndex: tabIndex++ }));
     }
 
-    private toggleCommandBar() {
-        this.commandBarActive = !this.commandBarActive;
-    }
-
     private selectScenario(sandboxKey: string, scenarioKey: number) {
         this.selectedSandboxAndScenarioKeys = { sandboxKey, scenarioKey };
         this.urlService.setSelected(sandboxKey, scenarioKey);
@@ -279,19 +287,19 @@ export class AppComponent {
         return [
             {
                 keys: ['ctrl + p', 'f2'],
-                description: 'Toggle command bar open/closed',
+                description: 'Toggle command bar open/closed'
             },
             {
                 keys: ['esc'],
-                description: 'Close command bar',
+                description: 'Close command bar'
             },
             {
                 keys: ['\u2191', '\u2193'],
-                description: 'Navigate up or down in command bar list',
+                description: 'Navigate up or down in command bar list'
             },
             {
                 keys: ['ctrl + \u2191', 'ctrl + \u2193'],
-                description: 'Switch scenarios while navigating up or down in command bar list',
+                description: 'Switch scenarios while navigating up or down in command bar list'
             }
         ];
     }
