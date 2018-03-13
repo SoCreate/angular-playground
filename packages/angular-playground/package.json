@@ -60,7 +60,7 @@
     "chalk": "^2.3.0",
     "commander": "^2.12.2",
     "node-watch": "^0.4.1",
-    "puppeteer": "^0.13.0"
+    "puppeteer": "^1.1.1"
   },
   "devDependencies": {
     "@angular/common": "^5.0.0",

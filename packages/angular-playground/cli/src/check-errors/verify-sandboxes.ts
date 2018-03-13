@@ -26,11 +26,11 @@ process.on('unhandledRejection', () => {
     if (browser) browser.close();
 });
 
-export function verifySandboxes(config: Config) {
+export async function verifySandboxes(config: Config) {
     hostUrl = `http://localhost:${config.angularCliPort}`;
     copyFileSync(SANDBOX_PATH, SANDBOX_DEST);
     removeDynamicImports(SANDBOX_DEST);
-    main(config);
+    await main(config);
 }
 
 /////////////////////////////////

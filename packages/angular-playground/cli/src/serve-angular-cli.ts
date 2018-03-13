@@ -17,6 +17,8 @@ export async function serveAngularCli(config: Config) {
     ngServe.stderr.on('data', data => {
         write(process.stderr, data);
     });
+
+    return Promise.resolve();
 }
 
 function configureArguments(config: Config): string[] {

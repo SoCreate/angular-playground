@@ -36,6 +36,10 @@ export async function run() {
     }
 
     if (config.verifySandboxes) {
-        verifySandboxes(config);
+        try {
+            await verifySandboxes(config);
+        } catch (err) {
+            throw err;
+        }
     }
 }
