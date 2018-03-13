@@ -1,9 +1,9 @@
 import { InjectionToken } from '@angular/core';
 
 export interface Middleware {
+    selector: string;
     modules?: any[];
-    hostComponent?: any;
-    uiActive: boolean;
+    overlay?: boolean;
 }
 
 export const MIDDLEWARE = new InjectionToken('middleware');
