@@ -4,12 +4,14 @@ import { AppComponent } from './app.component';
 import { PlaygroundCommonModule } from './playground-common.module';
 import { Middleware, MIDDLEWARE } from '../lib/middlewares';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { initializePlayground } from '../lib/initialize-playground';
 
 declare let require: any;
 
 const _middleware = new BehaviorSubject<Middleware>({
+    selector: null,
     modules: [],
-    uiActive: false
+    overlay: false
 });
 const middleware = _middleware.asObservable();
 
@@ -24,23 +26,14 @@ const middleware = _middleware.asObservable();
     bootstrap: [AppComponent]
 })
 export class PlaygroundModule {
-    static registerRootModules(...modules) {
-        _middleware.next({
-            ..._middleware.value,
-            modules
-        });
-        return this;
-    }
+    static configure(configuration: Middleware) {
+        if (!configuration.selector) {
+            throw new Error('Please provide the selector for the application you would like Playground to bootstrap.');
+        }
 
-    static applyMiddleware() {
-        // TODO
-    }
+        initializePlayground(configuration.selector);
+        _middleware.next(configuration);
 
-    static enableOverlay() {
-        _middleware.next({
-            ..._middleware.value,
-            uiActive: true
-        });
         return this;
     }
 }
