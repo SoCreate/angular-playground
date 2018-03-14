@@ -27,9 +27,6 @@ const middleware = _middleware.asObservable();
 })
 export class PlaygroundModule {
     static configure(configuration: Middleware) {
-        if (!configuration.selector) {
-            throw new Error('Please provide a valid selector for `PlaygroundModule.configure()`.');
-        }
         initializePlayground(configuration.selector);
         _middleware.next({ ..._middleware.value, ...configuration });
         return this;

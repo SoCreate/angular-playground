@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
 export interface Middleware {
-    selector: string;
+    selector?: string;
     modules?: any[];
     overlay?: boolean;
 }
