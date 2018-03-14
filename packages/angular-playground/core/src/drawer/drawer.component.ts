@@ -7,7 +7,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class DrawerComponent {
     @Output() openCommandBarClick = new EventEmitter();
-    expanded = false;
 
     openCommandBar() {
         this.openCommandBarClick.emit();
