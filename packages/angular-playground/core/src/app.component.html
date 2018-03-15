@@ -59,7 +59,7 @@
     </a>
 </div>
 <section class="content">
-    <ap-drawer *ngIf="activeMiddleware.uiActive" (openCommandBarClick)="toggleCommandBar()"></ap-drawer>
+    <ap-drawer *ngIf="activeMiddleware.overlay" (openCommandBarClick)="toggleCommandBar()"></ap-drawer>
     <div class="content__none" *ngIf="!selectedSandboxAndScenarioKeys.sandboxKey">
         <div class="content__none-message">
             <p *ngIf="totalSandboxes > 0">

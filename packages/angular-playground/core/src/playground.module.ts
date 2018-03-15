@@ -3,13 +3,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { PlaygroundCommonModule } from './playground-common.module';
 import { Middleware, MIDDLEWARE } from '../lib/middlewares';
+import { initializePlayground } from '../lib/initialize-playground';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 declare let require: any;
 
 const _middleware = new BehaviorSubject<Middleware>({
-    modules: [],
-    uiActive: false
+    selector: null,
+    overlay: false,
+    modules: []
 });
 const middleware = _middleware.asObservable();
 
@@ -24,23 +26,9 @@ const middleware = _middleware.asObservable();
     bootstrap: [AppComponent]
 })
 export class PlaygroundModule {
-    static registerRootModules(...modules) {
-        _middleware.next({
-            ..._middleware.value,
-            modules
-        });
-        return this;
-    }
-
-    static applyMiddleware() {
-        // TODO
-    }
-
-    static enableOverlay() {
-        _middleware.next({
-            ..._middleware.value,
-            uiActive: true
-        });
+    static configure(configuration: Middleware) {
+        initializePlayground(configuration.selector);
+        _middleware.next({ ..._middleware.value, ...configuration });
         return this;
     }
 }
