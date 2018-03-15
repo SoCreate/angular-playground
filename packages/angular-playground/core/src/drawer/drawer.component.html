@@ -1,8 +1,5 @@
-<div>
-    <div *ngIf="expanded" class="menu">
-        <span (click)="openCommandBar()">Open Command Bar</span>
-    </div>
-    <div class="expando">
-        <span (click)="expanded = !expanded">{{ expanded ? 'Close' : 'Expand' }}</span>
-    </div>
-</div>
+<a
+    (click)="openCommandBar()"
+    class="link">
+    Menu
+</a>
