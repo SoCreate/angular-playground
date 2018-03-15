@@ -7,6 +7,7 @@ wrote and providing an environment that makes it easy to visualize changes, docu
 fix broken UI.
 
 [![npm version](https://badge.fury.io/js/angular-playground.svg)](https://badge.fury.io/js/angular-playground)
+[![build status](https://travis-ci.org/SoCreate/angular-playground.svg?branch=master)](https://travis-ci.org/SoCreate/angular-playground)
 
 
 > [Watch our 2018 Angular Meetup Talk](https://www.youtube.com/watch?v=QfvwQEJVOig&t)
