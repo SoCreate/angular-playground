@@ -45,7 +45,11 @@ export function findSandboxes(home: string): SandboxFileInformation[] {
             const labelText = /label\s*:\s*['"](.+)['"]/g.exec(matchSandboxOf[0]);
 
             let scenarioMenuItems = [];
-            const scenarioRegex = /^(?!\/\/)\s*\.add\s*\(\s*['"](.+)['"]\s*,\s*{/gm;
+
+            // Tested with https://regex101.com/r/mtp2Fy/2
+            // First scenario: May follow directly after sandboxOf function ).add
+            // Other scenarios: .add with possible whitespace before. Ignore outcommented lines.
+            const scenarioRegex = /^(?!\/\/)(?:\s*|.*\))\.add\s*\(\s*['"](.+)['"]\s*,\s*{/gm;
             let scenarioMatches;
             let scenarioIndex = 1;
             while ((scenarioMatches = scenarioRegex.exec(contents)) !== null) {
