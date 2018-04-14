@@ -173,6 +173,6 @@ describe('buildSandboxFileContents', () => {
 describe('slash', () => {
     it('should convert Windows-style path to unix-style', () => {
         const windowsPath = 'c:\\etc\\';
-        expect(slash(windowsPath)).toBe('c:/etc/')
+        expect(slash(windowsPath)).toBe('c:/etc/');
     });
 });
