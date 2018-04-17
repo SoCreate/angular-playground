@@ -9,17 +9,25 @@ describe('findSandboxes', () => {
     });
 
     it('should find sandbox files and assemble multiple sandboxes', () => {
-        expect(sandboxes.length).toBe(2);
+        expect(sandboxes.length).toBe(6);
     });
 
     it('should create a key that contains the path to the sandbox', () => {
         expect(sandboxes[0].key).toBe('cli/test/files/sandboxes/example1.sandbox');
         expect(sandboxes[1].key).toBe('cli/test/files/sandboxes/example2.sandbox');
+        expect(sandboxes[2].key).toBe('cli/test/files/sandboxes/example3.sandbox');
+        expect(sandboxes[3].key).toBe('cli/test/files/sandboxes/example4.sandbox');
+        expect(sandboxes[4].key).toBe('cli/test/files/sandboxes/example5.sandbox');
+        expect(sandboxes[5].key).toBe('cli/test/files/sandboxes/example6.sandbox');
     });
 
     it('should find the sandbox label among the configuration options', () => {
         expect(sandboxes[0].label).toBe('');
         expect(sandboxes[1].label).toBe('test');
+        expect(sandboxes[2].label).toBe('');
+        expect(sandboxes[3].label).toBe('');
+        expect(sandboxes[4].label).toBe('');
+        expect(sandboxes[5].label).toBe('');
     });
 
     it('should put together correct metadata from a sandbox', () => {
@@ -27,12 +35,44 @@ describe('findSandboxes', () => {
         expect(sandboxes[0].searchKey).toBe('ExampleComponent');
         expect(sandboxes[0].name).toBe('ExampleComponent');
         expect(sandboxes[0].label).toBe('');
+
+        expect(sandboxes[2].key).toBe('cli/test/files/sandboxes/example3.sandbox');
+        expect(sandboxes[2].searchKey).toBe('ThreeDviewComponent');
+        expect(sandboxes[2].name).toBe('ThreeDviewComponent');
+        expect(sandboxes[2].label).toBe('');
+
+        expect(sandboxes[3].key).toBe('cli/test/files/sandboxes/example4.sandbox');
+        expect(sandboxes[3].searchKey).toBe('ThreeDviewComponent');
+        expect(sandboxes[3].name).toBe('ThreeDviewComponent');
+        expect(sandboxes[3].label).toBe('');
+
+        expect(sandboxes[4].key).toBe('cli/test/files/sandboxes/example5.sandbox');
+        expect(sandboxes[4].searchKey).toBe('ThreeDviewComponent');
+        expect(sandboxes[4].name).toBe('ThreeDviewComponent');
+        expect(sandboxes[4].label).toBe('');
+
+        expect(sandboxes[5].key).toBe('cli/test/files/sandboxes/example6.sandbox');
+        expect(sandboxes[5].searchKey).toBe('ThreeDviewComponent');
+        expect(sandboxes[5].name).toBe('ThreeDviewComponent');
+        expect(sandboxes[5].label).toBe('');
     });
 
     it('should find all scenarios associated with a sandbox', () => {
         expect(sandboxes[0].scenarioMenuItems.length).toBe(2);
         expect(sandboxes[0].scenarioMenuItems[0].description).toBe('Default');
         expect(sandboxes[0].scenarioMenuItems[1].description).toBe('With Wrapper');
+
+        expect(sandboxes[2].scenarioMenuItems.length).toBe(1);
+        expect(sandboxes[2].scenarioMenuItems[0].description).toBe('Default');
+
+        expect(sandboxes[3].scenarioMenuItems.length).toBe(1);
+        expect(sandboxes[3].scenarioMenuItems[0].description).toBe('Default');
+
+        expect(sandboxes[4].scenarioMenuItems.length).toBe(1);
+        expect(sandboxes[4].scenarioMenuItems[0].description).toBe('Default');
+
+        expect(sandboxes[5].scenarioMenuItems.length).toBe(1);
+        expect(sandboxes[5].scenarioMenuItems[0].description).toBe('Default');
     });
 
     it('should ignore commented-out scenarios', () => {
@@ -133,6 +173,6 @@ describe('buildSandboxFileContents', () => {
 describe('slash', () => {
     it('should convert Windows-style path to unix-style', () => {
         const windowsPath = 'c:\\etc\\';
-        expect(slash(windowsPath)).toBe('c:/etc/')
+        expect(slash(windowsPath)).toBe('c:/etc/');
     });
 });
