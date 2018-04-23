@@ -1,3 +1,10 @@
+# 4.0.1 (2018-04-23)
+
+<a name="4.0.1"></a>
+
+### Bug Fixes
+* **app:** Fixed issue with matching sandbox metadata when formatted differently. ([aa9285a](https://github.com/SoCreate/angular-playground/commit/aa9285a)).
+
 # 4.0.0 (2018-03-15)
 
 <a name="4.0.0"></a>
