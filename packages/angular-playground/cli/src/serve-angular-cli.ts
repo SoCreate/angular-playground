@@ -21,24 +21,19 @@ export async function serveAngularCli(config: Config) {
     return Promise.resolve();
 }
 
-function configureArguments(config: Config): string[] {
-    let args = [config.angularCliPath, 'serve', '-no-progress'];
-
+function configureArguments(config) {
+    let args = [config.angularCliPath, 'serve', '--no-progress', '--aot'];
     args.push(`--port=${config.angularCliPort}`);
-
     if (config.angularAppName) {
-        args.push(`-a=${config.angularAppName}`);
+        args.push(`--project=${config.angularAppName}`);
     } else {
         throw new Error('Please provide Playground\'s appName in your angular-playground.json file.');
     }
-
     if (config.angularCliEnv) {
         args.push(`-e=${config.angularCliEnv}`);
     }
-
     if (config.angularCliAdditionalArgs) {
         args = args.concat(config.angularCliAdditionalArgs);
     }
-
     return args;
 }
