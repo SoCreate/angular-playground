@@ -1,8 +1,6 @@
 import { Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EventManager } from '@angular/platform-browser';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
 import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from '../lib/app-state';
 import { StateService } from './shared/state.service';
 import { UrlService } from './shared/url.service';
@@ -10,7 +8,8 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
 import { LevenshteinDistance } from './shared/levenshtein-distance';
 import { SandboxLoader } from './shared/sandbox-loader';
 import { Middleware, MIDDLEWARE } from '../lib/middlewares';
-import { Observable } from 'rxjs/Observable';
+import { Observable, pipe } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
     selector: 'ap-root',
@@ -71,16 +70,18 @@ export class AppComponent {
             this.totalSandboxes = sandboxMenuItems.length;
             this.filteredSandboxMenuItems = this.filterSandboxes(sandboxMenuItems, filterValue);
             this.filter.setValue(filterValue);
-            this.filter.valueChanges
-                .debounceTime(300)
-                .distinctUntilChanged()
-                .subscribe(value => {
-                    this.stateService.setFilter(value);
-                    this.filteredSandboxMenuItems = this.filterSandboxes(sandboxMenuItems, value);
-                    if (!value) {
-                        this.selectScenario(null, null);
-                    }
-                });
+            this.filter.valueChanges.pipe
+            (
+                debounceTime(300),
+                distinctUntilChanged()
+            )
+            .subscribe(value => {
+                this.stateService.setFilter(value);
+                this.filteredSandboxMenuItems = this.filterSandboxes(sandboxMenuItems, value);
+                if (!value) {
+                    this.selectScenario(null, null);
+                }
+            });
         }
     }
 

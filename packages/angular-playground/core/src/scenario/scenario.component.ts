@@ -7,7 +7,7 @@ import { Scenario, SelectedSandboxAndScenarioKeys } from '../../lib/app-state';
 import { BrowserModule } from '@angular/platform-browser';
 import { Middleware, MIDDLEWARE } from '../../lib/middlewares';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'ap-scenario',
