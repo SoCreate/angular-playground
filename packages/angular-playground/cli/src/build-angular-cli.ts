@@ -2,42 +2,30 @@ import { exec } from 'child_process';
 import { join as joinPath } from 'path';
 
 export async function buildAngularCli(appName: string, baseHref: string) {
-    try {
-        // Check package is installed locally
-        require.resolve('@angular/service-worker');
-    } catch (err) {
-        throw new Error('Error: --build requires @angular/service-worker to be installed locally: ' +
-            'https://github.com/angular/angular-cli/wiki/build#service-worker');
+    let isInstalled = await serviceWorkerIsInstalled();
+    if (!isInstalled) {
+        throw new Error('\n\nError: --build requires @angular/service-worker to be installed locally: \n' +
+        `try running "npm install @angular/service-worker" then run "angular-playground --build" \n` +
+        'see docs: https://github.com/angular/angular-cli/wiki/build#service-worker \n\n');
     }
 
-    const playgroundIndex = getAppIndex(appName);
-    try {
-        await toggleServiceWorker(playgroundIndex);
-    } catch (err) {
-        throw err;
-    }
 
     console.log('Building for production with sandboxes...');
     // Cannot build w/ AOT due to runtime compiler dependency
-    exec(`ng build -a=${appName} --prod --aot=false --base-href=${baseHref}`, (err, stdout, stderr) => {
+    exec(`ng build ${appName} --prod --aot=false --base-href=${baseHref}`, (err, stdout, stderr) => {
         if (err) throw err;
         console.log(stdout);
     });
 }
 
-function getAppIndex(appName: string): number {
-    // Assumes .angular-cli.json is at root
-    const cliFile = joinPath(process.cwd(), '.angular-cli.json').replace(/.json$/, '');
-    const cliConfig = require(cliFile);
-
-    return cliConfig.apps.findIndex(app => app.name === appName);
-}
-
-async function toggleServiceWorker(appIndex: number): Promise<any> {
-    return new Promise((resolve, reject) => {
-        exec(`ng set apps.${appIndex}.serviceWorker=true`, (err, stdout, stderr) => {
-            if (err) reject(err);
+async function serviceWorkerIsInstalled(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+        try {
+            // Check package is installed locally
+            require.resolve('@angular/service-worker');
             resolve(true);
-        });
+        } catch (err) {
+            resolve(false);
+        }
     });
 }
