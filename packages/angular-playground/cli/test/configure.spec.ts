@@ -69,11 +69,7 @@ describe('applyConfigurationFile', () => {
                 expect(config.angularAppName).toBeUndefined();
             });
 
-            it('should not have default value for @angular/cli app environment', () => {
-                expect(config.angularCliEnv).toBeUndefined();
-            });
-
-            it('should not have default value for @angular/cli app environment', () => {
+            it('should not have default value for @angular/cli additional args', () => {
                 expect(config.angularCliAdditionalArgs).toBeUndefined();
             });
         });
