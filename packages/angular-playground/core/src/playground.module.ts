@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { PlaygroundCommonModule } from './playground-common.module';
 import { Middleware, MIDDLEWARE } from '../lib/middlewares';
 import { initializePlayground } from '../lib/initialize-playground';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 declare let require: any;
 

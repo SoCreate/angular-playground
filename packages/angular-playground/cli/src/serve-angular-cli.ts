@@ -22,19 +22,13 @@ export async function serveAngularCli(config: Config) {
 }
 
 function configureArguments(config: Config): string[] {
-    let args = [config.angularCliPath, 'serve', '-no-progress'];
+    let args = [config.angularCliPath, 'serve', config.angularAppName];
 
-    args.push(`--port=${config.angularCliPort}`);
-
-    if (config.angularAppName) {
-        args.push(`-a=${config.angularAppName}`);
-    } else {
+    if (!config.angularAppName) {
         throw new Error('Please provide Playground\'s appName in your angular-playground.json file.');
     }
-
-    if (config.angularCliEnv) {
-        args.push(`-e=${config.angularCliEnv}`);
-    }
+    args.push(`--port=${config.angularCliPort}`);
+    args.push(`--progress=false`);
 
     if (config.angularCliAdditionalArgs) {
         args = args.concat(config.angularCliAdditionalArgs);

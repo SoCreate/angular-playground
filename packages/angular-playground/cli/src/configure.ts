@@ -21,7 +21,6 @@ export interface Config {
     angularAppName?: string;
     angularCliPath?: string;
     angularCliPort?: number;
-    angularCliEnv?: string | undefined;
     angularCliAdditionalArgs?: string[];
 }
 
@@ -47,7 +46,6 @@ export function configure(argv: any): Config {
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
-        .option('--ng-cli-env <path>', 'Path to @angular/cli environment')
         .option('--ng-cli-port <n>', '@angular/cli serve port', 4201)
         .option('--ng-cli-cmd <path>', 'Path to @angular/cli executable', 'node_modules/@angular/cli/bin/ng')
         .option('--ng-cli-args <list>', 'Additional @angular/cli arguments');
@@ -78,7 +76,6 @@ export function applyConfigurationFile(program: any): Config {
         config.angularAppName = playgroundConfig.angularCli.appName || program.ngCliApp;
         config.angularCliPath = playgroundConfig.angularCli.cmdPath || program.ngCliCmd;
         config.angularCliPort = playgroundConfig.angularCli.port || program.ngCliPort;
-        config.angularCliEnv = playgroundConfig.angularCli.env || program.ngCliEnv;
         config.angularCliAdditionalArgs = playgroundConfig.angularCli.args || program.ngCliArgs;
     }
 
