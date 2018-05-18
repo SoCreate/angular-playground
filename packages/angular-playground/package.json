@@ -26,7 +26,7 @@
     "build": "npm run app:build && npm run cli:build",
     "app:build": "gulp build",
     "cli:build": "tsc -p ./cli/tsconfig.json",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "test": "jest"
   },
   "repository": {
