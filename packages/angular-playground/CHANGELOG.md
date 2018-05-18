@@ -1,3 +1,119 @@
+# 5.0.0 (2018-05-18)
+
+<a name="5.0.0"></a>
+
+### Features
+* **compatible with version 6 :** Updated Angular Playground to be work with Angular 6 and Angular CLI 6 
+           
+### Breaking Changes
+
+* **angular cli setup configuration changes**: The Angular CLI uses a new configuration file "angular.json" that is now based on projects as instead of apps.  When upgrading to use Angular CLI 6 change the "angular.json" file to include the contents of the after shown below.
+            
+
+  Before:
+
+  .angular-cli.json
+  ```
+  {
+  . . .
+  
+  "apps": [
+
+    . . .
+
+    {
+      "name": "playground",
+      "root": "src",
+      "outDir": "dist-playground",
+      "assets": [
+        "assets",
+        "favicon.ico"
+      ],
+      "index": "index.html",
+      "main": "main.playground.ts",
+      "polyfills": "polyfills.ts",
+      "tsconfig": "tsconfig.app.json",
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    }
+   ],
+
+   . . .
+  }
+  ```
+  After:
+
+  angular.json
+  ```
+  {
+  . . .
+
+  "projects": {
+
+    . . .
+
+    "playground": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/playground",
+            "index": "src/index.html",
+            "main": "src/main.playground.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "playground:build"
+          }
+        }
+      }
+    }
+  },
+
+   . . .
+  }
+  ```
+
+* **removed environment configuration**: Remove support for setting environment configuration in angular-playground.json file. Also removed command line switch for environment "--ng-cli-env".  You can now just configure environment settings directly in the angular.json file and just provide different configurations.
+
+
 # 4.0.1 (2018-04-23)
 
 <a name="4.0.1"></a>
