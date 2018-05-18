@@ -14,7 +14,7 @@ fix broken UI.
 
 ## Documentation (<http://www.angularplayground.it/>)
 
-* Angular 5.x and up
+* Angular 6.x and up
 * [CLI quick-start](http://www.angularplayground.it/docs/getting-started/angular-cli)
 
 ## Articles
