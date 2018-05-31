@@ -23,9 +23,10 @@
   },
   "scripts": {
     "ngc": "ngc",
-    "build": "npm run app:build && npm run cli:build",
+    "build": "npm run app:build && npm run cli:build && npm run schematics:build",
     "app:build": "gulp build",
     "cli:build": "tsc -p ./cli/tsconfig.json",
+    "schematics:build": "tsc -p ./schematics/tsconfig.json",
     "prepublishOnly": "npm run build",
     "test": "jest"
   },
@@ -45,6 +46,7 @@
     "url": "https://github.com/SoCreate/angular-playground/issues"
   },
   "homepage": "http://www.angularplayground.it",
+  "schematics": "./schematics/src/collection.json",
   "peerDependencies": {
     "@angular/common": ">=6.0.0",
     "@angular/compiler": ">=6.0.0",
@@ -56,6 +58,9 @@
     "zone.js": ">=0.8.26"
   },
   "dependencies": {
+    "@angular-devkit/core": "^0.7.1",
+    "@angular-devkit/schematics": "^0.7.1",
+    "@schematics/angular": "^0.7.1",
     "async": "^2.6.0",
     "chalk": "^2.4.1",
     "commander": "^2.15.1",

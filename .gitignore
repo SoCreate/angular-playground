@@ -33,6 +33,11 @@ testem.log
 /e2e/*.js
 /e2e/*.map
 
+# schematics
+/packages/angular-playground/schematics/**/*.js
+/packages/angular-playground/schematics/**/*.d.ts
+/packages/angular-playground/schematics/**/*.map
+
 #System Files
 .DS_Store
 Thumbs.db
