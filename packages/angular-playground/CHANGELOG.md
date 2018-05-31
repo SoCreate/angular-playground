@@ -1,3 +1,10 @@
+# 5.0.1 (2018-05-31)
+
+<a name="5.0.1"></a>
+
+### Bug Fixes
+* **fix sandbox file watch :** Fix issue with sandbox files not getting compiled when new one is added or removed 
+
 # 5.0.0 (2018-05-18)
 
 <a name="5.0.0"></a>
