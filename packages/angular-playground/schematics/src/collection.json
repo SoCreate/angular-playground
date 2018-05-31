@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "sandbox": {
+      "description": "Creates a sandbox file for component in given path",
+      "factory": "./sandbox",
+      "schema": "./sandbox/schema.json"
+    }
+  }
+}
