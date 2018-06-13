@@ -7,8 +7,10 @@ export interface Sandbox {
     type: any;
     imports?: any[];
     declarations?: any[];
+    entryComponents?: any[];
     scenarios: Scenario[];
     providers?: any[];
+    schemas?: any[];
     declareComponent?: boolean;
 }
 
