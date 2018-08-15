@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-npm run build --prefix ./packages/angular-playground
 
-declare -a examples=( 'cli-example' )
-for ex in "${examples[@]}"
-do
-    rm -rf "./examples/$ex/node_modules/angular-playground/"
-    mkdir "./examples/$ex/node_modules/angular-playground/"
-    cp -r ./packages/angular-playground/dist/ "./examples/$ex/node_modules/angular-playground/dist/"
-    cp ./packages/angular-playground/package.json "./examples/$ex/node_modules/angular-playground/"
-done
-echo 'finished copying examples'
+# build angular-playground package and link it globally
+cd ./packages/angular-playground
+npm run build
+npm link
 
+# link the angular-playground package in the cli example
+cd ../../examples/cli-example
+npm link angular-playground
+
+echo 'finished setting up cli-example'
