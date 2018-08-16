@@ -19,7 +19,8 @@
       "ts",
       "js",
       "json"
-    ]
+    ],
+    "testURL": "http://localhost"
   },
   "scripts": {
     "ngc": "ngc",
