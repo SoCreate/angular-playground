@@ -9,9 +9,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "playground": "node ./node_modules/angular-playground/dist/bin/index.js",
-    "playground:prod": "node ./node_modules/angular-playground/dist/bin/index.js --build",
-    "playground:check-errors": "node ./node_modules/angular-playground/dist/bin/index.js --check-errors",
+    "playground": "angular-playground",
+    "playground:prod": "angular-playground --build",
+    "playground:check-errors": "angular-playground --check-errors",
     "playground:build": "(cd ../../ && sh ./scripts/build.sh)"
   },
   "private": true,
