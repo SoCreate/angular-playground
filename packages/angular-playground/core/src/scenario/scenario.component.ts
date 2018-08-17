@@ -55,6 +55,19 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnDestroy() {
         this.onDestroy.next();
+
+        // this cleans up the DOM when a sandboxed component is loaded and the search bar is then cleared
+        if (this.activeApps.length > 0) {
+            // destroy sandboxed app (doesn't remove it from the DOM though)
+            const app = this.activeApps.pop();
+            app.destroy();
+
+            // remove the sandboxed component's element from the dom
+            const hostElement = document.querySelector('playground-host');
+            if (hostElement && hostElement.children) {
+                hostElement.children[0].remove();
+            }
+        }
     }
 
     /**
