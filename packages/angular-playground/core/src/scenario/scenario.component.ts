@@ -1,6 +1,4 @@
-import {
-    Component, Input, NgZone, NgModule, OnChanges, OnInit, SimpleChanges, NgModuleRef, Inject, OnDestroy
-} from '@angular/core';
+import { Component, Inject, Input, NgModule, NgModuleRef, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { SandboxLoader } from '../shared/sandbox-loader';
 import { Scenario, SelectedSandboxAndScenarioKeys, Sandbox } from '../../lib/app-state';
@@ -41,10 +39,6 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
         this.middleware
             .pipe(takeUntil(this.onDestroy))
             .subscribe(middlewares => this.activeMiddleware = middlewares);
-
-        if (this.selectedSandboxAndScenarioKeys) {
-            this.bootstrapSandbox(this.selectedSandboxAndScenarioKeys);
-        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
