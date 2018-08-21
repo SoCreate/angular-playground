@@ -1,0 +1,9 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "description": "Adds Angular Playground to an application",
+      "factory": "./ng-add"
+    }
+  }
+}
