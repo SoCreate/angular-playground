@@ -11,6 +11,9 @@
 * **natives package:** Updated `natives` npm package to fix gulp issue on windows running node 10+.
 * **local development:** Fixed several bugs with local development environment that caused the sandbox to crash when built and run locally.
 
+### Kudos
+* Thanks to **@sulco** for their contributions towards this release!
+
 # 5.0.1 (2018-05-31)
 
 <a name="5.0.1"></a>
