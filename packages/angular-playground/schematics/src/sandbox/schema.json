@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "SchematicsPlaygroundSandbox",
+  "title": "Angular Playground's Sandbox",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "The name of the component to add the sandbox to.",
+      "type": "string",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to create the sandbox.",
+      "visible": false
+    },
+    "flat": {
+      "type": "boolean",
+      "description": "Flag to indicate if a dir is created.",
+      "default": false
+    }
+  },
+  "required": []
+}

@@ -58,9 +58,9 @@
     "zone.js": ">=0.8.26"
   },
   "dependencies": {
-    "@angular-devkit/core": "^0.7.1",
-    "@angular-devkit/schematics": "^0.7.1",
-    "@schematics/angular": "^0.7.1",
+    "@angular-devkit/core": "^0.7.3",
+    "@angular-devkit/schematics": "^0.7.3",
+    "@schematics/angular": "^0.7.3",
     "async": "^2.6.0",
     "chalk": "^2.4.1",
     "commander": "^2.15.1",
