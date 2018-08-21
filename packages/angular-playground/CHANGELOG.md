@@ -1,6 +1,6 @@
-# 5.1.1 (2018-08-16)
+# 5.1.0 (2018-08-21)
 
-<a name="5.1.1"></a>
+<a name="5.1.0"></a>
 
 ### Features
 * **update sandbox config:** Add new `entryComponents` and `schemas` options for use when dynamically creating a module containing the dependencies of a `Sandbox` ([5f91c7f](https://github.com/SoCreate/angular-playground/commit/5f91c7f)).
@@ -12,7 +12,7 @@
 * **local development:** Fixed several bugs with local development environment that caused the sandbox to crash when built and run locally.
 
 ### Kudos
-* Thanks to **@sulco** for their contributions towards this release!
+* Thanks to **@sulco** for the contributions towards this release!
 
 # 5.0.1 (2018-05-31)
 
