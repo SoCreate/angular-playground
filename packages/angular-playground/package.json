@@ -1,6 +1,6 @@
 {
   "name": "angular-playground",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -19,7 +19,8 @@
       "ts",
       "js",
       "json"
-    ]
+    ],
+    "testURL": "http://localhost"
   },
   "scripts": {
     "ngc": "ngc",
@@ -87,7 +88,7 @@
     "rxjs": "^6.0.0",
     "ts-jest": "^22.4.4",
     "tslint": "5.9.1",
-    "typescript": "^2.7.2",
+    "typescript": "^2.9.2",
     "zone.js": "0.8.26"
   }
 }

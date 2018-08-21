@@ -1,16 +1,32 @@
+# 5.1.0 (2018-08-21)
+
+<a name="5.1.0"></a>
+
+### Features
+* **update sandbox config:** Add new `entryComponents` and `schemas` options for use when dynamically creating a module containing the dependencies of a `Sandbox` ([5f91c7f](https://github.com/SoCreate/angular-playground/commit/5f91c7f)).
+* **add cli schematics:** Add the ability to install `angular-playground` with `ng add`.
+* **add sandbox schematics:** Add the ability to create a new sandbox file with an ng cli command.
+
+### Bug Fixes
+* **natives package:** Updated `natives` npm package to fix gulp issue on windows running node 10+.
+* **local development:** Fixed several bugs with local development environment that caused the sandbox to crash when built and run locally.
+
+### Kudos
+* Thanks to **@sulco** for the contributions towards this release!
+
 # 5.0.1 (2018-05-31)
 
 <a name="5.0.1"></a>
 
 ### Bug Fixes
-* **fix sandbox file watch :** Fix issue with sandbox files not getting compiled when new one is added or removed 
+* **fix sandbox file watch:** Fix issue with sandbox files not getting compiled when new one is added or removed.
 
 # 5.0.0 (2018-05-18)
 
 <a name="5.0.0"></a>
 
 ### Features
-* **compatible with version 6 :** Updated Angular Playground to be work with Angular 6 and Angular CLI 6 
+* **compatible with version 6:** Updated Angular Playground to be work with Angular 6 and Angular CLI 6.
            
 ### Breaking Changes
 
@@ -126,7 +142,7 @@
 <a name="4.0.1"></a>
 
 ### Bug Fixes
-* **app:** Fixed issue with matching sandbox metadata when formatted differently. ([aa9285a](https://github.com/SoCreate/angular-playground/commit/aa9285a)).
+* **app:** Fixed issue with matching sandbox metadata when formatted differently ([aa9285a](https://github.com/SoCreate/angular-playground/commit/aa9285a)).
 
 # 4.0.0 (2018-03-15)
 
@@ -137,7 +153,7 @@
            modules to the Playground application. This is a feature that we're especially excited about at
            SoCreate and plan on extending the functionality further based on what type of plugins people would
            like to develop. Right now, the plugin system provides a wrapper around distributing modules to all
-           sandboxes globally and enabling a command-bar overlay. ([1db080f](https://github.com/SoCreate/angular-playground/commit/1db080f))
+           sandboxes globally and enabling a command-bar overlay ([1db080f](https://github.com/SoCreate/angular-playground/commit/1db080f))
            
   When declaring the Playground entry point in `main.playground.ts`, use `PlaygroundModule` to provide configuration:
   ```typescript
@@ -194,7 +210,7 @@
   ```
 
 * **app:** Added an opt-in overlay that allows users to open the command bar via click/touch. To enable this, use the
-        `PlaygroundModule.configure({ overlay: true })` option (see above for code example). ([f047453](https://github.com/SoCreate/angular-playground/commit/f047453))
+        `PlaygroundModule.configure({ overlay: true })` option (see above for code example) ([f047453](https://github.com/SoCreate/angular-playground/commit/f047453)).
 * **cli:** Added base-href support for production builds. This works in the same way as @angular/cli's `ng build --base-href` command does.
         Pass it in when running a build: ([0af9fbc](https://github.com/SoCreate/angular-playground/commit/0af9fbc))
   ```
@@ -206,7 +222,7 @@
 * **app:** Fixed IE11 command bar appearing on pages after being closed ([8e0f099](https://github.com/SoCreate/angular-playground/commit/8e0f099)).
 * **app:** Switched the "quick switch" key to `control` from `alt` for firefox compatibility
            ([8b5b386](https://github.com/SoCreate/angular-playground/commit/8b5b386)).
-* **cli:** Better error reporting due to properly surfacing errors and exiting the CLI process ([53692cc](https://github.com/SoCreate/angular-playground/commit/53692cc))
+* **cli:** Better error reporting due to properly surfacing errors and exiting the CLI process ([53692cc](https://github.com/SoCreate/angular-playground/commit/53692cc)).
 
 ### Kudos
 * Thanks to **@pharaxe**, **@cvidal**, and **@michaeljfuller** for their contributions towards this release!

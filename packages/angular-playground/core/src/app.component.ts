@@ -8,7 +8,7 @@ import { fuzzySearch } from './shared/fuzzy-search.function';
 import { LevenshteinDistance } from './shared/levenshtein-distance';
 import { SandboxLoader } from './shared/sandbox-loader';
 import { Middleware, MIDDLEWARE } from '../lib/middlewares';
-import { Observable, pipe } from 'rxjs';
+import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
