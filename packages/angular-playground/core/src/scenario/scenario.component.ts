@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { SandboxLoader } from '../shared/sandbox-loader';
-import { Scenario, SelectedSandboxAndScenarioKeys } from '../../lib/app-state';
+import { Scenario, SelectedSandboxAndScenarioKeys, Sandbox } from '../../lib/app-state';
 import { BrowserModule } from '@angular/platform-browser';
 import { Middleware, MIDDLEWARE } from '../../lib/middlewares';
 import { takeUntil } from 'rxjs/operators';
@@ -87,7 +87,7 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
     /**
      * Create a module containing the dependencies of a sandbox
      */
-    private createModule(sandboxMeta, scenario) {
+    private createModule(sandboxMeta: Sandbox, scenario) {
         const hostComp = this.createComponent(scenario);
 
         class DynamicModule {
@@ -113,7 +113,8 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
                 ...sandboxMeta.declarations
             ],
             providers: [...sandboxMeta.providers],
-            entryComponents: [hostComp]
+            entryComponents: [hostComp, ...sandboxMeta.entryComponents],
+            schemas: [...sandboxMeta.schemas]
         })(DynamicModule);
     }
 

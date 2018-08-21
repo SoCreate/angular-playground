@@ -4,7 +4,9 @@ export interface SandboxOfConfig {
     label?: string;
     imports?: any[];
     declarations?: any[];
+    entryComponents?: any[];
     providers?: any[];
+    schemas?: any[];
     declareComponent?: boolean;
 }
 
@@ -40,7 +42,9 @@ export class SandboxBuilder {
             scenarios: this._scenarios,
             imports: this._config.imports || [],
             declarations: this._config.declarations || [],
+            entryComponents: this._config.entryComponents || [],
             providers: this._config.providers || [],
+            schemas: this._config.schemas || [],
             declareComponent: this._config.declareComponent !== undefined ? this._config.declareComponent : true,
         };
     }
