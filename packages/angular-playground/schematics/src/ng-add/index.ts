@@ -1,6 +1,7 @@
+import { normalize } from '@angular-devkit/core';
 import { branchAndMerge, chain, mergeWith, Rule, SchematicContext, Tree, url } from '@angular-devkit/schematics';
-import { addPackageToPackageJson } from '../utils/package';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { addPackageToPackageJson } from '../utils/package';
 import { playgroundVersion } from '../utils/libs-version';
 import {
   addProjectToWorkspace,
@@ -31,25 +32,26 @@ export function install(): Rule {
 function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: WorkspaceSchema,
                                projectRoot: string, packageName: string): Rule {
 
+  const normalizedProjectRoot = normalize(projectRoot === '' ? '' : `${projectRoot}/`)
   const project: Partial<WorkspaceProject> = {
     root: `${projectRoot}`,
-    sourceRoot: `${projectRoot}/src`,
+    sourceRoot: `${normalizedProjectRoot}src`,
     projectType: 'application',
     architect: {
       build: {
         builder: '@angular-devkit/build-angular:browser',
         options: {
-          outputPath: `${projectRoot}/dist/playground`,
-          index: `${projectRoot}/src/index.html`,
-          main: `${projectRoot}/src/main.playground.ts`,
-          polyfills: `${projectRoot}/src/polyfills.ts`,
-          tsConfig: `${projectRoot}/src/tsconfig.app.json`,
+          outputPath: `${normalizedProjectRoot}dist/playground`,
+          index: `${normalizedProjectRoot}src/index.html`,
+          main: `${normalizedProjectRoot}src/main.playground.ts`,
+          polyfills: `${normalizedProjectRoot}src/polyfills.ts`,
+          tsConfig: `${normalizedProjectRoot}src/tsconfig.app.json`,
           assets: [
-            `${projectRoot}/src/favicon.ico`,
-            `${projectRoot}/src/asset`,
+            `${normalizedProjectRoot}src/favicon.ico`,
+            `${normalizedProjectRoot}src/asset`,
           ],
           styles: [
-            `${projectRoot}/src/styles.${options.stylesExtension}`,
+            `${normalizedProjectRoot}src/styles.${options.stylesExtension}`,
           ],
           scripts: []
         },
@@ -57,8 +59,8 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
           production: {
             fileReplacements: [
               {
-                replace: `${projectRoot}/src/environments/environment.ts`,
-                with: `${projectRoot}/src/environments/environment.prod.ts`,
+                replace: `${normalizedProjectRoot}src/environments/environment.ts`,
+                with: `${normalizedProjectRoot}src/environments/environment.prod.ts`,
               }
             ],
             optimization: true,
