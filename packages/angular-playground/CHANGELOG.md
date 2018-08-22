@@ -1,3 +1,10 @@
+# 5.1.1 (2018-08-22)
+
+<a name="5.1.1"></a>
+
+### Bug Fixes
+* **ng add:** Fixed error when installing via the `ng add` command.
+
 # 5.1.0 (2018-08-21)
 
 <a name="5.1.0"></a>
