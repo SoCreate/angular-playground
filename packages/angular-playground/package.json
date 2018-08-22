@@ -8,7 +8,8 @@
     "angular-playground": "dist/bin/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "schematics"
   ],
   "jest": {
     "transform": {
