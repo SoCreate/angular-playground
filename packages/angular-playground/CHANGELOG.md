@@ -1,3 +1,10 @@
+# 5.1.2 (2018-08-22)
+
+<a name="5.1.2"></a>
+
+### Bug Fixes
+* **npm run playground:** Fixed error where the playground would crash on startup.
+
 # 5.1.1 (2018-08-22)
 
 <a name="5.1.1"></a>
