@@ -1,3 +1,10 @@
+# 5.1.3 (2018-08-23)
+
+<a name="5.1.3"></a>
+
+### Bug Fixes
+* **generate sandbox:** Fixed relative import of sandboxed component when using the sandbox generate command.
+
 # 5.1.2 (2018-08-22)
 
 <a name="5.1.2"></a>
