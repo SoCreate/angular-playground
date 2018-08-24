@@ -1,25 +1,31 @@
 import { Tree } from '@angular-devkit/schematics';
 
 /**
- * Adds a package to the package.json
+ * Moves a dependency from 'dependencies' to 'devDependencies'
  */
-export function addPackageToPackageJson(
+export function moveDependencyFromDepsToDevDeps(
   host: Tree,
-  type: 'dependencies' | 'devDependencies',
-  pkg: string,
-  version: string
+  packageName: string
 ): Tree {
   if (host.exists('package.json')) {
     const sourceText = host.read('package.json')!.toString('utf-8');
     const json = JSON.parse(sourceText);
-    if (!json[type]) {
-      json[type] = {};
+
+    // create devDeps if it does not exist
+    if (!json['devDependencies']) {
+      json['devDependencies'] = {};
     }
 
-    if (!json[type][pkg]) {
-      json[type][pkg] = version;
+    // find package in dependencies and move it to devDpendencies
+    const dependencies = json['dependencies'];
+    if (dependencies) {
+      const version = dependencies[packageName];
+      delete dependencies[packageName];
+      json['dependencies'] = dependencies;
+      json['devDependencies'][packageName] = version;
     }
 
+    // replace the contents of the project's package file
     host.overwrite('package.json', JSON.stringify(json, null, 2));
   }
 
