@@ -1,8 +1,5 @@
 import { normalize } from '@angular-devkit/core';
 import { branchAndMerge, chain, mergeWith, Rule, SchematicContext, Tree, url } from '@angular-devkit/schematics';
-import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
-import { addPackageToPackageJson } from '../utils/package';
-import { playgroundVersion } from '../utils/libs-version';
 import {
   addProjectToWorkspace,
   getWorkspace,
@@ -10,6 +7,7 @@ import {
   WorkspaceSchema
 } from '@schematics/angular/utility/config';
 import { addNpmScriptToPackageJson } from '../utils/npm-script';
+import { moveDependencyFromDepsToDevDeps } from '../utils/package';
 import { getProject } from '../utils/project';
 
 export default function add(options: any): Rule {
@@ -21,10 +19,9 @@ export default function add(options: any): Rule {
 }
 
 export function install(): Rule {
-  return (host: Tree, context: SchematicContext) => {
-    addPackageToPackageJson(host, 'devDependencies', 'angular-playground', playgroundVersion);
+  return (host: Tree) => {
+    moveDependencyFromDepsToDevDeps(host, 'angular-playground');
     addNpmScriptToPackageJson(host, 'playground', 'angular-playground');
-    context.addTask(new NodePackageInstallTask());
     return host;
   };
 }
@@ -89,7 +86,7 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
 }
 
 function configure(options: any): Rule {
-  return (host: Tree, _context: SchematicContext) => {
+  return (host: Tree, context: SchematicContext) => {
     const workspace = getWorkspace(host);
     const project = getProject(host, options);
 
@@ -103,7 +100,7 @@ function configure(options: any): Rule {
 
     return chain([
       addAppToWorkspaceFile({ stylesExtension }, workspace, '', 'playground'),
-    ])(host, _context)
+    ])(host, context)
   }
 }
 
