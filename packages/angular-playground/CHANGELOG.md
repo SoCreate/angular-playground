@@ -1,3 +1,15 @@
+# 5.1.4 (2018-10-17)
+
+<a name="5.1.4"></a>
+
+### Bug Fixes
+* **ng add:** Fix ng add schematic adding 2 entries to the package.json file.
+* **ng add:** Fix incorrect assets path when creating playground entry in angular.json.
+* **playground:** Improved message on playground home screen when there are no sandboxed components.
+
+### Kudos
+* Thanks to **@Halt001** for the contributions towards this release!
+
 # 5.1.3 (2018-08-23)
 
 <a name="5.1.3"></a>
