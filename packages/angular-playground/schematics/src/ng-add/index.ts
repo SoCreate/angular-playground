@@ -45,7 +45,7 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
           tsConfig: `${normalizedProjectRoot}src/tsconfig.app.json`,
           assets: [
             `${normalizedProjectRoot}src/favicon.ico`,
-            `${normalizedProjectRoot}src/asset`,
+            `${normalizedProjectRoot}src/assets`,
           ],
           styles: [
             `${normalizedProjectRoot}src/styles.${options.stylesExtension}`,
