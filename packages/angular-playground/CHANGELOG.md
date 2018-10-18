@@ -1,3 +1,10 @@
+# 5.1.5 (2018-10-18)
+
+<a name="5.1.5"></a>
+
+### Bug Fixes
+* **ng add:** Fix ng add schematic error caused styles in the angular.json file using the new [object format](https://github.com/angular/angular-cli/wiki/stories-global-styles#global-styles).
+
 # 5.1.4 (2018-10-17)
 
 <a name="5.1.4"></a>
