@@ -92,9 +92,14 @@ function configure(options: any): Rule {
 
     let stylesExtension = 'css';
     if (project.architect) {
-      const mainStyle = project.architect.build.options.styles.find((path: string) => path.includes('/styles.'));
+      const mainStyle = project.architect.build.options.styles.find((path: string | { input: string }) => {
+        return typeof path === 'string'
+          ? path.includes('/styles.')
+          : path.input.includes('/styles.');
+      });
       if (mainStyle) {
-        stylesExtension = mainStyle.split('.').pop();
+        const mainStyleString = typeof mainStyle === 'string' ? mainStyle : mainStyle.input;
+        stylesExtension = mainStyleString.split('.').pop();
       }
     }
 
