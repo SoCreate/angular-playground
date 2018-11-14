@@ -9,10 +9,9 @@ export async function buildAngularCli(appName: string, baseHref: string, maxBuff
     }
 
     console.log('Building for production with sandboxes...');
-    console.log(`Max buffer set? ${maxBuffer ? +maxBuffer : 'No'}`);
 
+    const options = Number.isInteger(+maxBuffer) ? {maxBuffer: +maxBuffer} : {};
     // Cannot build w/ AOT due to runtime compiler dependency
-    const options = maxBuffer && Number.isInteger(+maxBuffer) ? {maxBuffer: +maxBuffer} : {};
     exec(`ng build ${appName} --prod --aot=false --base-href=${baseHref}`,
         options,
         (err, stdout, stderr) => {
