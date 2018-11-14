@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 
-export async function buildAngularCli(appName: string, baseHref: string, maxBuffer: number) {
+export async function buildAngularCli(appName: string, baseHref: string, maxBuffer: number | string) {
     let isInstalled = await serviceWorkerIsInstalled();
     if (!isInstalled) {
         throw new Error('\n\nError: --build requires @angular/service-worker to be installed locally: \n' +
