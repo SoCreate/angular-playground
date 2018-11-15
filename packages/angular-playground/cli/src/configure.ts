@@ -22,6 +22,7 @@ export interface Config {
     angularCliPath?: string;
     angularCliPort?: number;
     angularCliAdditionalArgs?: string[];
+    angularCliMaxBuffer?: number;
 }
 
 export function configure(argv: any): Config {
@@ -48,7 +49,8 @@ export function configure(argv: any): Config {
         .option('--ng-cli-app <appName>', '@angular/cli appName')
         .option('--ng-cli-port <n>', '@angular/cli serve port', 4201)
         .option('--ng-cli-cmd <path>', 'Path to @angular/cli executable', 'node_modules/@angular/cli/bin/ng')
-        .option('--ng-cli-args <list>', 'Additional @angular/cli arguments');
+        .option('--ng-cli-args <list>', 'Additional @angular/cli arguments')
+        .option('--ng-cli-max-buffer <maxBuffer>', 'Specify a max buffer (for large apps)');
 
     program.parse(argv);
     return applyConfigurationFile(program);
@@ -77,6 +79,7 @@ export function applyConfigurationFile(program: any): Config {
         config.angularCliPath = playgroundConfig.angularCli.cmdPath || program.ngCliCmd;
         config.angularCliPort = playgroundConfig.angularCli.port || program.ngCliPort;
         config.angularCliAdditionalArgs = playgroundConfig.angularCli.args || program.ngCliArgs;
+        config.angularCliMaxBuffer = playgroundConfig.angularCli.maxBuffer || program.ngCliMaxBuffer;
     }
 
     return config;

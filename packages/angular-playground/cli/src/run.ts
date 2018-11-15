@@ -16,7 +16,7 @@ export async function run() {
     }
 
     if (config.buildWithServiceWorkers) {
-        return await buildAngularCli(config.angularAppName, config.baseHref);
+        return await buildAngularCli(config.angularAppName, config.baseHref, config.angularCliMaxBuffer);
     }
 
     if (config.verifySandboxes) {
