@@ -1,5 +1,4 @@
 import { StringBuilder } from '../src/string-builder';
-import {} from 'jest';
 
 describe('StringBuilder', () => {
     it('should append newlines to each added line', () => {

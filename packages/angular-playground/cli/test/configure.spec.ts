@@ -1,5 +1,4 @@
 import { applyConfigurationFile, Config } from '../src/configure';
-import {} from 'jest';
 
 describe('applyConfigurationFile', () => {
     it('should throw error when failing to load a configuration file', () => {

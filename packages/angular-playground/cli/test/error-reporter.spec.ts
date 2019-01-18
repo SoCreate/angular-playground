@@ -1,4 +1,3 @@
-import {} from 'jest';
 import fs = require('fs');
 import chalk from 'chalk';
 import { ErrorReporter, REPORT_TYPE } from '../src/error-reporter';

@@ -28,6 +28,7 @@ node_modules
 npm-debug.log*
 testem.log
 /typings
+/packages/angular-playground/output.json
 
 # e2e
 /e2e/*.js
