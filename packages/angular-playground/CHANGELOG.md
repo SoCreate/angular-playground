@@ -1,3 +1,11 @@
+# 5.2.0 (2018-11-15)
+
+### Features
+* **configuration:** Users can now set the max buffer size for the internal angular cli commands
+
+### Kudos
+* Thanks to **@paolocarrasco** for the contributions towards this release!
+
 # 5.1.5 (2018-10-18)
 
 <a name="5.1.5"></a>
