@@ -1,5 +1,4 @@
 import { fromDir } from '../src/from-dir';
-import {} from 'jest';
 
 describe('fromDir', () => {
     const dir = './cli/test/files/from-dir-test/';

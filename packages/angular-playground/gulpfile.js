@@ -4,25 +4,26 @@ const path = require('path');
 const del = require('del');
 const exec = require('child_process').exec;
 
-gulp.task('clean', () => {
+function clean() {
     return del([
         path.join(__dirname, './dist/'),
         path.join(__dirname, './build/')
     ]);
-});
+}
 
-gulp.task('inline', ['clean'], () => {
+function inline() {
     return gulp.src('./core/**/*.ts')
         .pipe(inlineNg2Template({ base: '/core/src' }))
         .pipe(gulp.dest('./build/'));
-});
+}
 
-gulp.task('aot', ['inline'], (cb) => {
+function aot(cb) {
     exec('ngc -p ./tsconfig.json', (err, stdout, stderr) => {
         console.log(stdout);
         console.log(stderr);
         cb(err);
     });
-});
+}
 
-gulp.task('build', ['aot']);
+const build = gulp.series(clean, inline, aot);
+exports.build = build;

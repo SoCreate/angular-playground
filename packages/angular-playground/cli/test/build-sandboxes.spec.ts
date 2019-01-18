@@ -1,4 +1,3 @@
-import {} from 'jest';
 import { buildSandboxFileContents, findSandboxes, SandboxFileInformation, slash } from '../src/build-sandboxes';
 
 describe('findSandboxes', () => {

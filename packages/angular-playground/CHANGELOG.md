@@ -1,3 +1,10 @@
+# 5.3.0 (2019-1-18)
+
+<a name="5.3.0"></a>
+
+### Features
+* **npm dependencies:** Update npm dependencies and peer dependencies
+
 # 5.2.0 (2018-11-15)
 
 ### Features
