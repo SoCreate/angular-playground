@@ -1,5 +1,4 @@
 import program = require('commander');
-import chalk from 'chalk';
 import { resolve as resolvePath } from 'path';
 import { existsSync } from 'fs';
 import { REPORT_TYPE } from './error-reporter';
@@ -39,11 +38,11 @@ export function configure(argv: any): Config {
         .option('--base-href <href>', 'Specify a base-href for @angular/cli build', '/')
 
         // Sandbox verification
-        .option('--check-errors', '', false)
-        .option('--random-scenario', '', false)
-        .option('--timeout', '', 90)
-        .option('--report-type', '', REPORT_TYPE.LOG)
-        .option('--report-path', '')
+        .option('--check-errors', 'Check for errors in all scenarios in all sandboxes', false)
+        .option('--random-scenario', 'Pick a random scenario from each sandbox to check for errors', false)
+        .option('--timeout <n>', 'Number of attempts for each sandbox', 90)
+        .option('--report-type <type>', 'Type of report to generate', REPORT_TYPE.LOG)
+        .option('--report-path <path>', 'Path of report to generate', '')
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')

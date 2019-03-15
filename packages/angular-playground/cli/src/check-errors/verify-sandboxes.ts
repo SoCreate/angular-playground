@@ -2,6 +2,8 @@ import puppeteer = require('puppeteer');
 import { resolve as resolvePath } from 'path';
 import chalk from 'chalk';
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';
+import { ConsoleMessage } from 'puppeteer';
+import { SandboxFileInformation } from '../build-sandboxes';
 import { ErrorReporter } from '../error-reporter';
 import { Config } from '../configure';
 
@@ -21,7 +23,7 @@ let currentScenario = '';
 let reporter: ErrorReporter;
 let hostUrl = '';
 
-// Ensure Chromium instances are destroyed on err
+// Ensure Chromium instances are destroyed on error
 process.on('unhandledRejection', () => {
     if (browser) browser.close();
 });
@@ -48,7 +50,7 @@ async function main(config: Config) {
     reporter = new ErrorReporter(scenarios, config.reportPath, config.reportType);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
     for (let i = 0; i < scenarios.length; i++) {
-        console.log(`Checking: ${scenarios[i].name}: ${scenarios[i].description}`);
+        console.log(`Checking [${i + 1}/${scenarios.length}]: ${scenarios[i].name}: ${scenarios[i].description}`);
         await openScenarioInNewPage(scenarios[i], timeoutAttempts);
     }
 
@@ -74,11 +76,12 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
     }
 
     const page = await browser.newPage();
-    page.on('console', (msg: any) => onConsoleErr(msg));
+    page.on('console', (msg: ConsoleMessage) => onConsoleErr(msg));
     currentScenario = scenario.name;
 
     try {
         await page.goto(scenario.url);
+        setTimeout(() => page.close(), 10000) // close page after 10s to prevent memory leak
     } catch (e) {
         await page.close();
         await delay(1000);
@@ -94,20 +97,20 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
 function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean): ScenarioSummary[] {
     const scenarios: ScenarioSummary[] = [];
 
-    loadSandboxMenuItems().forEach((scenario: any) => {
+    loadSandboxMenuItems().forEach((scenario: SandboxFileInformation) => {
         if (selectRandomScenario) {
             const randomItemKey = getRandomKey(scenario.scenarioMenuItems.length);
-            scenario.scenarioMenuItems
-                .forEach((item: any) => {
-                    if (item.key === randomItemKey) {
-                        const url = `${baseUrl}?scenario=${encodeURIComponent(scenario.key)}/${encodeURIComponent(item.description)}`;
-                        scenarios.push({ url, name: scenario.key, description: item.description });
-                    }
-                });
+            for (const item of scenario.scenarioMenuItems) {
+                if (item.key === randomItemKey) {
+                    const url = `${baseUrl}?scenario=${encodeURIComponent(scenario.key)}/${encodeURIComponent(item.description)}`;
+                    scenarios.push({ url, name: scenario.key, description: item.description });
+                    break;
+                }
+            }
         } else {
             // Grab all scenarios
             scenario.scenarioMenuItems
-                .forEach((item: any) => {
+                .forEach((item) => {
                     const url = `${baseUrl}?scenario=${encodeURIComponent(scenario.key)}/${encodeURIComponent(item.description)}`;
                     scenarios.push({ url, name: scenario.key, description: item.description });
                 });
@@ -120,7 +123,7 @@ function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean): Sce
 /**
  * Attempt to load sandboxes.ts and provide menu items
  */
-function loadSandboxMenuItems(): any[] {
+function loadSandboxMenuItems(): SandboxFileInformation[] {
     try {
         return require(SANDBOX_DEST).getSandboxMenuItems();
     } catch (err) {
@@ -131,11 +134,11 @@ function loadSandboxMenuItems(): any[] {
 /**
  * Callback when Chromium page encounters a console error
  */
-async function onConsoleErr(msg: any) {
-    if (msg.type === 'error') {
+function onConsoleErr(msg: ConsoleMessage) {
+    if (msg.type() === 'error') {
         console.error(chalk.red(`Error in ${currentScenario}:`));
-        const descriptions = msg.args
-            .map(a => a._remoteObject)
+        const descriptions = msg.args()
+            .map(a => (a as any)._remoteObject)
             .filter(o => o.type === 'object')
             .map(o => o.description);
         descriptions.map(d => console.error(d));
@@ -144,11 +147,11 @@ async function onConsoleErr(msg: any) {
 }
 
 /**
- * Returns a random value between 1 and the provided length.
+ * Returns a random value between 1 and the provided length (both inclusive).
  * Note: indexing of keys starts at 1, not 0
  */
 function getRandomKey(menuItemsLength: number): number {
-    return Math.floor(Math.random() * (menuItemsLength - 1) + 1);
+    return Math.floor(Math.random() * menuItemsLength) + 1;
 }
 
 function removeDynamicImports(sandboxPath: string) {
