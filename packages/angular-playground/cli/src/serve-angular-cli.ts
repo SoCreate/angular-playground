@@ -25,10 +25,10 @@ function configureArguments(config: Config): string[] {
     let args = [config.angularCliPath, 'serve', config.angularAppName];
 
     if (!config.angularAppName) {
-        throw new Error('Please provide Playground\'s appName in your angular-playground.json file.');
+        throw new Error(`Please provide Playground's appName in your angular-playground.json file.`);
     }
     args.push(`--port=${config.angularCliPort}`);
-    args.push(`--progress=false`);
+    args.push('--progress=false');
 
     if (config.angularCliAdditionalArgs) {
         args = args.concat(config.angularCliAdditionalArgs);
