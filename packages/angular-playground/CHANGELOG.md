@@ -1,3 +1,14 @@
+# 5.3.1 (2019-3-18)
+
+<a name="5.3.1"></a>
+
+### Features
+* **perf:** Performance optimizations to verify sandboxes
+
+### Bug Fixes
+* **cli:** Fixed CLI configuration options for verify sandboxes
+* **types:** Improved types for verify sandboxes
+
 # 5.3.0 (2019-1-18)
 
 <a name="5.3.0"></a>
