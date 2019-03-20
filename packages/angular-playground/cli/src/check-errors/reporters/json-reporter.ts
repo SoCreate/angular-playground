@@ -1,3 +1,5 @@
+import { Reporter } from '../../error-reporter';
+
 class JSONStats {
     suites = 1;
     passes: number;
@@ -16,13 +18,13 @@ class JSONStats {
 
 }
 
-export class JSONReporter {
+export class JSONReporter implements Reporter {
     constructor (
         public errors: any[],
         public scenarioNames: string[]
     ) {}
 
-    getJson() {
+    getReport() {
         return JSON.stringify({
             stats: new JSONStats(this.scenarioNames.length, this.errors.length),
             failures: this.errors.map(failure => {

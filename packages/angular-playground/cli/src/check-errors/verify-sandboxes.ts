@@ -20,6 +20,7 @@ export interface ScenarioSummary {
 
 let browser: any;
 let currentScenario = '';
+let currentScenarioDescription = '';
 let reporter: ErrorReporter;
 let hostUrl = '';
 
@@ -78,6 +79,7 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
     const page = await browser.newPage();
     page.on('console', (msg: ConsoleMessage) => onConsoleErr(msg));
     currentScenario = scenario.name;
+    currentScenarioDescription = scenario.description;
 
     try {
         await page.goto(scenario.url);
@@ -136,13 +138,13 @@ function loadSandboxMenuItems(): SandboxFileInformation[] {
  */
 function onConsoleErr(msg: ConsoleMessage) {
     if (msg.type() === 'error') {
-        console.error(chalk.red(`Error in ${currentScenario}:`));
+        console.error(chalk.red(`Error in ${currentScenario} (${currentScenarioDescription}):`));
         const descriptions = msg.args()
             .map(a => (a as any)._remoteObject)
             .filter(o => o.type === 'object')
             .map(o => o.description);
         descriptions.map(d => console.error(d));
-        reporter.addError(descriptions, currentScenario);
+        reporter.addError(descriptions, currentScenario, currentScenarioDescription);
     }
 }
 

@@ -12,7 +12,8 @@
     "playground": "angular-playground",
     "playground:prod": "angular-playground --build",
     "playground:check-errors": "angular-playground --check-errors",
-    "playground:build": "(cd ../../ && sh ./scripts/build.sh)"
+    "playground:build": "(cd ../../ && sh ./scripts/build.sh)",
+    "verify-sandboxes": "angular-playground --config angular-playground.json --check-errors --report-path ./result.xml --report-type xml"
   },
   "private": true,
   "dependencies": {

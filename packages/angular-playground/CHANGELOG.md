@@ -1,3 +1,10 @@
+# 5.4.0 (2019-3-19)
+
+<a name="5.4.0"></a>
+
+### Features
+* **error reporter:** Added a new error reporter for JUnit XML format
+
 # 5.3.1 (2019-3-18)
 
 <a name="5.3.1"></a>
