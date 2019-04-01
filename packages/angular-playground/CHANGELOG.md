@@ -1,3 +1,10 @@
+# 5.4.1 (2019-4-1)
+
+<a name="5.4.1"></a>
+
+### Bug Fixes
+* **error reporter:** Fixed not generating a report when there were no errors
+
 # 5.4.0 (2019-3-19)
 
 <a name="5.4.0"></a>

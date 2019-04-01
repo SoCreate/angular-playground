@@ -57,12 +57,9 @@ async function main(config: Config) {
 
     browser.close();
 
-    if (reporter.errors.length > 0) {
-        reporter.compileReport();
-        process.exit(1);
-    } else {
-        process.exit(0);
-    }
+    reporter.compileReport();
+    const exitCode = reporter.errors.length > 0 ? 1 : 0;
+    process.exit(exitCode);
 }
 
 /**
