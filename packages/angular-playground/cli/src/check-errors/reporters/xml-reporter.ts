@@ -10,7 +10,9 @@ export class XMLReporter implements Reporter {
     getReport() {
         let result = `<testsuite name="Check Sandbox Errors" tests="${this.scenarios.length}" failures="${this.errors.length}" skipped="0">\n`;
         for (const scenario of this.scenarios) {
-            result += `<testcase classname="${scenario.name}" name="${scenario.description}">\n`;
+            const name = this.htmlEncode(scenario.name);
+            const description = this.htmlEncode(scenario.description);
+            result += `<testcase classname="${name}" name="${description}">\n`;
             const failure = this.errors.find(error =>
                 error.scenario === scenario.name && error.scenarioTitle === scenario.description);
             if (failure) {
