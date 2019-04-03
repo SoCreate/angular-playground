@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { ConsoleMessage } from 'puppeteer';
 import { SandboxFileInformation } from '../build-sandboxes';
-import { ErrorReporter } from '../error-reporter';
+import { ErrorReporter, REPORT_TYPE } from '../error-reporter';
 import { Config } from '../configure';
 
 // Used to tailor the version of headless chromium ran by puppeteer
@@ -57,8 +57,12 @@ async function main(config: Config) {
 
     browser.close();
 
-    reporter.compileReport();
-    const exitCode = reporter.errors.length > 0 ? 1 : 0;
+    const hasErrors = reporter.errors.length > 0;
+    // always generate report if report type is a file, or if there are errors
+    if (hasErrors || config.reportType !== REPORT_TYPE.LOG) {
+        reporter.compileReport();
+    }
+    const exitCode = hasErrors ? 1 : 0;
     process.exit(exitCode);
 }
 
