@@ -1,3 +1,10 @@
+# 5.4.2 (2019-4-2)
+
+<a name="5.4.2"></a>
+
+### Bug Fixes
+* **error reporter:** Fixed not xml encoding some strings for the xml report
+
 # 5.4.1 (2019-4-1)
 
 <a name="5.4.1"></a>
