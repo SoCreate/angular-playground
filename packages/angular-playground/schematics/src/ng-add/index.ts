@@ -27,7 +27,7 @@ export function install(): Rule {
 }
 
 function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: WorkspaceSchema,
-                               project: WorkspaceProject, projectRoot: string, packageName: string): Rule {
+                               project: WorkspaceProject | undefined, projectRoot: string, packageName: string): Rule {
 
   const sourceRoot = project && typeof project.sourceRoot === 'string'
     ? project.sourceRoot
@@ -36,7 +36,7 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
   const normalizedProjectRoot = normalize(projectRoot === '' ? '' : `${projectRoot}/`)
   const newProject: Partial<WorkspaceProject> = {
     root: `${projectRoot}`,
-    sourceRoot: `${normalizedProjectRoot}src`,
+    sourceRoot: `${normalizedProjectRoot}${sourceRoot}`,
     projectType: 'application',
     architect: {
       build: {

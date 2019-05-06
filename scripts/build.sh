@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# this script should be run from root-level angular-playground directory
+
 # build angular-playground package and link it globally
 cd ./packages/angular-playground
 npm run build
