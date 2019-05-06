@@ -27,10 +27,14 @@ export function install(): Rule {
 }
 
 function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: WorkspaceSchema,
-                               projectRoot: string, packageName: string): Rule {
+                               project: WorkspaceProject, projectRoot: string, packageName: string): Rule {
+
+  const sourceRoot = project && typeof project.sourceRoot === 'string'
+    ? project.sourceRoot
+    : 'src';
 
   const normalizedProjectRoot = normalize(projectRoot === '' ? '' : `${projectRoot}/`)
-  const project: Partial<WorkspaceProject> = {
+  const newProject: Partial<WorkspaceProject> = {
     root: `${projectRoot}`,
     sourceRoot: `${normalizedProjectRoot}src`,
     projectType: 'application',
@@ -39,16 +43,16 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
         builder: '@angular-devkit/build-angular:browser',
         options: {
           outputPath: `${normalizedProjectRoot}dist/playground`,
-          index: `${normalizedProjectRoot}src/index.html`,
-          main: `${normalizedProjectRoot}src/main.playground.ts`,
-          polyfills: `${normalizedProjectRoot}src/polyfills.ts`,
-          tsConfig: `${normalizedProjectRoot}src/tsconfig.app.json`,
+          index: `${normalizedProjectRoot}${sourceRoot}/index.html`,
+          main: `${normalizedProjectRoot}${sourceRoot}/main.playground.ts`,
+          polyfills: `${normalizedProjectRoot}${sourceRoot}/polyfills.ts`,
+          tsConfig: `${normalizedProjectRoot}${sourceRoot}/tsconfig.app.json`,
           assets: [
-            `${normalizedProjectRoot}src/favicon.ico`,
-            `${normalizedProjectRoot}src/assets`,
+            `${normalizedProjectRoot}${sourceRoot}/favicon.ico`,
+            `${normalizedProjectRoot}${sourceRoot}/assets`,
           ],
           styles: [
-            `${normalizedProjectRoot}src/styles.${options.stylesExtension}`,
+            `${normalizedProjectRoot}${sourceRoot}/styles.${options.stylesExtension}`,
           ],
           scripts: []
         },
@@ -56,8 +60,8 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
           production: {
             fileReplacements: [
               {
-                replace: `${normalizedProjectRoot}src/environments/environment.ts`,
-                with: `${normalizedProjectRoot}src/environments/environment.prod.ts`,
+                replace: `${normalizedProjectRoot}${sourceRoot}/environments/environment.ts`,
+                with: `${normalizedProjectRoot}${sourceRoot}/environments/environment.prod.ts`,
               }
             ],
             optimization: true,
@@ -82,7 +86,7 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
     }
   };
 
-  return addProjectToWorkspace(workspace, packageName, project as WorkspaceProject);
+  return addProjectToWorkspace(workspace, packageName, newProject as WorkspaceProject);
 }
 
 function configure(options: any): Rule {
@@ -91,7 +95,7 @@ function configure(options: any): Rule {
     const project = getProject(host, options);
 
     let stylesExtension = 'css';
-    if (project.architect) {
+    if (project && project.architect) {
       const mainStyle = project.architect.build.options.styles.find((path: string | { input: string }) => {
         return typeof path === 'string'
           ? path.includes('/styles.')
@@ -104,7 +108,7 @@ function configure(options: any): Rule {
     }
 
     return chain([
-      addAppToWorkspaceFile({ stylesExtension }, workspace, '', 'playground'),
+      addAppToWorkspaceFile({ stylesExtension }, workspace, project, '', 'playground'),
     ])(host, context)
   }
 }
