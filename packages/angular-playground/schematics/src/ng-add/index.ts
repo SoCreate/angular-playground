@@ -9,24 +9,24 @@ import {
   SchematicContext,
   template,
   Tree,
-  url
+  url,
 } from '@angular-devkit/schematics';
 import {
   addProjectToWorkspace,
   getWorkspace,
   WorkspaceProject,
-  WorkspaceSchema
+  WorkspaceSchema,
 } from '@schematics/angular/utility/config';
 import { addNpmScriptToPackageJson } from '../utils/npm-script';
 import { moveDependencyFromDepsToDevDeps } from '../utils/package';
-import { getProject } from '../utils/project';
+import { getProject, getSourceRoot } from '../utils/project';
 
 export default function add(options: any): Rule {
   return chain([
     updateNpmConfig(),
     configure(options),
     createNewFiles(options),
-  ])
+  ]);
 }
 
 export function updateNpmConfig(): Rule {
@@ -66,7 +66,7 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
           styles: [
             constructPath([...sourceRootParts, `styles.${options.stylesExtension}`]),
           ],
-          scripts: []
+          scripts: [],
         },
         configurations: {
           production: {
@@ -74,7 +74,7 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
               {
                 replace: constructPath([...sourceRootParts, 'environments', 'environment.ts']),
                 with: constructPath([...sourceRootParts, 'environments', 'environment.prod.ts']),
-              }
+              },
             ],
             optimization: true,
             outputHashing: 'all',
@@ -84,18 +84,18 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
             aot: false,
             extractLicenses: true,
             vendorChunk: false,
-            buildOptimizer: false
-          }
-        }
+            buildOptimizer: false,
+          },
+        },
       },
       serve: {
         builder: '@angular-devkit/build-angular:dev-server',
         options: {
           browserTarget: 'playground:build',
-          port: 4201
-        }
-      }
-    }
+          port: 4201,
+        },
+      },
+    },
   };
 
   return addProjectToWorkspace(workspace, packageName, newProject as WorkspaceProject);
@@ -107,7 +107,7 @@ function configure(options: any): Rule {
     const project = getProject(host, options);
 
     let stylesExtension = 'css';
-    if (project && project.architect) {
+    if (project.architect) {
       const mainStyle = project.architect.build.options.styles.find((path: string | { input: string }) => {
         return typeof path === 'string'
           ? path.includes('/styles.')
@@ -144,15 +144,12 @@ function createNewFiles(options: any): Rule {
     ]);
     return chain([
       branchAndMerge(mergeWith(angularPlaygroundJsonTemplateSource)),
-      branchAndMerge(mergeWith(playgroundMainTemplateSource))
+      branchAndMerge(mergeWith(playgroundMainTemplateSource)),
     ])(host, context);
   };
 }
 
-const getSourceRoot = (sourceRoot: string | undefined) =>
-  sourceRoot === undefined ? 'src' : normalize(sourceRoot);
-
 const constructPath = (parts: string[], isAbsolute = false) => {
   const filteredParts = parts.filter(part => !!part);
   return `${isAbsolute ? '/' : ''}${filteredParts.join('/')}`;
-}
+};
