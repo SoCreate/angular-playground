@@ -11,19 +11,19 @@ declare let require: any;
 const _middleware = new BehaviorSubject<Middleware>({
     selector: null,
     overlay: false,
-    modules: []
+    modules: [],
 });
 const middleware = _middleware.asObservable();
 
 @NgModule({
     imports: [
         BrowserModule,
-        PlaygroundCommonModule
+        PlaygroundCommonModule,
     ],
     providers: [
-        { provide: MIDDLEWARE, useValue: middleware }
+        { provide: MIDDLEWARE, useValue: middleware },
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
 })
 export class PlaygroundModule {
     static configure(configuration: Middleware) {

@@ -17,10 +17,6 @@ export interface ScenarioConfig {
     providers?: any[];
 }
 
-export function sandboxOf(type: any, config?: SandboxOfConfig): SandboxBuilder {
-    return new SandboxBuilder(type, config);
-}
-
 export class SandboxBuilder {
     private _scenarios: any[] = [];
     private _scenarioCounter = 0;
@@ -48,4 +44,8 @@ export class SandboxBuilder {
             declareComponent: this._config.declareComponent !== undefined ? this._config.declareComponent : true,
         };
     }
+}
+
+export function sandboxOf(type: any, config?: SandboxOfConfig): SandboxBuilder {
+    return new SandboxBuilder(type, config);
 }

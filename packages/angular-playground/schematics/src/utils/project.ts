@@ -1,9 +1,10 @@
+import { normalize } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
 import { getWorkspace, WorkspaceProject } from '@schematics/angular/utility/config';
 
 export function getProjectPath(
   host: Tree,
-  options: { project?: string | undefined; path?: string | undefined }
+  options: { project?: string | undefined; path?: string | undefined },
 ) {
   const project = getProject(host, options);
 
@@ -16,9 +17,7 @@ export function getProjectPath(
       ? 'app'
       : 'lib';
 
-    const sourceRoot = typeof project.sourceRoot === 'string'
-      ? project.sourceRoot
-      : 'src';
+    const sourceRoot = getSourceRoot(project.sourceRoot);
     return `${project.root ? `/${project.root}` : ''}/${sourceRoot}/${projectDirName}`;
   }
 
@@ -32,10 +31,13 @@ export function getProject(host: Tree, options: { project?: string | undefined; 
     const projectNames = Object.keys(workspace.projects);
     // can have no projects if created with `ng new <name> --createApplication=false`
     if (projectNames.length === 0) {
-      throw new Error('Your app must have at least 1 project to be used with Playground.');
+      throw new Error('Your app must have at least 1 project to use Playground.');
     }
     options.project = projectNames[0];
   }
 
   return workspace.projects[options.project];
 }
+
+export const getSourceRoot = (sourceRoot: string | undefined) =>
+  sourceRoot === undefined ? 'src' : normalize(sourceRoot);

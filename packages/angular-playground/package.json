@@ -30,7 +30,8 @@
     "cli:build": "tsc -p ./cli/tsconfig.json",
     "schematics:build": "tsc -p ./schematics/tsconfig.json",
     "prepublishOnly": "npm run build",
-    "test": "jest"
+    "test": "jest",
+    "lint": "tslint --project tsconfig.json"
   },
   "repository": {
     "type": "git",

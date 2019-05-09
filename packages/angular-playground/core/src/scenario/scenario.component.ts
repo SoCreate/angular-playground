@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 
 @Component({
     selector: 'ap-scenario',
-    template: `<ng-template></ng-template>`
+    template: `<ng-template></ng-template>`,
 })
 export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
     /**
@@ -43,7 +43,7 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.selectedSandboxAndScenarioKeys) {
-            this.bootstrapSandbox(changes.selectedSandboxAndScenarioKeys.currentValue)
+            this.bootstrapSandbox(changes.selectedSandboxAndScenarioKeys.currentValue);
         }
     }
 
@@ -112,16 +112,16 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
             imports: [
                 BrowserModule,
                 ...sandboxMeta.imports,
-                ...this.activeMiddleware.modules
+                ...this.activeMiddleware.modules,
             ],
             declarations: [
                 hostComp,
                 sandboxMeta.declareComponent ? sandboxMeta.type : [],
-                ...sandboxMeta.declarations
+                ...sandboxMeta.declarations,
             ],
             providers: [...sandboxMeta.providers],
             entryComponents: [hostComp, ...sandboxMeta.entryComponents],
-            schemas: [...sandboxMeta.schemas]
+            schemas: [...sandboxMeta.schemas],
         })(DynamicModule);
     }
 
@@ -139,7 +139,7 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
             selector: 'playground-host',
             template: scenario.template,
             styles: scenario.styles,
-            providers: scenario.providers
+            providers: scenario.providers,
         })(DynamicComponent);
     }
 }
