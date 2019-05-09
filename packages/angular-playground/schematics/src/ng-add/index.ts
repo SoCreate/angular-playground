@@ -1,5 +1,16 @@
-import { normalize } from '@angular-devkit/core';
-import { branchAndMerge, chain, mergeWith, Rule, SchematicContext, Tree, url } from '@angular-devkit/schematics';
+import { normalize, strings } from '@angular-devkit/core';
+import {
+  apply,
+  branchAndMerge,
+  chain, filter,
+  mergeWith,
+  move,
+  Rule,
+  SchematicContext,
+  template,
+  Tree,
+  url
+} from '@angular-devkit/schematics';
 import {
   addProjectToWorkspace,
   getWorkspace,
@@ -12,13 +23,13 @@ import { getProject } from '../utils/project';
 
 export default function add(options: any): Rule {
   return chain([
-    install(),
+    updateNpmConfig(),
     configure(options),
-    main(),
+    createNewFiles(options),
   ])
 }
 
-export function install(): Rule {
+export function updateNpmConfig(): Rule {
   return (host: Tree) => {
     moveDependencyFromDepsToDevDeps(host, 'angular-playground');
     addNpmScriptToPackageJson(host, 'playground', 'angular-playground');
@@ -27,32 +38,33 @@ export function install(): Rule {
 }
 
 function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: WorkspaceSchema,
-                               project: WorkspaceProject | undefined, projectRoot: string, packageName: string): Rule {
+                               project: WorkspaceProject, packageName: string): Rule {
 
-  const sourceRoot = project && typeof project.sourceRoot === 'string'
-    ? project.sourceRoot
-    : 'src';
+  const projectRoot = normalize(project.root);
+  const sourceRoot = getSourceRoot(project.sourceRoot);
+  const sourceRootParts = sourceRoot.split('/');
+  const tsConfigPath = projectRoot === '' ? 'src' : projectRoot;
+  const tsConfigPathParts = tsConfigPath.split('/');
 
-  const normalizedProjectRoot = normalize(projectRoot === '' ? '' : `${projectRoot}/`)
   const newProject: Partial<WorkspaceProject> = {
-    root: `${projectRoot}`,
-    sourceRoot: `${normalizedProjectRoot}${sourceRoot}`,
+    root: projectRoot,
+    sourceRoot,
     projectType: 'application',
     architect: {
       build: {
         builder: '@angular-devkit/build-angular:browser',
         options: {
-          outputPath: `${normalizedProjectRoot}dist/playground`,
-          index: `${normalizedProjectRoot}${sourceRoot}/index.html`,
-          main: `${normalizedProjectRoot}${sourceRoot}/main.playground.ts`,
-          polyfills: `${normalizedProjectRoot}${sourceRoot}/polyfills.ts`,
-          tsConfig: `${normalizedProjectRoot}${sourceRoot}/tsconfig.app.json`,
+          outputPath: constructPath(['dist', 'playground']),
+          index: constructPath([...sourceRootParts, 'index.html']),
+          main: constructPath([...sourceRootParts, 'main.playground.ts']),
+          polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
+          tsConfig: constructPath([...tsConfigPathParts, 'tsconfig.app.json']),
           assets: [
-            `${normalizedProjectRoot}${sourceRoot}/favicon.ico`,
-            `${normalizedProjectRoot}${sourceRoot}/assets`,
+            constructPath([...sourceRootParts, 'favicon.ico']),
+            constructPath([...sourceRootParts, 'assets']),
           ],
           styles: [
-            `${normalizedProjectRoot}${sourceRoot}/styles.${options.stylesExtension}`,
+            constructPath([...sourceRootParts, `styles.${options.stylesExtension}`]),
           ],
           scripts: []
         },
@@ -60,8 +72,8 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
           production: {
             fileReplacements: [
               {
-                replace: `${normalizedProjectRoot}${sourceRoot}/environments/environment.ts`,
-                with: `${normalizedProjectRoot}${sourceRoot}/environments/environment.prod.ts`,
+                replace: constructPath([...sourceRootParts, 'environments', 'environment.ts']),
+                with: constructPath([...sourceRootParts, 'environments', 'environment.prod.ts']),
               }
             ],
             optimization: true,
@@ -108,11 +120,39 @@ function configure(options: any): Rule {
     }
 
     return chain([
-      addAppToWorkspaceFile({ stylesExtension }, workspace, project, '', 'playground'),
-    ])(host, context)
-  }
+      addAppToWorkspaceFile({ stylesExtension }, workspace, project, 'playground'),
+    ])(host, context);
+  };
 }
 
-function main(): Rule {
-  return branchAndMerge(mergeWith(url('./files')));
+function createNewFiles(options: any): Rule {
+  return (host: Tree, context: SchematicContext) => {
+    const project = getProject(host, options);
+
+    const sourceRoot = getSourceRoot(project.sourceRoot);
+    const angularPlaygroundJsonTemplateSource = apply(url('./files'), [
+      filter(path => path.endsWith('angular-playground.json')),
+      template({
+        ...strings,
+        sourceRoot,
+      }),
+    ]);
+    const playgroundMainTemplateSource = apply(url('./files'), [
+      filter(path => path.endsWith('main.playground.ts')),
+      template({}),
+      move(sourceRoot),
+    ]);
+    return chain([
+      branchAndMerge(mergeWith(angularPlaygroundJsonTemplateSource)),
+      branchAndMerge(mergeWith(playgroundMainTemplateSource))
+    ])(host, context);
+  };
+}
+
+const getSourceRoot = (sourceRoot: string | undefined) =>
+  sourceRoot === undefined ? 'src' : normalize(sourceRoot);
+
+const constructPath = (parts: string[], isAbsolute = false) => {
+  const filteredParts = parts.filter(part => !!part);
+  return `${isAbsolute ? '/' : ''}${filteredParts.join('/')}`;
 }
