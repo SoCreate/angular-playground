@@ -1,6 +1,6 @@
 {
   "name": "angular-playground",
-  "version": "5.4.3",
+  "version": "5.4.4",
   "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -15,7 +15,7 @@
     "transform": {
       "\\.ts$": "ts-jest"
     },
-    "testRegex": "/test/.*\\.spec\\.ts$",
+    "testRegex": ".*\\.spec\\.ts$",
     "moduleFileExtensions": [
       "ts",
       "js",
@@ -30,7 +30,8 @@
     "cli:build": "tsc -p ./cli/tsconfig.json",
     "schematics:build": "tsc -p ./schematics/tsconfig.json",
     "prepublishOnly": "npm run build",
-    "test": "jest"
+    "test": "jest",
+    "lint": "tslint --project tsconfig.json"
   },
   "repository": {
     "type": "git",

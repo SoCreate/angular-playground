@@ -18,8 +18,6 @@ import { Component } from '@angular/core';
         fill: rgba(255, 255, 255, .5);
         transition: fill 0.2s ease-out;
     }
-    `]
+    `],
 })
-export class LogoComponent {
-
-}
+export class LogoComponent {}

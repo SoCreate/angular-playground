@@ -14,7 +14,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 @Component({
     selector: 'ap-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
     @ViewChildren('scenarioElement') scenarioLinkElements: QueryList<ElementRef>;
@@ -27,12 +27,13 @@ export class AppComponent {
     shortcuts = this.getShortcuts();
     activeMiddleware: Middleware;
 
-    constructor(private stateService: StateService,
-                private urlService: UrlService,
-                private eventManager: EventManager,
-                private levenshteinDistance: LevenshteinDistance,
-                @Inject(MIDDLEWARE) private middleware: Observable<Middleware>) {
-    }
+    constructor(
+        private stateService: StateService,
+        private urlService: UrlService,
+        private eventManager: EventManager,
+        private levenshteinDistance: LevenshteinDistance,
+        @Inject(MIDDLEWARE) private middleware: Observable<Middleware>,
+    ) {}
 
     ngOnInit() {
         const sandboxMenuItems = SandboxLoader.getSandboxMenuItems();
@@ -43,13 +44,13 @@ export class AppComponent {
         if (this.urlService.embed) {
             this.selectedSandboxAndScenarioKeys = {
                 sandboxKey: this.urlService.select.sandboxKey,
-                scenarioKey: this.urlService.select.scenarioKey
+                scenarioKey: this.urlService.select.scenarioKey,
             };
         } else {
             if (this.urlService.select) {
                 this.selectedSandboxAndScenarioKeys = {
                     sandboxKey: this.urlService.select.sandboxKey,
-                    scenarioKey: this.urlService.select.scenarioKey
+                    scenarioKey: this.urlService.select.scenarioKey,
                 };
             }
 
@@ -73,7 +74,7 @@ export class AppComponent {
             this.filter.valueChanges.pipe
             (
                 debounceTime(300),
-                distinctUntilChanged()
+                distinctUntilChanged(),
             )
             .subscribe(value => {
                 this.stateService.setFilter(value);
@@ -195,8 +196,7 @@ export class AppComponent {
         if (selectedScenarioElementRef) {
             this.selectScenario(
                 selectedScenarioElementRef.nativeElement.getAttribute('sandboxMenuItemKey'),
-                parseInt(selectedScenarioElementRef.nativeElement.getAttribute('scenarioMenuItemkey'), 10)
-            );
+                parseInt(selectedScenarioElementRef.nativeElement.getAttribute('scenarioMenuItemkey'), 10));
         }
     }
 
@@ -288,20 +288,20 @@ export class AppComponent {
         return [
             {
                 keys: ['ctrl + p', 'f2'],
-                description: 'Toggle command bar open/closed'
+                description: 'Toggle command bar open/closed',
             },
             {
                 keys: ['esc'],
-                description: 'Close command bar'
+                description: 'Close command bar',
             },
             {
                 keys: ['\u2191', '\u2193'],
-                description: 'Navigate up or down in command bar list'
+                description: 'Navigate up or down in command bar list',
             },
             {
                 keys: ['ctrl + \u2191', 'ctrl + \u2193'],
-                description: 'Switch scenarios while navigating up or down in command bar list'
-            }
+                description: 'Switch scenarios while navigating up or down in command bar list',
+            },
         ];
     }
 }

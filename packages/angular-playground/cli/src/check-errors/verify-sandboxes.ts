@@ -43,7 +43,7 @@ async function main(config: Config) {
     browser = await puppeteer.launch({
         headless: true,
         handleSIGINT: false,
-        args: CHROME_ARGS
+        args: CHROME_ARGS,
     });
 
     const scenarios = getSandboxMetadata(hostUrl, config.randomScenario);
@@ -84,7 +84,7 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
 
     try {
         await page.goto(scenario.url);
-        setTimeout(() => page.close(), 10000) // close page after 10s to prevent memory leak
+        setTimeout(() => page.close(), 10000); // close page after 10s to prevent memory leak
     } catch (e) {
         await page.close();
         await delay(1000);

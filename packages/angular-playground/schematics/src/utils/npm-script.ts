@@ -6,7 +6,7 @@ import { Tree } from '@angular-devkit/schematics';
 export function addNpmScriptToPackageJson(
   host: Tree,
   name: string,
-  command: string
+  command: string,
 ): Tree {
   if (host.exists('package.json')) {
     const sourceText = host.read('package.json')!.toString('utf-8');

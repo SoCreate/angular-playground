@@ -1,9 +1,10 @@
+import { normalize } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
 import { getWorkspace, WorkspaceProject } from '@schematics/angular/utility/config';
 
 export function getProjectPath(
   host: Tree,
-  options: { project?: string | undefined; path?: string | undefined }
+  options: { project?: string | undefined; path?: string | undefined },
 ) {
   const project = getProject(host, options);
 
@@ -12,10 +13,12 @@ export function getProjectPath(
   }
 
   if (options.path === undefined) {
-    const projectDirName =
-      project.projectType === 'application' ? 'app' : 'lib';
+    const projectDirName = project.projectType === 'application'
+      ? 'app'
+      : 'lib';
 
-    return `${project.root ? `/${project.root}` : ''}/src/${projectDirName}`;
+    const sourceRoot = getSourceRoot(project.sourceRoot);
+    return `${project.root ? `/${project.root}` : ''}/${sourceRoot}/${projectDirName}`;
   }
 
   return options.path;
@@ -25,8 +28,16 @@ export function getProject(host: Tree, options: { project?: string | undefined; 
   const workspace = getWorkspace(host);
 
   if (!options.project) {
-    options.project = Object.keys(workspace.projects)[0];
+    const projectNames = Object.keys(workspace.projects);
+    // can have no projects if created with `ng new <name> --createApplication=false`
+    if (projectNames.length === 0) {
+      throw new Error('Your app must have at least 1 project to use Playground.');
+    }
+    options.project = projectNames[0];
   }
 
   return workspace.projects[options.project];
 }
+
+export const getSourceRoot = (sourceRoot: string | undefined) =>
+  sourceRoot === undefined ? 'src' : normalize(sourceRoot);

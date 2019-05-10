@@ -28,7 +28,7 @@ describe('applyConfigurationFile', () => {
                 chunk: true,
                 build: false,
                 ngCliPort: 4201,
-                ngCliCmd: 'node_modules/@angular/cli/bin/ng'
+                ngCliCmd: 'node_modules/@angular/cli/bin/ng',
             };
             config = applyConfigurationFile(programMock);
         });

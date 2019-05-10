@@ -103,13 +103,13 @@ describe('buildSandboxFileContents', () => {
                 scenarioMenuItems: [
                     {
                         key: 1,
-                        description: 'Default'
+                        description: 'Default',
                     },
                     {
                         key: 2,
-                        description: 'With Wrapper'
-                    }
-                ]
+                        description: 'With Wrapper',
+                    },
+                ],
             },
             {
                 key: 'cli/test/files/sandboxes/other.sandbox',
@@ -119,10 +119,10 @@ describe('buildSandboxFileContents', () => {
                 scenarioMenuItems: [
                     {
                         key: 1,
-                        description: 'Default'
-                    }
-                ]
-            }
+                        description: 'Default',
+                    },
+                ],
+            },
         ];
     });
 

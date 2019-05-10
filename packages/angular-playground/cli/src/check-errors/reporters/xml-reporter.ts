@@ -4,8 +4,7 @@ import { ScenarioSummary } from '../verify-sandboxes';
 export class XMLReporter implements Reporter {
     constructor (
         public errors: ErrorReport[],
-        public scenarios: ScenarioSummary[]
-    ) {}
+        public scenarios: ScenarioSummary[]) {}
 
     getReport() {
         let result = `<testsuite name="Check Sandbox Errors" tests="${this.scenarios.length}" failures="${this.errors.length}" skipped="0">\n`;

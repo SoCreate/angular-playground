@@ -63,7 +63,7 @@ export function findSandboxes(home: string): SandboxFileInformation[] {
                 searchKey: `${typeName}${label}`,
                 name: typeName,
                 label: label,
-                scenarioMenuItems
+                scenarioMenuItems,
             });
         }
     });

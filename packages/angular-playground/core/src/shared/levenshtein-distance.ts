@@ -46,6 +46,7 @@ export class LevenshteinDistance {
         let bx2;
         let bx3;
 
+        // tslint:disable-next-line:no-bitwise
         let vector = new Array(la << 1);
 
         for (y = 0; y < la;) {

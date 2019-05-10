@@ -17,17 +17,14 @@ export interface ScenarioConfig {
     providers?: any[];
 }
 
-export function sandboxOf(type: any, config?: SandboxOfConfig): SandboxBuilder {
-    return new SandboxBuilder(type, config);
-}
-
 export class SandboxBuilder {
     private _scenarios: any[] = [];
     private _scenarioCounter = 0;
 
-    constructor(private _type: any,
-        private _config: SandboxOfConfig = {}) {
-    }
+    constructor(
+        private _type: any,
+        private _config: SandboxOfConfig = {},
+    ) {}
 
     add(description: string, config: ScenarioConfig) {
         let key = ++this._scenarioCounter;
@@ -48,4 +45,8 @@ export class SandboxBuilder {
             declareComponent: this._config.declareComponent !== undefined ? this._config.declareComponent : true,
         };
     }
+}
+
+export function sandboxOf(type: any, config?: SandboxOfConfig): SandboxBuilder {
+    return new SandboxBuilder(type, config);
 }
