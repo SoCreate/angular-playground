@@ -6,7 +6,7 @@ describe('ErrorReporter', () => {
     const mockScenarios = [{
         url: 'http://localhost:4201/textbox',
         name: 'textbox',
-        description: 'Default'
+        description: 'Default',
     }];
     let reporter;
 
@@ -23,7 +23,7 @@ describe('ErrorReporter', () => {
         expect(reporter.errors.length).toBe(1);
         expect(reporter.errors).toEqual([{
             descriptions: 'LOG Error',
-            scenario: 'http://localhost:4201/textbox'
+            scenario: 'http://localhost:4201/textbox',
         }]);
     });
 

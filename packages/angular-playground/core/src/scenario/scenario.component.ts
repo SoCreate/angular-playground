@@ -32,8 +32,7 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
      */
     private onDestroy = new Subject<void>();
 
-    constructor(private zone: NgZone, @Inject(MIDDLEWARE) private middleware) {
-    }
+    constructor(private zone: NgZone, @Inject(MIDDLEWARE) private middleware) {}
 
     ngOnInit() {
         this.middleware

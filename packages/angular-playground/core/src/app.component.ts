@@ -27,12 +27,13 @@ export class AppComponent {
     shortcuts = this.getShortcuts();
     activeMiddleware: Middleware;
 
-    constructor(private stateService: StateService,
-                private urlService: UrlService,
-                private eventManager: EventManager,
-                private levenshteinDistance: LevenshteinDistance,
-                @Inject(MIDDLEWARE) private middleware: Observable<Middleware>) {
-    }
+    constructor(
+        private stateService: StateService,
+        private urlService: UrlService,
+        private eventManager: EventManager,
+        private levenshteinDistance: LevenshteinDistance,
+        @Inject(MIDDLEWARE) private middleware: Observable<Middleware>,
+    ) {}
 
     ngOnInit() {
         const sandboxMenuItems = SandboxLoader.getSandboxMenuItems();

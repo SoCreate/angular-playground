@@ -21,9 +21,10 @@ export class SandboxBuilder {
     private _scenarios: any[] = [];
     private _scenarioCounter = 0;
 
-    constructor(private _type: any,
-        private _config: SandboxOfConfig = {}) {
-    }
+    constructor(
+        private _type: any,
+        private _config: SandboxOfConfig = {},
+    ) {}
 
     add(description: string, config: ScenarioConfig) {
         let key = ++this._scenarioCounter;

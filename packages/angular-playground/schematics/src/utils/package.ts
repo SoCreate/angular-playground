@@ -5,7 +5,7 @@ import { Tree } from '@angular-devkit/schematics';
  */
 export function moveDependencyFromDepsToDevDeps(
   host: Tree,
-  packageName: string
+  packageName: string,
 ): Tree {
   if (host.exists('package.json')) {
     const sourceText = host.read('package.json')!.toString('utf-8');
