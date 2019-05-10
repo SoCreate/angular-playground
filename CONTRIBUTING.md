@@ -25,7 +25,7 @@ Before you submit your Pull Request (PR) consider the following guidelines:
 
 * Search [GitHub](https://github.com/socreate/angular-playground/pulls) for an open or closed PR
   that relates to your submission. You don't want to duplicate effort.
-* Make your changes in a new git branch:
+* Fork the repo and make your changes in a new git branch:
 
      ```shell
      git checkout -b my-fix-branch master
