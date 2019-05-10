@@ -1,3 +1,10 @@
+# 5.4.3 (2019-4-5)
+
+<a name="5.4.3"></a>
+
+### Bug Fixes
+* **error reporter:** Fixed finding a free port
+
 # 5.4.2 (2019-4-2)
 
 <a name="5.4.2"></a>
