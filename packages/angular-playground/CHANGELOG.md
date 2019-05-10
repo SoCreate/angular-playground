@@ -1,3 +1,10 @@
+# 5.4.4 (2019-5-10)
+
+<a name="5.4.4"></a>
+
+### Bug Fixes
+* **cli schematics:** Fixed schematic pathing issues for apps not created with the default `ng new <appName>` command
+
 # 5.4.3 (2019-4-5)
 
 <a name="5.4.3"></a>
