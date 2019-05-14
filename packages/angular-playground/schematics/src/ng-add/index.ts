@@ -43,7 +43,7 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
   const projectRoot = normalize(project.root);
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
-  const tsConfigPath = projectRoot === '' ? 'src' : projectRoot;
+  const tsConfigPath = projectRoot === '' ? sourceRoot : projectRoot;
   const tsConfigPathParts = tsConfigPath.split('/');
 
   const newProject: Partial<WorkspaceProject> = {

@@ -4,11 +4,11 @@ describe('findSandboxes', () => {
     let sandboxes;
 
     beforeEach(() => {
-        sandboxes = findSandboxes('./cli/test/files/sandboxes/');
+        sandboxes = findSandboxes(['./cli/test/files/sandboxes/', './cli/test/files/sandboxes-2/']);
     });
 
     it('should find sandbox files and assemble multiple sandboxes', () => {
-        expect(sandboxes.length).toBe(6);
+        expect(sandboxes.length).toBe(12);
     });
 
     it('should create a key that contains the path to the sandbox', () => {
@@ -97,6 +97,7 @@ describe('buildSandboxFileContents', () => {
         sandboxes = [
             {
                 key: 'cli/test/files/sandboxes/example1.sandbox',
+                srcPath: 'home/',
                 searchKey: 'ExampleComponent',
                 name: 'ExampleComponent',
                 label: '',
@@ -113,6 +114,7 @@ describe('buildSandboxFileContents', () => {
             },
             {
                 key: 'cli/test/files/sandboxes/other.sandbox',
+                srcPath: 'other-home/',
                 searchKey: 'OtherComponent',
                 name: 'OtherComponent',
                 label: '',
@@ -128,19 +130,19 @@ describe('buildSandboxFileContents', () => {
 
     describe('exported functions', () => {
         it('should return a function, getSandboxMenuItems, with the JSON string contents of the sandboxes', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'home/', 'lazy');
+            const fileContents = buildSandboxFileContents(sandboxes, 'lazy');
             expect(fileContents).toContain(JSON.stringify(sandboxes));
         });
 
         it('should return a function, getSandbox, that includes imports to sandbox files', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'home/', 'lazy');
+            const fileContents = buildSandboxFileContents(sandboxes, 'lazy');
             expect(fileContents).toContain('import( /* webpackMode: "lazy" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
             expect(fileContents).toContain('import( /* webpackMode: "lazy" */ \'home/cli/test/files/sandboxes/other.sandbox\')');
         });
 
 
         it('should include exports for both sandbox-fetching functions', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'home/', 'eager');
+            const fileContents = buildSandboxFileContents(sandboxes, 'eager');
             expect(fileContents).toContain('exports.getSandboxMenuItems = getSandboxMenuItems;');
             expect(fileContents).toContain('exports.getSandbox = getSandbox;');
         });
@@ -148,7 +150,7 @@ describe('buildSandboxFileContents', () => {
 
     describe('getSandbox', () => {
         it('should return the serialized sandbox', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'home/', 'lazy');
+            const fileContents = buildSandboxFileContents(sandboxes, 'lazy');
             expect(fileContents).toContain('return _.default.serialize(\'cli/test/files/sandboxes/example1.sandbox\')');
             expect(fileContents).toContain('return _.default.serialize(\'cli/test/files/sandboxes/other.sandbox\')');
         });
@@ -156,22 +158,22 @@ describe('buildSandboxFileContents', () => {
 
     describe('webpack strategy', () => {
         it('should use lazy webpack resolution strategy if lazy is provided as a parameter', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'home/', 'lazy');
+            const fileContents = buildSandboxFileContents(sandboxes, 'lazy');
             expect(fileContents).toContain('import( /* webpackMode: "lazy" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
             expect(fileContents).not.toContain('eager');
         });
 
         it('should use eager webpack resolution strategy if lazy is provided as a parameter', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'home/', 'eager');
+            const fileContents = buildSandboxFileContents(sandboxes, 'eager');
             expect(fileContents).toContain('import( /* webpackMode: "eager" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
             expect(fileContents).not.toContain('lazy');
         });
     });
-});
 
-describe('slash', () => {
-    it('should convert Windows-style path to unix-style', () => {
-        const windowsPath = 'c:\\etc\\';
-        expect(slash(windowsPath)).toBe('c:/etc/');
+    describe('slash', () => {
+        it('should convert Windows-style path to unix-style', () => {
+            const windowsPath = 'c:\\etc\\';
+            expect(slash(windowsPath)).toBe('c:/etc/');
+        });
     });
 });

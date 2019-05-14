@@ -1,12 +1,12 @@
-import { fromDir } from '../src/from-dir';
+import { fromDirMultiple } from '../src/from-dir';
 
 describe('fromDir', () => {
     const dir = './cli/test/files/from-dir-test/';
+    const dir2 = './cli/test/files/from-dir-test-multiple/';
 
     it('should throw error when directory does not exist', () => {
         const t = () => {
-            fromDir('foo', /test/, () => {
-            });
+            fromDirMultiple(['foo'], /test/, () => {});
         };
         expect(t).toThrow();
     });
@@ -14,7 +14,8 @@ describe('fromDir', () => {
     it('should apply callback to each file process matching regex', () => {
         const regex = /\.json$/;
         const mockCb = jest.fn();
-        fromDir(dir, regex, mockCb);
+
+        fromDirMultiple([dir], regex, mockCb);
         expect(mockCb.mock.calls.length).toBe(2);
     });
 
@@ -22,7 +23,7 @@ describe('fromDir', () => {
         const regex = /\.spec.ts$/;
         const mockCb = jest.fn();
 
-        fromDir(dir, regex, mockCb);
+        fromDirMultiple([dir], regex, mockCb);
         expect(mockCb.mock.calls.length).toBe(0);
     });
 
@@ -30,7 +31,15 @@ describe('fromDir', () => {
         const regex = /\.csv$/;
         const mockCb = jest.fn();
 
-        fromDir(dir, regex, mockCb);
+        fromDirMultiple([dir], regex, mockCb);
         expect(mockCb.mock.calls.length).toBe(1);
+    });
+
+    it('should work for multiple directories', () => {
+        const regex = /\.(json|ts)$/;
+        const mockCb = jest.fn();
+
+        fromDirMultiple([dir, dir2], regex, mockCb);
+        expect(mockCb.mock.calls.length).toBe(5);
     });
 });

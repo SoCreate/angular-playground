@@ -1,11 +1,17 @@
 import { existsSync, readdirSync, lstatSync } from 'fs';
 import { join as joinPath } from 'path';
 
+export function fromDirMultiple(startPaths: string[], filter: RegExp, callback: Function) {
+    for (const path of startPaths) {
+        fromDir(path, path, filter, callback);
+    }
+}
+
 /**
  * Recursively apply callback to files in a directory (and sub-directories) that match the
  * provided regular expression
  */
-export function fromDir (startPath: string, filter: RegExp, callback: Function) {
+function fromDir(rootPath: string, startPath: string, filter: RegExp, callback: Function) {
   if (!existsSync(startPath)) {
       throw new Error(`No Directory Found: ${startPath}`);
   }
@@ -16,9 +22,9 @@ export function fromDir (startPath: string, filter: RegExp, callback: Function) 
       const stat = lstatSync(filename);
 
       if (stat.isDirectory()) {
-          fromDir(filename, filter, callback);
+          fromDir(rootPath, filename, filter, callback);
       } else if (filter.test(filename)) {
-          callback(filename);
+          callback(filename, rootPath);
       }
   }
 }
