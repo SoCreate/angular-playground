@@ -137,7 +137,7 @@ describe('buildSandboxFileContents', () => {
         it('should return a function, getSandbox, that includes imports to sandbox files', () => {
             const fileContents = buildSandboxFileContents(sandboxes, 'lazy');
             expect(fileContents).toContain('import( /* webpackMode: "lazy" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
-            expect(fileContents).toContain('import( /* webpackMode: "lazy" */ \'home/cli/test/files/sandboxes/other.sandbox\')');
+            expect(fileContents).toContain('import( /* webpackMode: "lazy" */ \'other-home/cli/test/files/sandboxes/other.sandbox\')');
         });
 
 

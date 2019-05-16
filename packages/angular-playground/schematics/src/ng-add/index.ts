@@ -134,7 +134,7 @@ function createNewFiles(options: any): Rule {
       filter(path => path.endsWith('angular-playground.json')),
       template({
         ...strings,
-        sourceRoot,
+        sourceRoots: [sourceRoot],
       }),
     ]);
     const playgroundMainTemplateSource = apply(url('./files'), [

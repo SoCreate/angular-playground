@@ -41,7 +41,7 @@ describe('ng-add', () => {
 
     // angular-playground.json
     const angularPlaygroundJson = getJsonFileAsObject(resultTree, 'angular-playground.json');
-    expect(angularPlaygroundJson.sourceRoot).toBe('./src');
+    expect(angularPlaygroundJson.sourceRoots).toEqual(['./src']);
     expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
 
     // main.playground.ts
@@ -84,7 +84,7 @@ describe('ng-add', () => {
 
     // angular-playground.json
     const angularPlaygroundJson = getJsonFileAsObject(resultTree, 'angular-playground.json');
-    expect(angularPlaygroundJson.sourceRoot).toBe('./projects/something/src');
+    expect(angularPlaygroundJson.sourceRoots).toEqual(['./projects/something/src']);
     expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
 
     // main.playground.ts
@@ -126,7 +126,7 @@ describe('ng-add', () => {
 
     // angular-playground.json
     const angularPlaygroundJson = getJsonFileAsObject(resultTree, 'angular-playground.json');
-    expect(angularPlaygroundJson.sourceRoot).toBe('./src');
+    expect(angularPlaygroundJson.sourceRoots).toEqual(['./src']);
     expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
 
     // main.playground.ts

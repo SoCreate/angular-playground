@@ -1,6 +1,6 @@
 import { applyConfigurationFile, Config } from '../src/configure';
 
-describe('applyConfigurationFile', () => {
+describe('configure', () => {
     it('should throw error when failing to load a configuration file', () => {
         const programMock = { config: './no-config.json' };
 
@@ -22,7 +22,7 @@ describe('applyConfigurationFile', () => {
             // Defaults provided from commander
             const programMock = {
                 config: './cli/test/files/empty-config.json',
-                src: './src/',
+                src: ['./src/'],
                 watch: true,
                 serve: true,
                 chunk: true,
@@ -35,7 +35,7 @@ describe('applyConfigurationFile', () => {
 
         describe('have defaults', () => {
             it('should provide default value for source path', () => {
-                expect(config.sourceRoot).toBe('./src/');
+                expect(config.sourceRoots).toEqual(['./src/']);
             });
 
             it('should provide default value for no-watch', () => {
