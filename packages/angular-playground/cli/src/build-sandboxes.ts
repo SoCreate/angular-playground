@@ -1,10 +1,11 @@
 import { writeFile, readFileSync } from 'fs';
 import { join as joinPath, resolve as resolvePath } from 'path';
-import { fromDir } from './from-dir';
+import { fromDirMultiple } from './from-dir';
 import { StringBuilder } from './string-builder';
 
 export interface SandboxFileInformation {
     key: string;
+    srcPath: string;
     searchKey: string;
     name: string;
     label: string;
@@ -14,12 +15,12 @@ export interface SandboxFileInformation {
     }[];
 }
 
-export function buildSandboxes(srcPath: string, chunk: boolean): Promise<string> {
+export function buildSandboxes(srcPaths: string[], chunk: boolean): Promise<string> {
     const chunkMode = chunk ? 'lazy' : 'eager';
-    const home = resolvePath(srcPath);
-    const sandboxes = findSandboxes(home);
+    const homes = srcPaths.map(srcPath => resolvePath(srcPath));
+    const sandboxes = findSandboxes(homes);
     const filePath = resolvePath(__dirname, '../../build/src/shared/sandboxes.js');
-    const fileContent = buildSandboxFileContents(sandboxes, home, chunkMode);
+    const fileContent = buildSandboxFileContents(sandboxes, chunkMode);
 
     return new Promise((resolve, reject) => {
         writeFile(filePath, fileContent, err => {
@@ -32,10 +33,10 @@ export function buildSandboxes(srcPath: string, chunk: boolean): Promise<string>
     });
 }
 
-export function findSandboxes(home: string): SandboxFileInformation[] {
+export function findSandboxes(homes: string[]): SandboxFileInformation[] {
     const sandboxes = [];
 
-    fromDir(home, /\.sandbox.ts$/, (filename) => {
+    fromDirMultiple(homes, /\.sandbox.ts$/, (filename, home) => {
         let sandboxPath = filename.replace(home, '.').replace(/.ts$/, '').replace(/\\/g, '/');
         const contents = readFileSync(filename, 'utf8');
 
@@ -60,6 +61,7 @@ export function findSandboxes(home: string): SandboxFileInformation[] {
             let label = labelText ? labelText[1] : '';
             sandboxes.push({
                 key: sandboxPath,
+                srcPath: home,
                 searchKey: `${typeName}${label}`,
                 name: typeName,
                 label: label,
@@ -71,7 +73,7 @@ export function findSandboxes(home: string): SandboxFileInformation[] {
     return sandboxes;
 }
 
-export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], home: string, chunkMode: string): string {
+export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], chunkMode: string): string {
     const content = new StringBuilder();
     content.addLine(`function getSandboxMenuItems() {`);
     content.addLine(`return ${JSON.stringify(sandboxes)};`);
@@ -81,8 +83,8 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ho
     content.addLine(`function getSandbox(path) {`);
     content.addLine(`switch(path) {`);
 
-    sandboxes.forEach(({ key }, i) => {
-        let fullPath = joinPath(home, key);
+    sandboxes.forEach(({ key, srcPath }, i) => {
+        let fullPath = joinPath(srcPath, key);
         // Normalize slash syntax for Windows/Unix filepaths
         fullPath = slash(fullPath);
         content.addLine(`case '${key}':`);

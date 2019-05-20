@@ -1,10 +1,10 @@
-import program = require('commander');
+import commander = require('commander');
 import { resolve as resolvePath } from 'path';
 import { existsSync } from 'fs';
 import { REPORT_TYPE } from './error-reporter';
 
 export interface Config {
-    sourceRoot: string;
+    sourceRoots: string[];
     chunk: boolean;
     watch: boolean;
     serve: boolean;
@@ -24,11 +24,18 @@ export interface Config {
     angularCliMaxBuffer?: number;
 }
 
+const splitCommaSeparatedList = (value) => {
+    if (!value) {
+        return ['./src/'];
+    }
+    return value.split(',');
+};
+
 export function configure(argv: any): Config {
-    program
+    commander
         .name('angular-playground')
         .option('-C, --config <path>', 'Configuration file', './angular-playground.json')
-        .option('-S, --src <path>', 'Specify component source directory', './src/')
+        .option('-S, --src <path>', 'Specify component source directories (comma separated list)', splitCommaSeparatedList)
 
         // Build options
         .option('--no-watch', 'Disable sandboxes watch', false)
@@ -51,15 +58,21 @@ export function configure(argv: any): Config {
         .option('--ng-cli-args <list>', 'Additional @angular/cli arguments')
         .option('--ng-cli-max-buffer <maxBuffer>', 'Specify a max buffer (for large apps)');
 
-    program.parse(argv);
-    return applyConfigurationFile(program);
+    commander.parse(argv);
+    return applyConfigurationFile(commander);
 }
 
 export function applyConfigurationFile(program: any): Config {
     const playgroundConfig = loadConfig(program.config);
+    // TODO: remove this deprecation warning at next major version
+    if (playgroundConfig.sourceRoot) {
+        console.warn('Using `sourceRoot` is deprecated. Please use `sourceRoots` instead.');
+        console.warn('See https://angularplayground.it/docs/api/configuration for more info.');
+        playgroundConfig.sourceRoots = [playgroundConfig.sourceRoot];
+    }
 
     const config: Config = {
-        sourceRoot: playgroundConfig.sourceRoot || program.src,
+        sourceRoots: playgroundConfig.sourceRoots || program.src,
         chunk: negate(playgroundConfig.noChunk) || program.chunk,
         watch: negate(playgroundConfig.noWatch) || program.watch,
         serve: negate(playgroundConfig.noServe) || program.serve,

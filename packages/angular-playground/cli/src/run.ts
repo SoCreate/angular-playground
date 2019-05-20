@@ -10,7 +10,7 @@ export async function run() {
     const config: Config = configure(process.argv);
 
     try {
-        await buildSandboxes(config.sourceRoot, config.chunk);
+        await buildSandboxes(config.sourceRoots, config.chunk);
     } catch (err) {
         throw err;
     }
@@ -24,7 +24,7 @@ export async function run() {
     }
 
     if (config.watch || config.verifySandboxes) {
-        startWatch(config.sourceRoot, () => buildSandboxes(config.sourceRoot, config.chunk));
+        startWatch(config.sourceRoots, () => buildSandboxes(config.sourceRoots, config.chunk));
     }
 
     if (config.serve || config.verifySandboxes) {
