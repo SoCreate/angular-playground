@@ -64,6 +64,12 @@ export function configure(argv: any): Config {
 
 export function applyConfigurationFile(program: any): Config {
     const playgroundConfig = loadConfig(program.config);
+    // TODO: remove this deprecation warning at next major version
+    if (playgroundConfig.sourceRoot) {
+        console.warn('Using `sourceRoot` is deprecated. Please use `sourceRoots` instead.');
+        console.warn('See https://angularplayground.it/docs/api/configuration for more info.');
+        playgroundConfig.sourceRoots = [playgroundConfig.sourceRoot];
+    }
 
     const config: Config = {
         sourceRoots: playgroundConfig.sourceRoots || program.src,

@@ -1,3 +1,10 @@
+# 5.5.0 (2019-5-10)
+
+<a name="5.5.0"></a>
+
+### Features
+* **config:** Playground now supports using multiple source libraries at once (via the `sourceRoots` property in the configuration)
+
 # 5.4.4 (2019-5-10)
 
 <a name="5.4.4"></a>
