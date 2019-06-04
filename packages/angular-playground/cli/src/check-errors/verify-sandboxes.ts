@@ -140,12 +140,17 @@ function loadSandboxMenuItems(): SandboxFileInformation[] {
 function onConsoleErr(msg: ConsoleMessage) {
     if (msg.type() === 'error') {
         console.error(chalk.red(`Error in ${currentScenario} (${currentScenarioDescription}):`));
-        const descriptions = msg.args()
+        const getErrors = (type: string, getValue: (_: any) => string) => msg.args()
             .map(a => (a as any)._remoteObject)
-            .filter(o => o.type === 'object')
-            .map(o => o.description);
-        descriptions.map(d => console.error(d));
-        reporter.addError(descriptions, currentScenario, currentScenarioDescription);
+            .filter(o => o.type === type)
+            .map(getValue);
+        const stackTrace = getErrors('object', o => o.description);
+        const errorMessage = getErrors('string', o => o.value);
+        const description = stackTrace.length ? stackTrace : errorMessage;
+        description.map(d => console.error(d));
+        if (description.length) {
+            reporter.addError(description, currentScenario, currentScenarioDescription);
+        }
     }
 }
 
