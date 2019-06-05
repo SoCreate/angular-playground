@@ -1,4 +1,4 @@
-import getPort from 'get-port';
+import * as getPort from 'get-port';
 import { configure, Config } from './configure';
 import { buildSandboxes } from './build-sandboxes';
 import { startWatch } from './start-watch';
