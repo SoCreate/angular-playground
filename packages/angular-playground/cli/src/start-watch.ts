@@ -1,5 +1,5 @@
 import { resolve as resolvePath } from 'path';
-import watch = require('node-watch');
+import watch from 'node-watch';
 
 export function startWatch(sourceRoots: string[], cb: Function) {
     const filter = (fn: Function) => {
@@ -10,6 +10,6 @@ export function startWatch(sourceRoots: string[], cb: Function) {
         };
     };
 
-    const sourceRootPaths = sourceRoots.map(sourceRoot => resolvePath(sourceRoot));
-    watch(sourceRootPaths, { recursive: true }, filter(cb));
+    sourceRoots.forEach(sourceRoot =>
+        watch(resolvePath(sourceRoot), { recursive: true }, filter(cb)));
 }

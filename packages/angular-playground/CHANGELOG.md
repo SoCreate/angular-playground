@@ -1,3 +1,13 @@
+# 5.6.0 (2019-6-5)
+
+<a name="5.6.0"></a>
+
+### Features
+* **angular:** Upgrade to be compatible with Angular version 8
+
+### Bug Fixes
+* **error reporter:** Fixed error reporter sometimes having blank errors
+
 # 5.5.0 (2019-5-10)
 
 <a name="5.5.0"></a>
