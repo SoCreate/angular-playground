@@ -28,6 +28,7 @@ describe('configure', () => {
                 chunk: true,
                 build: false,
                 ngCliPort: 4201,
+                ngCliHost: '127.0.0.1',
                 ngCliCmd: 'node_modules/@angular/cli/bin/ng',
             };
             config = applyConfigurationFile(programMock);
