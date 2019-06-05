@@ -54,6 +54,10 @@ describe('configure', () => {
                 expect(config.buildWithServiceWorkers).toBe(false);
             });
 
+            it('should provide default value for @angular/cli host', () => {
+                expect(config.angularCliHost).toBe('127.0.0.1');
+            });
+
             it('should provide default value for @angular/cli port', () => {
                 expect(config.angularCliPort).toBe(4201);
             });
