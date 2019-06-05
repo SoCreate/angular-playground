@@ -28,6 +28,7 @@ describe('configure', () => {
                 chunk: true,
                 build: false,
                 ngCliPort: 4201,
+                ngCliHost: '127.0.0.1',
                 ngCliCmd: 'node_modules/@angular/cli/bin/ng',
             };
             config = applyConfigurationFile(programMock);
@@ -52,6 +53,10 @@ describe('configure', () => {
 
             it('should provide default value for build', () => {
                 expect(config.buildWithServiceWorkers).toBe(false);
+            });
+
+            it('should provide default value for @angular/cli host', () => {
+                expect(config.angularCliHost).toBe('127.0.0.1');
             });
 
             it('should provide default value for @angular/cli port', () => {

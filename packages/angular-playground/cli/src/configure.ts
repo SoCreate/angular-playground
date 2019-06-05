@@ -1,4 +1,4 @@
-import commander = require('commander');
+import * as commander from 'commander';
 import { resolve as resolvePath } from 'path';
 import { existsSync } from 'fs';
 import { REPORT_TYPE } from './error-reporter';
@@ -19,6 +19,7 @@ export interface Config {
 
     angularAppName?: string;
     angularCliPath?: string;
+    angularCliHost?: string;
     angularCliPort?: number;
     angularCliAdditionalArgs?: string[];
     angularCliMaxBuffer?: number;
@@ -53,6 +54,7 @@ export function configure(argv: any): Config {
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
+        .option('--ng-cli-host <ip>', '@angular/cli serve host ip', '127.0.0.1')
         .option('--ng-cli-port <n>', '@angular/cli serve port', 4201)
         .option('--ng-cli-cmd <path>', 'Path to @angular/cli executable', 'node_modules/@angular/cli/bin/ng')
         .option('--ng-cli-args <list>', 'Additional @angular/cli arguments')
@@ -89,6 +91,7 @@ export function applyConfigurationFile(program: any): Config {
     if (playgroundConfig.angularCli) {
         config.angularAppName = playgroundConfig.angularCli.appName || program.ngCliApp;
         config.angularCliPath = playgroundConfig.angularCli.cmdPath || program.ngCliCmd;
+        config.angularCliHost = playgroundConfig.angularCli.host || program.ngCliHost;
         config.angularCliPort = playgroundConfig.angularCli.port || program.ngCliPort;
         config.angularCliAdditionalArgs = playgroundConfig.angularCli.args || program.ngCliArgs;
         config.angularCliMaxBuffer = playgroundConfig.angularCli.maxBuffer || program.ngCliMaxBuffer;

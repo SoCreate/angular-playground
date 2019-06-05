@@ -20,7 +20,7 @@ export async function run() {
     }
 
     if (config.verifySandboxes) {
-        config.angularCliPort = await getPort({ host: '127.0.0.1' });
+        config.angularCliPort = await getPort({ host: config.angularCliHost });
     }
 
     if (config.watch || config.verifySandboxes) {
