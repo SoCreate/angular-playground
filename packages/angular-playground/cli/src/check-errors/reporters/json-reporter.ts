@@ -11,7 +11,7 @@ class JSONStats {
         public tests: number,
         public failures: number,
         public start = 0,
-        public end = 0
+        public end = 0,
     ) {
         this.passes = this.tests - this.failures;
     }
@@ -21,7 +21,7 @@ class JSONStats {
 export class JSONReporter implements Reporter {
     constructor (
         public errors: any[],
-        public scenarioNames: string[]
+        public scenarioNames: string[],
     ) {}
 
     getReport() {
@@ -32,14 +32,14 @@ export class JSONReporter implements Reporter {
                 return {
                     title: failure.scenario,
                     err: {
-                        message: failure.descriptions[0]
-                    }
+                        message: failure.descriptions[0],
+                    },
                 };
             }),
             passes: this.scenarioNames.map(pass => {
                 return { title: pass };
             }),
-            skips: []
+            skips: [],
         }, null, 2);
     }
 }

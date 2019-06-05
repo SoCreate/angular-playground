@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { ConsoleMessage } from 'puppeteer';
 import { SandboxFileInformation } from '../build-sandboxes';
-import { ErrorReporter } from '../error-reporter';
+import { ErrorReporter, REPORT_TYPE } from '../error-reporter';
 import { Config } from '../configure';
 
 // Used to tailor the version of headless chromium ran by puppeteer
@@ -43,7 +43,7 @@ async function main(config: Config) {
     browser = await puppeteer.launch({
         headless: true,
         handleSIGINT: false,
-        args: CHROME_ARGS
+        args: CHROME_ARGS,
     });
 
     const scenarios = getSandboxMetadata(hostUrl, config.randomScenario);
@@ -57,8 +57,12 @@ async function main(config: Config) {
 
     browser.close();
 
-    reporter.compileReport();
-    const exitCode = reporter.errors.length > 0 ? 1 : 0;
+    const hasErrors = reporter.errors.length > 0;
+    // always generate report if report type is a file, or if there are errors
+    if (hasErrors || config.reportType !== REPORT_TYPE.LOG) {
+        reporter.compileReport();
+    }
+    const exitCode = hasErrors ? 1 : 0;
     process.exit(exitCode);
 }
 
@@ -80,7 +84,7 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
 
     try {
         await page.goto(scenario.url);
-        setTimeout(() => page.close(), 10000) // close page after 10s to prevent memory leak
+        setTimeout(() => page.close(), 10000); // close page after 10s to prevent memory leak
     } catch (e) {
         await page.close();
         await delay(1000);
@@ -136,12 +140,17 @@ function loadSandboxMenuItems(): SandboxFileInformation[] {
 function onConsoleErr(msg: ConsoleMessage) {
     if (msg.type() === 'error') {
         console.error(chalk.red(`Error in ${currentScenario} (${currentScenarioDescription}):`));
-        const descriptions = msg.args()
+        const getErrors = (type: string, getValue: (_: any) => string) => msg.args()
             .map(a => (a as any)._remoteObject)
-            .filter(o => o.type === 'object')
-            .map(o => o.description);
-        descriptions.map(d => console.error(d));
-        reporter.addError(descriptions, currentScenario, currentScenarioDescription);
+            .filter(o => o.type === type)
+            .map(getValue);
+        const stackTrace = getErrors('object', o => o.description);
+        const errorMessage = getErrors('string', o => o.value);
+        const description = stackTrace.length ? stackTrace : errorMessage;
+        description.map(d => console.error(d));
+        if (description.length) {
+            reporter.addError(description, currentScenario, currentScenarioDescription);
+        }
     }
 }
 

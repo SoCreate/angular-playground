@@ -5,7 +5,7 @@ PlaygroundModule
   .configure({
     selector: 'app-root',
     overlay: false,
-    modules: []
+    modules: [],
   });
 
 platformBrowserDynamic().bootstrapModule(PlaygroundModule);

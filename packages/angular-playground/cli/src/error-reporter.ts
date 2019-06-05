@@ -7,7 +7,7 @@ import { XMLReporter } from './check-errors/reporters/xml-reporter';
 export const REPORT_TYPE = {
     LOG: 'log',
     JSON: 'json',
-    XML: 'xml'
+    XML: 'xml',
 };
 
 export interface Reporter {
@@ -26,8 +26,7 @@ export class ErrorReporter {
     constructor(
         public scenarios: ScenarioSummary[],
         public filename: string,
-        public type: string
-    ) {}
+        public type: string) {}
 
     get errors() {
         return this._errors;

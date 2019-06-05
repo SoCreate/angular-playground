@@ -27,6 +27,7 @@ function configureArguments(config: Config): string[] {
     if (!config.angularAppName) {
         throw new Error(`Please provide Playground's appName in your angular-playground.json file.`);
     }
+    args.push(`--host=${config.angularCliHost}`);
     args.push(`--port=${config.angularCliPort}`);
     args.push('--progress=false');
 

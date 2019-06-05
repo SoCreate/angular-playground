@@ -24,11 +24,11 @@
 
 .link::before {
     background: linear-gradient(
-        to bottom, 
-        rgba(255, 255, 255, .5), rgba(255, 255, 255, .5) 20%, 
-        transparent 20%, transparent 40%, 
-        rgba(255, 255, 255, .5) 40%, rgba(255, 255, 255, .5) 60%, 
-        transparent 60%, transparent 80%, 
+        to bottom,
+        rgba(255, 255, 255, .5), rgba(255, 255, 255, .5) 20%,
+        transparent 20%, transparent 40%,
+        rgba(255, 255, 255, .5) 40%, rgba(255, 255, 255, .5) 60%,
+        transparent 60%, transparent 80%,
         rgba(255, 255, 255, .5) 80%, rgba(255, 255, 255, .5) 100%
     );
     content: '';

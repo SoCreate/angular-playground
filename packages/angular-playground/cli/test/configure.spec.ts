@@ -1,6 +1,6 @@
 import { applyConfigurationFile, Config } from '../src/configure';
 
-describe('applyConfigurationFile', () => {
+describe('configure', () => {
     it('should throw error when failing to load a configuration file', () => {
         const programMock = { config: './no-config.json' };
 
@@ -22,20 +22,21 @@ describe('applyConfigurationFile', () => {
             // Defaults provided from commander
             const programMock = {
                 config: './cli/test/files/empty-config.json',
-                src: './src/',
+                src: ['./src/'],
                 watch: true,
                 serve: true,
                 chunk: true,
                 build: false,
                 ngCliPort: 4201,
-                ngCliCmd: 'node_modules/@angular/cli/bin/ng'
+                ngCliHost: '127.0.0.1',
+                ngCliCmd: 'node_modules/@angular/cli/bin/ng',
             };
             config = applyConfigurationFile(programMock);
         });
 
         describe('have defaults', () => {
             it('should provide default value for source path', () => {
-                expect(config.sourceRoot).toBe('./src/');
+                expect(config.sourceRoots).toEqual(['./src/']);
             });
 
             it('should provide default value for no-watch', () => {
@@ -52,6 +53,10 @@ describe('applyConfigurationFile', () => {
 
             it('should provide default value for build', () => {
                 expect(config.buildWithServiceWorkers).toBe(false);
+            });
+
+            it('should provide default value for @angular/cli host', () => {
+                expect(config.angularCliHost).toBe('127.0.0.1');
             });
 
             it('should provide default value for @angular/cli port', () => {

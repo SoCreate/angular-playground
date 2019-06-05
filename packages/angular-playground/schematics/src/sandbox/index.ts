@@ -8,7 +8,7 @@ import {
   SchematicContext,
   template,
   Tree,
-  url
+  url,
 } from '@angular-devkit/schematics';
 import { strings } from '@angular-devkit/core';
 import { getProject, getProjectPath } from '../utils/project';
@@ -42,7 +42,7 @@ export default function sandbox(options: Schema): Rule {
     ]);
 
     return chain([
-      branchAndMerge(mergeWith(templateSource))
+      branchAndMerge(mergeWith(templateSource)),
     ])(host, context);
-  }
+  };
 }

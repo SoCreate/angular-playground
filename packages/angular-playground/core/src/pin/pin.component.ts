@@ -17,7 +17,7 @@ import { Component, Input } from '@angular/core';
         fill: #0097fb;
         opacity: 1;
     }
-    `]
+    `],
 })
 export class PinComponent {
     @Input() selected: boolean;

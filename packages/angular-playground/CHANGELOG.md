@@ -1,3 +1,48 @@
+# 5.7.0 (2019-6-5)
+
+<a name="5.7.0"></a>
+
+### Features
+* **config:** Add option to configure host that ng serve runs on (default is 127.0.0.1)
+
+# 5.6.0 (2019-6-5)
+
+<a name="5.6.0"></a>
+
+### Features
+* **angular:** Upgrade to be compatible with Angular version 8
+
+### Bug Fixes
+* **error reporter:** Fixed error reporter sometimes having blank errors
+
+# 5.5.0 (2019-5-10)
+
+<a name="5.5.0"></a>
+
+### Features
+* **config:** Playground now supports using multiple source libraries at once (via the `sourceRoots` property in the configuration)
+
+# 5.4.4 (2019-5-10)
+
+<a name="5.4.4"></a>
+
+### Bug Fixes
+* **cli schematics:** Fixed schematic pathing issues for apps not created with the default `ng new <appName>` command
+
+# 5.4.3 (2019-4-5)
+
+<a name="5.4.3"></a>
+
+### Bug Fixes
+* **error reporter:** Fixed finding a free port
+
+# 5.4.2 (2019-4-2)
+
+<a name="5.4.2"></a>
+
+### Bug Fixes
+* **error reporter:** Fixed not xml encoding some strings for the xml report
+
 # 5.4.1 (2019-4-1)
 
 <a name="5.4.1"></a>

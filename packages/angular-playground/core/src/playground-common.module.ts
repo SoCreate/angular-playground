@@ -17,14 +17,14 @@ declare let require: any;
 @NgModule({
     imports: [
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     providers: [
         Location,
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         StateService,
         UrlService,
-        LevenshteinDistance
+        LevenshteinDistance,
     ],
     declarations: [
         AppComponent,
@@ -33,9 +33,8 @@ declare let require: any;
         HighlightSearchMatchPipe,
         LogoComponent,
         PinComponent,
-        DrawerComponent
+        DrawerComponent,
     ],
-    exports: [AppComponent]
+    exports: [AppComponent],
 })
-export class PlaygroundCommonModule {
-}
+export class PlaygroundCommonModule {}

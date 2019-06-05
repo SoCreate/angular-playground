@@ -1,7 +1,7 @@
 import { Directive, Input, ElementRef } from '@angular/core';
 
 @Directive({
-    selector: '[apFocus]'
+    selector: '[apFocus]',
 })
 export class FocusDirective {
     @Input() set apFocus(value: any) {
@@ -10,6 +10,5 @@ export class FocusDirective {
         }
     }
 
-    constructor(private elementRef: ElementRef) {
-    }
+    constructor(private elementRef: ElementRef) {}
 }
