@@ -25,6 +25,9 @@ export class XMLReporter implements Reporter {
     }
 
     private htmlEncode(s: string) {
+        if (!s) {
+            return '';
+        }
         return s
             .replace(/&/g, '&amp;')
             .replace(/"/g, '&quot;')

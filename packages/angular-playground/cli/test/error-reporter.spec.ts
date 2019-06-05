@@ -45,4 +45,13 @@ describe('ErrorReporter', () => {
         reporter.compileReport();
         expect(writeFileSpy).toHaveBeenCalled();
     });
+
+    it('should write to file if report type is xml', () => {
+        const writeFileSpy = spyOn(fs, 'writeFileSync');
+        reporter.type = REPORT_TYPE.XML;
+        reporter.addError('LOG Error', 'http://localhost:4201/textbox');
+        reporter.addError('Read Error', 'http://localhost:4201/textbox');
+        reporter.compileReport();
+        expect(writeFileSpy).toHaveBeenCalled();
+    });
 });

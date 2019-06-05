@@ -9,6 +9,6 @@ export class PersonBlockComponent {
   person;
 
   constructor() {
-    this.person = { fullName: 'Justin Schwartzenberger', twitterHandle: 'schwarty'}
+    this.person = { fullName: 'Justin Schwartzenberger', twitterHandle: 'schwarty'};
   }
 }
