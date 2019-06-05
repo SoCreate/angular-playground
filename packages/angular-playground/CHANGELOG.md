@@ -1,6 +1,6 @@
-# 5.6.1 (2019-6-5)
+# 5.7.0 (2019-6-5)
 
-<a name="5.6.1"></a>
+<a name="5.7.0"></a>
 
 ### Features
 * **config:** Add option to configure host that ng serve runs on (default is 127.0.0.1)
