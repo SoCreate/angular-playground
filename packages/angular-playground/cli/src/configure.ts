@@ -89,13 +89,13 @@ export function applyConfigurationFile(program: any): Config {
     };
 
     if (config.verifySandboxes && config.reportType && !config.reportPath) {
-        switch(config.reportType) {
+        switch (config.reportType) {
             case REPORT_TYPE.JSON:
                 config.reportPath = './sandbox.report.json';
+                break;
             case REPORT_TYPE.XML:
                 config.reportPath = './sandbox.report.xml';
-            default:
-                config.reportPath = './sandbox.report';
+                break;
         }
     }
 
