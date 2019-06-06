@@ -88,6 +88,17 @@ export function applyConfigurationFile(program: any): Config {
         reportType: playgroundConfig.reportType || program.reportType,
     };
 
+    if (config.verifySandboxes && config.reportType && !config.reportPath) {
+        switch (config.reportType) {
+            case REPORT_TYPE.JSON:
+                config.reportPath = './sandbox.report.json';
+                break;
+            case REPORT_TYPE.XML:
+                config.reportPath = './sandbox.report.xml';
+                break;
+        }
+    }
+
     if (playgroundConfig.angularCli) {
         config.angularAppName = playgroundConfig.angularCli.appName || program.ngCliApp;
         config.angularCliPath = playgroundConfig.angularCli.cmdPath || program.ngCliCmd;
