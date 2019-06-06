@@ -5,6 +5,9 @@
 ### Features
 * **config:** Add option to configure host that ng serve runs on (default is 127.0.0.1)
 
+### Bug Fixes
+* **config:** Add default file path for check errors output file (only for json/xml, not log)
+
 # 5.6.0 (2019-6-5)
 
 <a name="5.6.0"></a>
