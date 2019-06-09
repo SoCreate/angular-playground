@@ -5,6 +5,7 @@ import { startWatch } from './start-watch';
 import { verifySandboxes } from './check-errors/verify-sandboxes';
 import { serveAngularCli } from './serve-angular-cli';
 import { buildAngularCli } from './build-angular-cli';
+import { checkSnapshots } from './check-snapshots';
 
 export async function run() {
     const config: Config = configure(process.argv);
@@ -19,15 +20,15 @@ export async function run() {
         return await buildAngularCli(config.angularAppName, config.baseHref, config.angularCliMaxBuffer);
     }
 
-    if (config.verifySandboxes) {
+    if (config.verifySandboxes || config.checkVisualRegressions) {
         config.angularCliPort = await getPort({ host: config.angularCliHost });
     }
 
-    if (config.watch || config.verifySandboxes) {
+    if (config.watch || config.verifySandboxes || config.checkVisualRegressions) {
         startWatch(config.sourceRoots, () => buildSandboxes(config.sourceRoots, config.chunk));
     }
 
-    if (config.serve || config.verifySandboxes) {
+    if (config.serve || config.verifySandboxes || config.checkVisualRegressions) {
         try {
             await serveAngularCli(config);
         } catch (err) {
@@ -42,4 +43,12 @@ export async function run() {
             throw err;
         }
     }
+
+    if (config.checkVisualRegressions) {
+      try {
+          await checkSnapshots(config);
+      } catch (err) {
+          throw err;
+      }
+  }
 }
