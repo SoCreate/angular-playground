@@ -16,7 +16,10 @@ export interface Config {
     timeout: number;
     reportType: string;
     reportPath: string;
+
     checkVisualRegressions: boolean;
+    snapshotDirectory: string;
+    updateSnapshots: boolean;
 
     angularAppName?: string;
     angularCliPath?: string;
@@ -52,7 +55,11 @@ export function configure(argv: any): Config {
         .option('--timeout <n>', 'Number of attempts for each sandbox', 90)
         .option('--report-type <type>', 'Type of report to generate', REPORT_TYPE.LOG)
         .option('--report-path <path>', 'Path of report to generate', '')
+
+        // Snapshot tests
         .option('--check-visual-regressions', 'Run visual regression tests', false)
+        .option('--snapshot-directory <dir>', 'Directory to store snapshots in', 'src/__images_snapshots__')
+        .option('--update-snapshots', 'Update stored snapshots', false)
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
@@ -89,6 +96,8 @@ export function applyConfigurationFile(program: any): Config {
         reportPath: playgroundConfig.reportPath || program.reportPath,
         reportType: playgroundConfig.reportType || program.reportType,
         checkVisualRegressions: playgroundConfig.checkVisualRegressions || program.checkVisualRegressions,
+        snapshotDirectory: playgroundConfig.snapshotDirectory || program.snapshotDirectory,
+        updateSnapshots: playgroundConfig.updateSnapshots || program.updateSnapshots,
     };
 
     if (config.verifySandboxes && config.reportType && !config.reportPath) {

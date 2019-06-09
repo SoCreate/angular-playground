@@ -31,8 +31,8 @@ process.on('unhandledRejection', async () => {
 export async function checkSnapshots(config: Config) {
     copyFileSync(SANDBOX_PATH, SANDBOX_DEST);
     removeDynamicImports(SANDBOX_DEST);
-    const hostUrl = `http://localhost:${config.angularCliPort}`;
-    writeSandboxesToTest(hostUrl);
+    const hostUrl = `http://${config.angularCliHost}:${config.angularCliPort}`;
+    writeSandboxesToTest(config, hostUrl);
     await main(config, hostUrl);
 }
 
@@ -50,11 +50,12 @@ async function main(config: Config, hostUrl: string) {
     const execAsync = promisify(exec);
     await execAsync('cd node_modules/angular-playground');
 
+    // TODO pass update snapshots flag
     const argv = {
       config: 'node_modules/angular-playground/jest/jest-puppeteer.config.js',
     } as JestConfig.Argv;
-    const project = resolvePath('.');
-    const projects = [project];
+    const projectPath = resolvePath('.');
+    const projects = [projectPath];
     console.log(argv, projects)
     const { results } = await runCLI(argv, projects);
     // console.log('RESULTS', results);
@@ -102,24 +103,30 @@ function removeDynamicImports(sandboxPath: string) {
     writeFileSync(sandboxPath, result, { encoding: 'utf-8' });
 }
 
-function writeSandboxesToTest(hostUrl: string) {
+function writeSandboxesToTest(config: Config, hostUrl: string) {
+    const absoluteSnapshotDirectory = resolvePath('.', config.snapshotDirectory);
     try {
         const items = require(SANDBOX_DEST).getSandboxMenuItems();
         const testPaths = items.reduce((prev, curr) => {
           const paths = curr.scenarioMenuItems
-            .map((scenarioItem) => `{url:'${encodeURIComponent(curr.key)}/${encodeURIComponent(scenarioItem.description)}'}`);
+            .map((scenarioItem) => ({
+              url: `${encodeURIComponent(curr.key)}/${encodeURIComponent(scenarioItem.description)}`,
+              label: `${curr.name} ${scenarioItem.description}`,
+            }));
           prev.push(...paths);
           return prev;
         }, []);
         const result = `
-          const tests = [${testPaths.join(',')}];
+          const tests = ${JSON.stringify(testPaths)};
           describe('Playground snapshot tests', () => {
             for (const test of tests) {
-              it('should match', async () => {
+              it('should match ' + test.label, async () => {
                 const url = \`${hostUrl}?scenario=\${test.url}\`
                 await page.goto(url);
                 const image = await page.screenshot();
-                expect(image).toMatchImageSnapshot();
+                expect(image).toMatchImageSnapshot({
+                  customSnapshotsDir: '${absoluteSnapshotDirectory}',
+                });
               });
             }
           });
