@@ -19,7 +19,9 @@ export interface Config {
 
     checkVisualRegressions: boolean;
     snapshotDirectory: string;
+    diffDirectory: string;
     updateSnapshots: boolean;
+    imageSnapshotConfig: { [key: string]: any};
 
     angularAppName?: string;
     angularCliPath?: string;
@@ -59,6 +61,7 @@ export function configure(argv: any): Config {
         // Snapshot tests
         .option('--check-visual-regressions', 'Run visual regression tests', false)
         .option('--snapshot-directory <dir>', 'Directory to store snapshots in', 'src/__images_snapshots__')
+        .option('--diff-directory <dir>', 'Directory to put diffs in', 'src/__diff_output__')
         .option('--update-snapshots', 'Update stored snapshots', false)
 
         // @angular/cli options
@@ -95,9 +98,12 @@ export function applyConfigurationFile(program: any): Config {
         timeout: playgroundConfig.timeout || program.timeout,
         reportPath: playgroundConfig.reportPath || program.reportPath,
         reportType: playgroundConfig.reportType || program.reportType,
+
         checkVisualRegressions: playgroundConfig.checkVisualRegressions || program.checkVisualRegressions,
         snapshotDirectory: playgroundConfig.snapshotDirectory || program.snapshotDirectory,
+        diffDirectory: playgroundConfig.diffDirectory || program.diffDirectory,
         updateSnapshots: playgroundConfig.updateSnapshots || program.updateSnapshots,
+        imageSnapshotConfig: playgroundConfig.imageSnapshotConfig || {},
     };
 
     if (config.verifySandboxes && config.reportType && !config.reportPath) {

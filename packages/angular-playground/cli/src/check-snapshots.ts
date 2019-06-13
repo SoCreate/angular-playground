@@ -50,15 +50,13 @@ async function main(config: Config, hostUrl: string) {
     const execAsync = promisify(exec);
     await execAsync('cd node_modules/angular-playground');
 
-    // TODO pass update snapshots flag
     const argv = {
       config: 'node_modules/angular-playground/jest/jest-puppeteer.config.js',
+      updateSnapshot: !!config.updateSnapshots,
     } as JestConfig.Argv;
     const projectPath = resolvePath('.');
     const projects = [projectPath];
-    console.log(argv, projects)
     const { results } = await runCLI(argv, projects);
-    // console.log('RESULTS', results);
 
     await browser.close();
     process.exit(results.numFailedTests === 0 ? 0 : 1);
@@ -105,6 +103,7 @@ function removeDynamicImports(sandboxPath: string) {
 
 function writeSandboxesToTest(config: Config, hostUrl: string) {
     const absoluteSnapshotDirectory = resolvePath('.', config.snapshotDirectory);
+    const absoluteDiffDirectory = resolvePath('.', config.diffDirectory);
     try {
         const items = require(SANDBOX_DEST).getSandboxMenuItems();
         const testPaths = items.reduce((prev, curr) => {
@@ -116,6 +115,9 @@ function writeSandboxesToTest(config: Config, hostUrl: string) {
           prev.push(...paths);
           return prev;
         }, []);
+        const extraConfig = Object.keys(config.imageSnapshotConfig)
+          .map(key => `${key}: ${JSON.stringify(config.imageSnapshotConfig[key])}`)
+          .join(',');
         const result = `
           const tests = ${JSON.stringify(testPaths)};
           describe('Playground snapshot tests', () => {
@@ -126,6 +128,8 @@ function writeSandboxesToTest(config: Config, hostUrl: string) {
                 const image = await page.screenshot();
                 expect(image).toMatchImageSnapshot({
                   customSnapshotsDir: '${absoluteSnapshotDirectory}',
+                  customDiffDir: '${absoluteDiffDirectory}',
+                  ${extraConfig}
                 });
               });
             }
