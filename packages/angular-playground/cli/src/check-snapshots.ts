@@ -1,4 +1,4 @@
-import { copyFileSync, readFileSync, writeFileSync } from 'fs';
+import { copyFileSync, writeFileSync } from 'fs';
 import * as puppeteer from 'puppeteer';
 import { resolve as resolvePath } from 'path';
 import { promisify } from 'util';
@@ -6,7 +6,7 @@ import { exec } from 'child_process';
 import { runCLI } from '@jest/core';
 import { Config as JestConfig } from '@jest/types';
 import { Config } from './configure';
-import { ErrorReporter, REPORT_TYPE } from './error-reporter';
+import { delay, removeDynamicImports } from './utils';
 
 // Used to tailor the version of headless chromium ran by puppeteer
 const CHROME_ARGS = [ '--disable-gpu', '--no-sandbox' ];
@@ -14,14 +14,7 @@ const SANDBOX_PATH = resolvePath(__dirname, '../../../dist/build/src/shared/sand
 const SANDBOX_DEST = resolvePath(__dirname, '../../../sandboxes_modified.js');
 const TEST_PATH = resolvePath(__dirname, '../../../jest/test.js');
 
-export interface ScenarioSummary {
-    url: string;
-    name: string;
-    description: string;
-}
-
-let browser: any;
-let reporter: ErrorReporter;
+let browser: puppeteer.Browser;
 
 // Ensure Chromium instances are destroyed on error
 process.on('unhandledRejection', async () => {
@@ -32,7 +25,7 @@ export async function checkSnapshots(config: Config) {
     copyFileSync(SANDBOX_PATH, SANDBOX_DEST);
     removeDynamicImports(SANDBOX_DEST);
     const hostUrl = `http://${config.angularCliHost}:${config.angularCliPort}`;
-    writeSandboxesToTest(config, hostUrl);
+    writeSandboxesToTestFile(config, hostUrl);
     await main(config, hostUrl);
 }
 
@@ -59,7 +52,8 @@ async function main(config: Config, hostUrl: string) {
     const { results } = await runCLI(argv, projects);
 
     await browser.close();
-    process.exit(results.numFailedTests === 0 ? 0 : 1);
+    const exitCode = results.numFailedTests === 0 ? 0 : 1;
+    process.exit(exitCode);
 }
 
 /**
@@ -85,23 +79,7 @@ async function waitForNgServe(hostUrl: string, timeoutAttempts: number) {
     }
 }
 
-function delay(ms: number) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve();
-        }, ms);
-    });
-}
-
-function removeDynamicImports(sandboxPath: string) {
-    const data = readFileSync(sandboxPath, 'utf-8');
-    const dataArray = data.split('\n');
-    const getSandboxIndex = dataArray.findIndex(val => val.includes('getSandbox(path)'));
-    const result = dataArray.slice(0, getSandboxIndex).join('\n');
-    writeFileSync(sandboxPath, result, { encoding: 'utf-8' });
-}
-
-function writeSandboxesToTest(config: Config, hostUrl: string) {
+function writeSandboxesToTestFile(config: Config, hostUrl: string) {
     const absoluteSnapshotDirectory = resolvePath('.', config.snapshotDirectory);
     const absoluteDiffDirectory = resolvePath('.', config.diffDirectory);
     try {
@@ -137,6 +115,6 @@ function writeSandboxesToTest(config: Config, hostUrl: string) {
         `;
         writeFileSync(TEST_PATH, result, { encoding: 'utf-8' });
     } catch (err) {
-        throw new Error(`Failed to create snapshot tests. ${err}`);
+        throw new Error(`Failed to create snapshot test file. ${err}`);
     }
 }

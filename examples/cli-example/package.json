@@ -14,7 +14,8 @@
     "playground:check-errors": "angular-playground --check-errors",
     "playground:build": "(cd ../../ && sh ./scripts/build.sh)",
     "verify-sandboxes": "angular-playground --config angular-playground.json --check-errors --report-path ./result.xml --report-type xml",
-    "check-snapshots": "angular-playground --config angular-playground.json --check-visual-regressions"
+    "check-snapshots": "angular-playground --config angular-playground.json --check-visual-regressions",
+    "update-snapshots": "angular-playground --config angular-playground.json --check-visual-regressions --update-snapshots"
   },
   "private": true,
   "dependencies": {
