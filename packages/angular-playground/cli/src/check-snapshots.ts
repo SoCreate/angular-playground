@@ -80,8 +80,9 @@ async function waitForNgServe(hostUrl: string, timeoutAttempts: number) {
 }
 
 function writeSandboxesToTestFile(config: Config, hostUrl: string) {
-    const absoluteSnapshotDirectory = resolvePath('.', config.snapshotDirectory);
-    const absoluteDiffDirectory = resolvePath('.', config.diffDirectory);
+    const normalizeResolvePath = (directory: string) => resolvePath('.', directory).replace(/\\/g, '/');
+    const absoluteSnapshotDirectory = normalizeResolvePath(config.snapshotDirectory);
+    const absoluteDiffDirectory = normalizeResolvePath(config.diffDirectory);
     try {
         const items = require(SANDBOX_DEST).getSandboxMenuItems();
         const testPaths = items.reduce((prev, curr) => {
@@ -99,11 +100,13 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
         const result = `
           const tests = ${JSON.stringify(testPaths)};
           describe('Playground snapshot tests', () => {
-            for (const test of tests) {
-              it('should match ' + test.label, async () => {
-                const url = \`${hostUrl}?scenario=\${test.url}\`
+            for (let i = 0; i < tests.length; i++) {
+              const test = tests[i];
+              it(\`should match \${test.label}\`, async () => {
+                const url = \`${hostUrl}?scenario=\${test.url}\`;
+                console.log(\`Checking [\${i + 1}/\${tests.length}]: \${url}\`);
                 await page.goto(url);
-                const image = await page.screenshot();
+                const image = await page.screenshot({ fullPage: true });
                 expect(image).toMatchImageSnapshot({
                   customSnapshotsDir: '${absoluteSnapshotDirectory}',
                   customDiffDir: '${absoluteDiffDirectory}',
