@@ -5,6 +5,7 @@ import { promisify } from 'util';
 import { exec } from 'child_process';
 import { runCLI } from '@jest/core';
 import { Config as JestConfig } from '@jest/types';
+import { SandboxFileInformation } from './build-sandboxes';
 import { Config } from './configure';
 import { delay, removeDynamicImports } from './utils';
 
@@ -84,19 +85,21 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
     const absoluteSnapshotDirectory = normalizeResolvePath(config.snapshotDirectory);
     const absoluteDiffDirectory = normalizeResolvePath(config.diffDirectory);
     try {
-        const items = require(SANDBOX_DEST).getSandboxMenuItems();
-        const testPaths = items.reduce((prev, curr) => {
-          const paths = curr.scenarioMenuItems
-            .map((scenarioItem) => ({
-              url: `${encodeURIComponent(curr.key)}/${encodeURIComponent(scenarioItem.description)}`,
-              label: `${curr.name} ${scenarioItem.description}`,
-            }));
-          prev.push(...paths);
-          return prev;
+        const items: SandboxFileInformation[] = require(SANDBOX_DEST).getSandboxMenuItems();
+        const testPaths = [];
+        items.forEach((item) => {
+            item.scenarioMenuItems.forEach((scenarioItem) => {
+                if (item.key.includes(config.updateSnapshotsDirectory)) {
+                    testPaths.push({
+                        url: `${encodeURIComponent(item.key)}/${encodeURIComponent(scenarioItem.description)}`,
+                        label: `${item.name} ${scenarioItem.description}`,
+                    });
+                }
+            });
         }, []);
         const extraConfig = Object.keys(config.imageSnapshotConfig)
-          .map(key => `${key}: ${JSON.stringify(config.imageSnapshotConfig[key])}`)
-          .join(',');
+            .map(key => `${key}: ${JSON.stringify(config.imageSnapshotConfig[key])}`)
+            .join(',');
         const result = `
           const tests = ${JSON.stringify(testPaths)};
           describe('Playground snapshot tests', () => {

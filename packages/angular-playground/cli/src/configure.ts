@@ -21,6 +21,7 @@ export interface Config {
     snapshotDirectory: string;
     diffDirectory: string;
     updateSnapshots: boolean;
+    updateSnapshotsDirectory: string;
     imageSnapshotConfig: { [key: string]: any};
 
     angularAppName?: string;
@@ -63,6 +64,7 @@ export function configure(argv: any): Config {
         .option('--snapshot-directory <dir>', 'Directory to store snapshots in', 'src/__images_snapshots__')
         .option('--diff-directory <dir>', 'Directory to put diffs in', 'src/__diff_output__')
         .option('--update-snapshots', 'Update stored snapshots', false)
+        .option('--update-snapshots-directory <div>', 'Subdirectory of project in which to update stored snapshots', '')
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
@@ -103,6 +105,7 @@ export function applyConfigurationFile(program: any): Config {
         snapshotDirectory: playgroundConfig.snapshotDirectory || program.snapshotDirectory,
         diffDirectory: playgroundConfig.diffDirectory || program.diffDirectory,
         updateSnapshots: playgroundConfig.updateSnapshots || program.updateSnapshots,
+        updateSnapshotsDirectory: playgroundConfig.updateSnapshotsDirectory || program.updateSnapshotsDirectory,
         imageSnapshotConfig: playgroundConfig.imageSnapshotConfig || {},
     };
 
