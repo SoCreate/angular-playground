@@ -1,6 +1,6 @@
 {
     "name": "angular-playground",
-    "version": "5.8.0",
+    "version": "5.8.1",
     "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
@@ -25,13 +25,14 @@
     },
     "scripts": {
         "ngc": "ngc",
-        "build": "npm run app:build && npm run cli:build && npm run schematics:build",
+        "build": "npm run app:build && npm run cli:build && npm run schematics:build && npm run copy-jest-files",
         "app:build": "gulp build",
         "cli:build": "tsc -p ./cli/tsconfig.json",
         "schematics:build": "tsc -p ./schematics/tsconfig.json",
         "prepublishOnly": "npm run build",
         "test": "jest",
-        "lint": "tslint --project tsconfig.json"
+        "lint": "tslint --project tsconfig.json",
+        "copy-jest-files": "cd dist && mkdir jest && cd .. && cp jest/* dist/jest"
     },
     "repository": {
         "type": "git",

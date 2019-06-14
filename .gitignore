@@ -30,7 +30,6 @@ testem.log
 /typings
 /packages/angular-playground/output.json
 /packages/angular-playground/sandboxes_modified.js
-/packages/angular-playground/jest/test.js
 
 # e2e
 /e2e/*.js

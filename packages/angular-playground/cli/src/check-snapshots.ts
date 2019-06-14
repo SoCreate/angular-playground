@@ -13,7 +13,7 @@ import { delay, removeDynamicImports } from './utils';
 const CHROME_ARGS = [ '--disable-gpu', '--no-sandbox' ];
 const SANDBOX_PATH = resolvePath(__dirname, '../../../dist/build/src/shared/sandboxes.js');
 const SANDBOX_DEST = resolvePath(__dirname, '../../../sandboxes_modified.js');
-const TEST_PATH = resolvePath(__dirname, '../../../jest/test.js');
+const TEST_PATH = resolvePath(__dirname, '../../../dist/jest/test.js');
 
 let browser: puppeteer.Browser;
 
@@ -45,7 +45,7 @@ async function main(config: Config, hostUrl: string) {
     await execAsync('cd node_modules/angular-playground');
 
     const argv = {
-      config: 'node_modules/angular-playground/jest/jest-puppeteer.config.js',
+      config: 'node_modules/angular-playground/dist/jest/jest-puppeteer.config.js',
       updateSnapshot: !!config.updateSnapshots,
     } as JestConfig.Argv;
     const projectPath = resolvePath('.');
