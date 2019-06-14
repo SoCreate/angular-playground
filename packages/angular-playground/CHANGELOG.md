@@ -1,3 +1,10 @@
+# 5.8.0 (2019-6-14)
+
+<a name="5.8.0"></a>
+
+### Features
+* **config:** Add option to check for visual regressions
+
 # 5.7.0 (2019-6-5)
 
 <a name="5.7.0"></a>
