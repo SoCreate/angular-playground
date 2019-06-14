@@ -1,3 +1,10 @@
+# 5.8.1 (2019-6-14)
+
+<a name="5.8.1"></a>
+
+### Features
+* **visual regressions:** Include jest config files needed for testing visual regressions
+
 # 5.8.0 (2019-6-14)
 
 <a name="5.8.0"></a>
