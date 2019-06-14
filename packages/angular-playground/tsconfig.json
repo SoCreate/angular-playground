@@ -11,7 +11,7 @@
     "module": "es6",
     "moduleResolution": "node",
     "noImplicitAny": false,
-    "target": "es5",
+    "target": "es2015",
     "newLine": "LF",
     "typeRoots": [
       "node_modules/@types"

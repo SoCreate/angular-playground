@@ -17,6 +17,13 @@ export interface Config {
     reportType: string;
     reportPath: string;
 
+    checkVisualRegressions: boolean;
+    snapshotDirectory: string;
+    diffDirectory: string;
+    updateSnapshots: boolean;
+    updateSnapshotsDirectory: string;
+    imageSnapshotConfig: { [key: string]: any};
+
     angularAppName?: string;
     angularCliPath?: string;
     angularCliHost?: string;
@@ -52,6 +59,13 @@ export function configure(argv: any): Config {
         .option('--report-type <type>', 'Type of report to generate', REPORT_TYPE.LOG)
         .option('--report-path <path>', 'Path of report to generate', '')
 
+        // Snapshot tests
+        .option('--check-visual-regressions', 'Run visual regression tests', false)
+        .option('--snapshot-directory <dir>', 'Directory to store snapshots in', 'src/__images_snapshots__')
+        .option('--diff-directory <dir>', 'Directory to put diffs in', 'src/__diff_output__')
+        .option('--update-snapshots', 'Update stored snapshots', false)
+        .option('--update-snapshots-directory <dir>', 'Subdirectory of project in which to update stored snapshots', '')
+
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
         .option('--ng-cli-host <ip>', '@angular/cli serve host ip', '127.0.0.1')
@@ -86,6 +100,13 @@ export function applyConfigurationFile(program: any): Config {
         timeout: playgroundConfig.timeout || program.timeout,
         reportPath: playgroundConfig.reportPath || program.reportPath,
         reportType: playgroundConfig.reportType || program.reportType,
+
+        checkVisualRegressions: playgroundConfig.checkVisualRegressions || program.checkVisualRegressions,
+        snapshotDirectory: playgroundConfig.snapshotDirectory || program.snapshotDirectory,
+        diffDirectory: playgroundConfig.diffDirectory || program.diffDirectory,
+        updateSnapshots: playgroundConfig.updateSnapshots || program.updateSnapshots,
+        updateSnapshotsDirectory: playgroundConfig.updateSnapshotsDirectory || program.updateSnapshotsDirectory,
+        imageSnapshotConfig: playgroundConfig.imageSnapshotConfig || {},
     };
 
     if (config.verifySandboxes && config.reportType && !config.reportPath) {

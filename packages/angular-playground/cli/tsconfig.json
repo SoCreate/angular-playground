@@ -5,6 +5,7 @@
     "lib": ["es6", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "outDir": "../dist/bin",
     "sourceMap": false,
     "target": "es2015",

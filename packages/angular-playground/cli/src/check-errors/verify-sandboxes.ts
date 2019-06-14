@@ -1,11 +1,12 @@
-import puppeteer = require('puppeteer');
+import * as puppeteer from 'puppeteer';
 import { resolve as resolvePath } from 'path';
 import chalk from 'chalk';
-import { copyFileSync, readFileSync, writeFileSync } from 'fs';
+import { copyFileSync } from 'fs';
 import { ConsoleMessage } from 'puppeteer';
 import { SandboxFileInformation } from '../build-sandboxes';
 import { ErrorReporter, REPORT_TYPE } from '../error-reporter';
 import { Config } from '../configure';
+import { delay, removeDynamicImports } from '../utils';
 
 // Used to tailor the version of headless chromium ran by puppeteer
 const CHROME_ARGS = [ '--disable-gpu', '--no-sandbox' ];
@@ -18,7 +19,7 @@ export interface ScenarioSummary {
     description: string;
 }
 
-let browser: any;
+let browser: puppeteer.Browser;
 let currentScenario = '';
 let currentScenarioDescription = '';
 let reporter: ErrorReporter;
@@ -160,20 +161,4 @@ function onConsoleErr(msg: ConsoleMessage) {
  */
 function getRandomKey(menuItemsLength: number): number {
     return Math.floor(Math.random() * menuItemsLength) + 1;
-}
-
-function removeDynamicImports(sandboxPath: string) {
-    const data = readFileSync(sandboxPath, 'utf-8');
-    const dataArray = data.split('\n');
-    const getSandboxIndex = dataArray.findIndex(val => val.includes('getSandbox(path)'));
-    const result = dataArray.slice(0, getSandboxIndex).join('\n');
-    writeFileSync(sandboxPath, result, { encoding: 'utf-8' });
-}
-
-function delay(ms: number) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve();
-        }, ms);
-    });
 }
