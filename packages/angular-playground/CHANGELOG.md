@@ -1,8 +1,15 @@
+# 5.8.2 (2019-6-15)
+
+<a name="5.8.2"></a>
+
+### Bug Fixes
+* **visual regressions:** Make jest not ignore the `test.js` file used for testing visual regressions
+
 # 5.8.1 (2019-6-14)
 
 <a name="5.8.1"></a>
 
-### Features
+### Bug Fixes
 * **visual regressions:** Include jest config files needed for testing visual regressions
 
 # 5.8.0 (2019-6-14)
