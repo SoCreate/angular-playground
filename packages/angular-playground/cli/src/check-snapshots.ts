@@ -118,7 +118,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
                     ${extraConfig}
                 });
                 page.close();
-              });
+              }, 30000);
             }
           });
         `;
