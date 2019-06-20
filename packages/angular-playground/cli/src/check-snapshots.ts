@@ -108,14 +108,17 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
               it(\`should match \${test.label}\`, async () => {
                 const url = \`${hostUrl}?scenario=\${test.url}\`;
                 console.log(\`Checking [\${i + 1}/\${tests.length}]: \${url}\`);
-                await page.goto(url);
+                const page = await browser.newPage();
+                await page.goto(url, {'waitUntil' : 'load'});;
+                await page.waitFor(() => !!document.querySelector('playground-host'));
                 const image = await page.screenshot({ fullPage: true });
                 expect(image).toMatchImageSnapshot({
-                  customSnapshotsDir: '${absoluteSnapshotDirectory}',
-                  customDiffDir: '${absoluteDiffDirectory}',
-                  ${extraConfig}
+                    customSnapshotsDir: '${absoluteSnapshotDirectory}',
+                    customDiffDir: '${absoluteDiffDirectory}',
+                    ${extraConfig}
                 });
-              });
+                page.close();
+              }, 30000);
             }
           });
         `;
