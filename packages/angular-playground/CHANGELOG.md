@@ -1,3 +1,11 @@
+# 5.8.3 (2019-6-19)
+
+<a name="5.8.3"></a>
+
+### Bug Fixes
+* **visual regressions:** Fix issue with screenshot capturing loading image
+* **visual regressions:** Fix issue with some tests timing out
+
 # 5.8.2 (2019-6-15)
 
 <a name="5.8.2"></a>
