@@ -1,3 +1,10 @@
+# 5.8.4 (2019-6-27)
+
+<a name="5.8.4"></a>
+
+### Bug Fixes
+* **visual regressions:** Fix issue with screenshot image name not being unique
+
 # 5.8.3 (2019-6-19)
 
 <a name="5.8.3"></a>

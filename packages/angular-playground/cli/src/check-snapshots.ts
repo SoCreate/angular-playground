@@ -115,6 +115,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
                 expect(image).toMatchImageSnapshot({
                     customSnapshotsDir: '${absoluteSnapshotDirectory}',
                     customDiffDir: '${absoluteDiffDirectory}',
+                    customSnapshotIdentifier: () => decodeURIComponent(test.url).substr(2).replace(/[\\/\\.\\s]/g, '-'),
                     ${extraConfig}
                 });
                 page.close();

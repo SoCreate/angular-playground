@@ -1,6 +1,6 @@
 {
     "name": "angular-playground",
-    "version": "5.8.3",
+    "version": "5.8.4",
     "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
@@ -72,7 +72,7 @@
         "commander": "^2.20.0",
         "get-port": "^5.0.0",
         "jest": "^24.8.0",
-        "jest-image-snapshot": "^2.8.2",
+        "jest-image-snapshot": "^2.9.0",
         "jest-puppeteer": "^4.2.0",
         "node-watch": "^0.6.2",
         "puppeteer": "^1.17.0"
