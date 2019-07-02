@@ -102,6 +102,12 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
             .join(',');
         const result = `
           const tests = ${JSON.stringify(testPaths)};
+          const buildIdentifier = (url) => {
+            return decodeURIComponent(url)
+                .substr(2)
+                .replace(/[\\/\\.]|\\s+/g, '-')
+                .replace(/[^a-z0-9\\-]/gi, '');
+          };
           describe('Playground snapshot tests', () => {
             for (let i = 0; i < tests.length; i++) {
               const test = tests[i];
@@ -115,7 +121,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
                 expect(image).toMatchImageSnapshot({
                     customSnapshotsDir: '${absoluteSnapshotDirectory}',
                     customDiffDir: '${absoluteDiffDirectory}',
-                    customSnapshotIdentifier: () => decodeURIComponent(test.url).substr(2).replace(/[\\/\\.\\s]/g, '-'),
+                    customSnapshotIdentifier: () => buildIdentifier(test.url),
                     ${extraConfig}
                 });
                 page.close();
