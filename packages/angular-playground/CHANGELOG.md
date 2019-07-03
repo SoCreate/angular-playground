@@ -1,3 +1,27 @@
+# 6.0.0 (2019-7-3)
+
+<a name="6.0.0"></a>
+
+### Features
+* **visual regressions:** Add ability to delete snapshots based on sandboxes filtered
+
+### Bug Fixes
+* **visual regressions:** Fix with special characters causing issue with naming snapshots
+
+### Breaking Changes
+* **visual regressions command line switch change from "--update-snapshots-directory" to "--path-to-sandboxes"**:
+
+Before:
+
+ ```
+  angular-playground --config angular-playground.json --check-visual-regressions --update-snapshots --update-snapshots-directory app/feature1
+ ```
+After:
+
+```
+  angular-playground --config angular-playground.json --check-visual-regressions --update-snapshots --path-to-sandboxes app/feature1
+```
+
 # 5.8.4 (2019-6-27)
 
 <a name="5.8.4"></a>
