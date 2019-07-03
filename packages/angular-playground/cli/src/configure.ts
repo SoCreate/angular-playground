@@ -21,7 +21,8 @@ export interface Config {
     snapshotDirectory: string;
     diffDirectory: string;
     updateSnapshots: boolean;
-    updateSnapshotsDirectory: string;
+    deleteSnapshots: boolean;
+    pathToSandboxes: string;
     imageSnapshotConfig: { [key: string]: any};
 
     angularAppName?: string;
@@ -64,7 +65,8 @@ export function configure(argv: any): Config {
         .option('--snapshot-directory <dir>', 'Directory to store snapshots in', 'src/__images_snapshots__')
         .option('--diff-directory <dir>', 'Directory to put diffs in', 'src/__diff_output__')
         .option('--update-snapshots', 'Update stored snapshots', false)
-        .option('--update-snapshots-directory <dir>', 'Subdirectory of project in which to update stored snapshots', '')
+        .option('--delete-snapshots', 'Delete stored snapshots', false)
+        .option('--path-to-sandboxes <dir>', 'Subdirectory of project in which to target sandbox files', '')
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
@@ -105,7 +107,8 @@ export function applyConfigurationFile(program: any): Config {
         snapshotDirectory: playgroundConfig.snapshotDirectory || program.snapshotDirectory,
         diffDirectory: playgroundConfig.diffDirectory || program.diffDirectory,
         updateSnapshots: playgroundConfig.updateSnapshots || program.updateSnapshots,
-        updateSnapshotsDirectory: playgroundConfig.updateSnapshotsDirectory || program.updateSnapshotsDirectory,
+        deleteSnapshots: playgroundConfig.deleteSnapshots || program.deleteSnapshots,
+        pathToSandboxes: playgroundConfig.pathToSandboxes || program.pathToSandboxes,
         imageSnapshotConfig: playgroundConfig.imageSnapshotConfig || {},
     };
 

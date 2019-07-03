@@ -20,15 +20,15 @@ export async function run() {
         return await buildAngularCli(config.angularAppName, config.baseHref, config.angularCliMaxBuffer);
     }
 
-    if (config.verifySandboxes || config.checkVisualRegressions) {
+    if (config.verifySandboxes || (config.checkVisualRegressions && !config.deleteSnapshots)) {
         config.angularCliPort = await getPort({ host: config.angularCliHost });
     }
 
-    if (config.watch || config.verifySandboxes || config.checkVisualRegressions) {
+    if ((config.watch && !config.deleteSnapshots) || config.verifySandboxes || (config.checkVisualRegressions && !config.deleteSnapshots)) {
         startWatch(config.sourceRoots, () => buildSandboxes(config.sourceRoots, config.chunk));
     }
 
-    if (config.serve || config.verifySandboxes || config.checkVisualRegressions) {
+    if ((config.serve && !config.deleteSnapshots) || config.verifySandboxes || (config.checkVisualRegressions && !config.deleteSnapshots)) {
         try {
             await serveAngularCli(config);
         } catch (err) {
