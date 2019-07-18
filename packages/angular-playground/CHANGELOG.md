@@ -1,3 +1,10 @@
+# 6.0.1 (2019-7-18)
+
+<a name="6.0.1"></a>
+
+### Bug Fixes
+* **schematic:** Fix issue ([#199](https://github.com/SoCreate/angular-playground/issues/199)) with `ng add` setting improper `tsconfig.app.json` path after upgrade to Angular version 8.  
+
 # 6.0.0 (2019-7-3)
 
 <a name="6.0.0"></a>
