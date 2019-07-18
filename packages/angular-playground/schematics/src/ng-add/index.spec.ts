@@ -30,7 +30,7 @@ describe('ng-add', () => {
     expect(angularJson.projects.playground.architect.build.options.index).toBe('src/index.html');
     expect(angularJson.projects.playground.architect.build.options.main).toBe('src/main.playground.ts');
     expect(angularJson.projects.playground.architect.build.options.polyfills).toBe('src/polyfills.ts');
-    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('src/tsconfig.app.json');
+    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('tsconfig.app.json');
     expect(angularJson.projects.playground.architect.build.options.assets[0]).toBe('src/favicon.ico');
     expect(angularJson.projects.playground.architect.build.options.assets[1]).toBe('src/assets');
     expect(angularJson.projects.playground.architect.build.options.styles[0]).toBe('src/styles.css');
@@ -115,7 +115,7 @@ describe('ng-add', () => {
     expect(angularJson.projects.playground.architect.build.options.index).toBe('src/index.html');
     expect(angularJson.projects.playground.architect.build.options.main).toBe('src/main.playground.ts');
     expect(angularJson.projects.playground.architect.build.options.polyfills).toBe('src/polyfills.ts');
-    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('src/tsconfig.app.json');
+    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('tsconfig.app.json');
     expect(angularJson.projects.playground.architect.build.options.assets[0]).toBe('src/favicon.ico');
     expect(angularJson.projects.playground.architect.build.options.assets[1]).toBe('src/assets');
     expect(angularJson.projects.playground.architect.build.options.styles[0]).toBe('src/styles.scss');
