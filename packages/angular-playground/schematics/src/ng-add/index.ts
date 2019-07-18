@@ -41,10 +41,9 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
                                project: WorkspaceProject, packageName: string): Rule {
 
   const projectRoot = normalize(project.root);
+  const projectRootParts = projectRoot.split('/');
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
-  const tsConfigPath = projectRoot === '' ? sourceRoot : projectRoot;
-  const tsConfigPathParts = tsConfigPath.split('/');
 
   const newProject: Partial<WorkspaceProject> = {
     root: projectRoot,
@@ -58,7 +57,7 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
           index: constructPath([...sourceRootParts, 'index.html']),
           main: constructPath([...sourceRootParts, 'main.playground.ts']),
           polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
-          tsConfig: constructPath([...tsConfigPathParts, 'tsconfig.app.json']),
+          tsConfig: constructPath([...projectRootParts, 'tsconfig.app.json']),
           assets: [
             constructPath([...sourceRootParts, 'favicon.ico']),
             constructPath([...sourceRootParts, 'assets']),
