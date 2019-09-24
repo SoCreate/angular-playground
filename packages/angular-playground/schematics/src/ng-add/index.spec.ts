@@ -15,14 +15,11 @@ describe('ng-add', () => {
     tree.create('package.json', createPackageJson());
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const resultTree = runner.runSchematic('ng-add', {}, tree);
+    verifyBasicFiles(resultTree, {
+      sourceRootPath: './src',
+      mainFilePath: 'src/main.playground.ts',
+    });
 
-    // package.json
-    const packageJson = getJsonFileAsObject(resultTree, 'package.json');
-    expect(packageJson.scripts['playground']).toBe('angular-playground');
-    expect(packageJson.dependencies['angular-playground']).toBeUndefined();
-    expect(packageJson.devDependencies['angular-playground']).toBe('1.2.3');
-
-    // angular.json
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
     expect(angularJson.projects.playground.root).toBe('');
     expect(angularJson.projects.playground.sourceRoot).toBe('src');
@@ -38,15 +35,6 @@ describe('ng-add', () => {
       .toBe('src/environments/environment.ts');
     expect(angularJson.projects.playground.architect.build.configurations.production.fileReplacements[0].with)
       .toBe('src/environments/environment.prod.ts');
-
-    // angular-playground.json
-    const angularPlaygroundJson = getJsonFileAsObject(resultTree, 'angular-playground.json');
-    expect(angularPlaygroundJson.sourceRoots).toEqual(['./src']);
-    expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
-
-    // main.playground.ts
-    const mainFile = resultTree.readContent('src/main.playground.ts');
-    expect(mainFile).toBeTruthy();
   });
   it('should work for a project created with `ng g app`', () => {
     const tree = Tree.empty();
@@ -58,14 +46,11 @@ describe('ng-add', () => {
     tree.create('package.json', createPackageJson());
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const resultTree = runner.runSchematic('ng-add', {}, tree);
+    verifyBasicFiles(resultTree, {
+      sourceRootPath: './projects/something/src',
+      mainFilePath: 'projects/something/src/main.playground.ts',
+    });
 
-    // package.json
-    const packageJson = getJsonFileAsObject(resultTree, 'package.json');
-    expect(packageJson.scripts['playground']).toBe('angular-playground');
-    expect(packageJson.dependencies['angular-playground']).toBeUndefined();
-    expect(packageJson.devDependencies['angular-playground']).toBe('1.2.3');
-
-    // angular.json
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
     expect(angularJson.projects.playground.root).toBe('projects/something');
     expect(angularJson.projects.playground.sourceRoot).toBe('projects/something/src');
@@ -81,14 +66,6 @@ describe('ng-add', () => {
       .toBe('projects/something/src/environments/environment.ts');
     expect(angularJson.projects.playground.architect.build.configurations.production.fileReplacements[0].with)
       .toBe('projects/something/src/environments/environment.prod.ts');
-
-    // angular-playground.json
-    const angularPlaygroundJson = getJsonFileAsObject(resultTree, 'angular-playground.json');
-    expect(angularPlaygroundJson.sourceRoots).toEqual(['./projects/something/src']);
-    expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
-
-    // main.playground.ts
-    expect(resultTree.files).toContain('/projects/something/src/main.playground.ts');
   });
   it('should work for a project with a non-default style extension', () => {
     const tree = Tree.empty();
@@ -100,14 +77,11 @@ describe('ng-add', () => {
     tree.create('package.json', createPackageJson());
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const resultTree = runner.runSchematic('ng-add', {}, tree);
+    verifyBasicFiles(resultTree, {
+      sourceRootPath: './src',
+      mainFilePath: 'src/main.playground.ts',
+    });
 
-    // package.json
-    const packageJson = getJsonFileAsObject(resultTree, 'package.json');
-    expect(packageJson.scripts['playground']).toBe('angular-playground');
-    expect(packageJson.dependencies['angular-playground']).toBeUndefined();
-    expect(packageJson.devDependencies['angular-playground']).toBe('1.2.3');
-
-    // angular.json
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
     expect(angularJson.projects.playground.root).toBe('');
     expect(angularJson.projects.playground.sourceRoot).toBe('src');
@@ -123,15 +97,6 @@ describe('ng-add', () => {
       .toBe('src/environments/environment.ts');
     expect(angularJson.projects.playground.architect.build.configurations.production.fileReplacements[0].with)
       .toBe('src/environments/environment.prod.ts');
-
-    // angular-playground.json
-    const angularPlaygroundJson = getJsonFileAsObject(resultTree, 'angular-playground.json');
-    expect(angularPlaygroundJson.sourceRoots).toEqual(['./src']);
-    expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
-
-    // main.playground.ts
-    const mainFile = resultTree.readContent('src/main.playground.ts');
-    expect(mainFile).toBeTruthy();
   });
   it('should work for a project that contains only a library', () => {
     const tree = Tree.empty();
@@ -139,14 +104,11 @@ describe('ng-add', () => {
     tree.create('package.json', createPackageJson());
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const resultTree = runner.runSchematic('ng-add', {}, tree);
+    verifyBasicFiles(resultTree, {
+      sourceRootPath: './projects/foo-lib/src',
+      mainFilePath: 'projects/foo-lib/src/main.playground.ts',
+    });
 
-    // package.json
-    const packageJson = getJsonFileAsObject(resultTree, 'package.json');
-    expect(packageJson.scripts['playground']).toBe('angular-playground');
-    expect(packageJson.dependencies['angular-playground']).toBeUndefined();
-    expect(packageJson.devDependencies['angular-playground']).toBe('1.2.3');
-
-    // angular.json
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
     expect(angularJson.projects.playground.root).toBe('projects/foo-lib');
     expect(angularJson.projects.playground.sourceRoot).toBe('projects/foo-lib/src');
@@ -162,15 +124,6 @@ describe('ng-add', () => {
       .toBe('projects/foo-lib/src/environments/environment.ts');
     expect(angularJson.projects.playground.architect.build.configurations.production.fileReplacements[0].with)
       .toBe('projects/foo-lib/src/environments/environment.prod.ts');
-
-    // angular-playground.json
-    const angularPlaygroundJson = getJsonFileAsObject(resultTree, 'angular-playground.json');
-    expect(angularPlaygroundJson.sourceRoots).toEqual(['./projects/foo-lib/src']);
-    expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
-
-    // main.playground.ts
-    const mainFile = resultTree.readContent('projects/foo-lib/src/main.playground.ts');
-    expect(mainFile).toBeTruthy();
   });
   it('should work for a project that contains a library followed by an application', () => {
     const tree = Tree.empty();
@@ -178,14 +131,11 @@ describe('ng-add', () => {
     tree.create('package.json', createPackageJson());
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const resultTree = runner.runSchematic('ng-add', {}, tree);
+    verifyBasicFiles(resultTree, {
+      sourceRootPath: './projects/foo-lib-tester/src',
+      mainFilePath: 'projects/foo-lib-tester/src/main.playground.ts',
+    });
 
-    // package.json
-    const packageJson = getJsonFileAsObject(resultTree, 'package.json');
-    expect(packageJson.scripts['playground']).toBe('angular-playground');
-    expect(packageJson.dependencies['angular-playground']).toBeUndefined();
-    expect(packageJson.devDependencies['angular-playground']).toBe('1.2.3');
-
-    // angular.json
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
     expect(angularJson.projects.playground.root).toBe('projects/foo-lib-tester');
     expect(angularJson.projects.playground.sourceRoot).toBe('projects/foo-lib-tester/src');
@@ -201,22 +151,11 @@ describe('ng-add', () => {
       .toBe('projects/foo-lib-tester/src/environments/environment.ts');
     expect(angularJson.projects.playground.architect.build.configurations.production.fileReplacements[0].with)
       .toBe('projects/foo-lib-tester/src/environments/environment.prod.ts');
-
-    // angular-playground.json
-    const angularPlaygroundJson = getJsonFileAsObject(resultTree, 'angular-playground.json');
-    expect(angularPlaygroundJson.sourceRoots).toEqual(['./projects/foo-lib-tester/src']);
-    expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
-
-    // main.playground.ts
-    const mainFile = resultTree.readContent('projects/foo-lib-tester/src/main.playground.ts');
-    expect(mainFile).toBeTruthy();
   });
   it('should throw if there are no projects', () => {
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const tree = Tree.empty();
-    tree.create('angular.json', `{
-      "projects": {}
-    }`);
+    tree.create('angular.json', '{ "projects": {} }');
     expect(() => runner.runSchematic('ng-add', {}, tree))
       .toThrow('Your app must have at least 1 project to use Playground.');
   });
@@ -283,3 +222,20 @@ const createPackageJson = () => `{
   },
   "devDependencies": {}
 }`;
+
+const verifyBasicFiles = (tree: UnitTestTree, options: { sourceRootPath: string, mainFilePath: string }) => {
+  // package.json
+  const packageJson = getJsonFileAsObject(tree, 'package.json');
+  expect(packageJson.scripts['playground']).toBe('angular-playground');
+  expect(packageJson.dependencies['angular-playground']).toBeUndefined();
+  expect(packageJson.devDependencies['angular-playground']).toBe('1.2.3');
+
+  // angular-playground.json
+  const angularPlaygroundJson = getJsonFileAsObject(tree, 'angular-playground.json');
+  expect(angularPlaygroundJson.sourceRoots).toEqual([options.sourceRootPath]);
+  expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
+
+  // main.playground.ts
+  const mainFile = tree.readContent(options.mainFilePath);
+  expect(mainFile).toBeTruthy();
+};
