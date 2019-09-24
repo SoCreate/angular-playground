@@ -44,6 +44,7 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
   const projectRootParts = projectRoot.split('/');
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
+  const tsConfigType = project.projectType === 'application' ? 'app' : 'lib';
 
   const newProject: Partial<WorkspaceProject> = {
     root: projectRoot,
@@ -57,7 +58,7 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
           index: constructPath([...sourceRootParts, 'index.html']),
           main: constructPath([...sourceRootParts, 'main.playground.ts']),
           polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
-          tsConfig: constructPath([...projectRootParts, 'tsconfig.app.json']),
+          tsConfig: constructPath([...projectRootParts, `tsconfig.${tsConfigType}.json`]),
           assets: [
             constructPath([...sourceRootParts, 'favicon.ico']),
             constructPath([...sourceRootParts, 'assets']),
@@ -103,15 +104,19 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
 function configure(options: any): Rule {
   return (host: Tree, context: SchematicContext) => {
     const workspace = getWorkspace(host);
-    const project = getProject(host, options);
+    const project = getProject(host, options, 'application');
 
     let stylesExtension = 'css';
-    if (project.architect) {
-      const mainStyle = project.architect.build.options.styles.find((path: string | { input: string }) => {
-        return typeof path === 'string'
+    if (
+      project.architect
+      && project.architect.build
+      && project.architect.build.options
+      && project.architect.build.options.styles
+    ) {
+      const mainStyle = project.architect.build.options.styles
+        .find((path: string | { input: string }) => typeof path === 'string'
           ? path.includes('/styles.')
-          : path.input.includes('/styles.');
-      });
+          : path.input.includes('/styles.'));
       if (mainStyle) {
         const mainStyleString = typeof mainStyle === 'string' ? mainStyle : mainStyle.input;
         stylesExtension = mainStyleString.split('.').pop();

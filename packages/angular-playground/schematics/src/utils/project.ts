@@ -24,7 +24,11 @@ export function getProjectPath(
   return options.path;
 }
 
-export function getProject(host: Tree, options: { project?: string | undefined; path?: string | undefined }): WorkspaceProject {
+export function getProject(
+  host: Tree,
+  options: { project?: string | undefined; path?: string | undefined },
+  typeFilter: 'application' | 'library' | null = null,
+): WorkspaceProject {
   const workspace = getWorkspace(host);
 
   if (!options.project) {
@@ -33,7 +37,18 @@ export function getProject(host: Tree, options: { project?: string | undefined; 
     if (projectNames.length === 0) {
       throw new Error('Your app must have at least 1 project to use Playground.');
     }
-    options.project = projectNames[0];
+    // if type filter is not set, use first project
+    let firstFilteredProject = projectNames[0];
+    if (typeFilter) {
+      // apply filter
+      for (const projectName in workspace.projects) {
+        if (workspace.projects[projectName].projectType === typeFilter) {
+          firstFilteredProject = projectName;
+          break;
+        }
+      }
+    }
+    options.project = firstFilteredProject;
   }
 
   return workspace.projects[options.project];

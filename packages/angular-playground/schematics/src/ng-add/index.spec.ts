@@ -133,6 +133,84 @@ describe('ng-add', () => {
     const mainFile = resultTree.readContent('src/main.playground.ts');
     expect(mainFile).toBeTruthy();
   });
+  it('should work for a project that contains only a library', () => {
+    const tree = Tree.empty();
+    tree.create('angular.json', createAngularJsonForLibrary(false));
+    tree.create('package.json', createPackageJson());
+    const runner = new SchematicTestRunner('schematics', collectionPath);
+    const resultTree = runner.runSchematic('ng-add', {}, tree);
+
+    // package.json
+    const packageJson = getJsonFileAsObject(resultTree, 'package.json');
+    expect(packageJson.scripts['playground']).toBe('angular-playground');
+    expect(packageJson.dependencies['angular-playground']).toBeUndefined();
+    expect(packageJson.devDependencies['angular-playground']).toBe('1.2.3');
+
+    // angular.json
+    const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
+    expect(angularJson.projects.playground.root).toBe('projects/foo-lib');
+    expect(angularJson.projects.playground.sourceRoot).toBe('projects/foo-lib/src');
+    expect(angularJson.projects.playground.architect.build.options.outputPath).toBe('dist/playground');
+    expect(angularJson.projects.playground.architect.build.options.index).toBe('projects/foo-lib/src/index.html');
+    expect(angularJson.projects.playground.architect.build.options.main).toBe('projects/foo-lib/src/main.playground.ts');
+    expect(angularJson.projects.playground.architect.build.options.polyfills).toBe('projects/foo-lib/src/polyfills.ts');
+    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('projects/foo-lib/tsconfig.lib.json');
+    expect(angularJson.projects.playground.architect.build.options.assets[0]).toBe('projects/foo-lib/src/favicon.ico');
+    expect(angularJson.projects.playground.architect.build.options.assets[1]).toBe('projects/foo-lib/src/assets');
+    expect(angularJson.projects.playground.architect.build.options.styles[0]).toBe('projects/foo-lib/src/styles.css');
+    expect(angularJson.projects.playground.architect.build.configurations.production.fileReplacements[0].replace)
+      .toBe('projects/foo-lib/src/environments/environment.ts');
+    expect(angularJson.projects.playground.architect.build.configurations.production.fileReplacements[0].with)
+      .toBe('projects/foo-lib/src/environments/environment.prod.ts');
+
+    // angular-playground.json
+    const angularPlaygroundJson = getJsonFileAsObject(resultTree, 'angular-playground.json');
+    expect(angularPlaygroundJson.sourceRoots).toEqual(['./projects/foo-lib/src']);
+    expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
+
+    // main.playground.ts
+    const mainFile = resultTree.readContent('projects/foo-lib/src/main.playground.ts');
+    expect(mainFile).toBeTruthy();
+  });
+  it('should work for a project that contains a library followed by an application', () => {
+    const tree = Tree.empty();
+    tree.create('angular.json', createAngularJsonForLibrary(true));
+    tree.create('package.json', createPackageJson());
+    const runner = new SchematicTestRunner('schematics', collectionPath);
+    const resultTree = runner.runSchematic('ng-add', {}, tree);
+
+    // package.json
+    const packageJson = getJsonFileAsObject(resultTree, 'package.json');
+    expect(packageJson.scripts['playground']).toBe('angular-playground');
+    expect(packageJson.dependencies['angular-playground']).toBeUndefined();
+    expect(packageJson.devDependencies['angular-playground']).toBe('1.2.3');
+
+    // angular.json
+    const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
+    expect(angularJson.projects.playground.root).toBe('projects/foo-lib-tester');
+    expect(angularJson.projects.playground.sourceRoot).toBe('projects/foo-lib-tester/src');
+    expect(angularJson.projects.playground.architect.build.options.outputPath).toBe('dist/playground');
+    expect(angularJson.projects.playground.architect.build.options.index).toBe('projects/foo-lib-tester/src/index.html');
+    expect(angularJson.projects.playground.architect.build.options.main).toBe('projects/foo-lib-tester/src/main.playground.ts');
+    expect(angularJson.projects.playground.architect.build.options.polyfills).toBe('projects/foo-lib-tester/src/polyfills.ts');
+    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('projects/foo-lib-tester/tsconfig.app.json');
+    expect(angularJson.projects.playground.architect.build.options.assets[0]).toBe('projects/foo-lib-tester/src/favicon.ico');
+    expect(angularJson.projects.playground.architect.build.options.assets[1]).toBe('projects/foo-lib-tester/src/assets');
+    expect(angularJson.projects.playground.architect.build.options.styles[0]).toBe('projects/foo-lib-tester/src/styles.scss');
+    expect(angularJson.projects.playground.architect.build.configurations.production.fileReplacements[0].replace)
+      .toBe('projects/foo-lib-tester/src/environments/environment.ts');
+    expect(angularJson.projects.playground.architect.build.configurations.production.fileReplacements[0].with)
+      .toBe('projects/foo-lib-tester/src/environments/environment.prod.ts');
+
+    // angular-playground.json
+    const angularPlaygroundJson = getJsonFileAsObject(resultTree, 'angular-playground.json');
+    expect(angularPlaygroundJson.sourceRoots).toEqual(['./projects/foo-lib-tester/src']);
+    expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
+
+    // main.playground.ts
+    const mainFile = resultTree.readContent('projects/foo-lib-tester/src/main.playground.ts');
+    expect(mainFile).toBeTruthy();
+  });
   it('should throw if there are no projects', () => {
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const tree = Tree.empty();
@@ -165,6 +243,38 @@ const createAngularJson = (config: { root: string, sourceRoot: string, stylesExt
     }
   }
 }`;
+
+const createAngularJsonForLibrary = (includeTestApp = false) => {
+  const lib = `"foo-lib": {
+    "root": "projects/foo-lib",
+    "sourceRoot": "projects/foo-lib/src",
+    "projectType": "library",
+    "prefix": "lib",
+    "architect": {
+      "build": {
+        "options": {}
+      }
+    }
+  }`;
+  const libTestApp = `"foo-lib-tester": {
+    "root": "projects/foo-lib-tester",
+    "sourceRoot": "projects/foo-lib-tester/src",
+    "projectType": "application",
+    "prefix": "app",
+    "architect": {
+      "build": {
+        "options": {
+          "styles": [
+            "src/styles.scss"
+          ]
+        }
+      }
+    }
+  }`;
+  return includeTestApp
+    ? `{ "projects": { ${lib}, ${libTestApp} } }`
+    : `{ "projects": { ${lib} } }`;
+};
 
 const createPackageJson = () => `{
   "scripts": {},
