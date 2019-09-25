@@ -1,3 +1,10 @@
+# 6.0.2 (2019-9-25)
+
+<a name="6.0.2"></a>
+
+### Features
+* **ng add:** Fix error during ng add when first project is a library
+
 # 6.0.1 (2019-7-18)
 
 <a name="6.0.1"></a>
