@@ -1,5 +1,5 @@
 import { copyFileSync, writeFileSync, unlinkSync, existsSync } from 'fs';
-import * as puppeteer from 'puppeteer';
+import { Browser, ConsoleMessage, launch } from 'puppeteer';
 import { resolve as resolvePath } from 'path';
 import { promisify } from 'util';
 import { exec } from 'child_process';
@@ -15,7 +15,7 @@ const SANDBOX_PATH = resolvePath(__dirname, '../../../dist/build/src/shared/sand
 const SANDBOX_DEST = resolvePath(__dirname, '../../../sandboxes_modified.js');
 const TEST_PATH = resolvePath(__dirname, '../../../dist/jest/test.js');
 
-let browser: puppeteer.Browser;
+let browser: Browser;
 
 // Ensure Chromium instances are destroyed on error
 process.on('unhandledRejection', async () => {
@@ -38,7 +38,7 @@ export async function checkSnapshots(config: Config) {
 
 async function main(config: Config, hostUrl: string) {
     const timeoutAttempts = config.timeout;
-    browser = await puppeteer.launch({
+    browser = await launch({
         headless: true,
         handleSIGINT: false,
         args: CHROME_ARGS,
@@ -73,14 +73,24 @@ async function waitForNgServe(hostUrl: string, timeoutAttempts: number) {
     }
 
     const page = await browser.newPage();
+    let ngServeErrors = 0;
 
     try {
+        page.on('console', (msg: ConsoleMessage) => {
+            if (msg.type() === 'error') {
+                ngServeErrors++;
+            }
+        });
         await page.goto(hostUrl);
         setTimeout(() => page.close()); // close page to prevent memory leak
     } catch (e) {
         await page.close();
         await delay(1000);
         await waitForNgServe(hostUrl, timeoutAttempts - 1);
+    }
+
+    if (ngServeErrors > 0) {
+        throw new Error('ng serve failure');
     }
 }
 
@@ -92,7 +102,7 @@ function deleteSnapshots(config: Config) {
         const buildIdentifier = (url) => {
             return decodeURIComponent(url)
                 .substr(2)
-                .replace(/[\/\.]|\s+/g, '-')
+                .replace(/[\/.]|\s+/g, '-')
                 .replace(/[^a-z0-9\-]/gi, '');
         };
 
@@ -142,9 +152,9 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
           const tests = ${JSON.stringify(testPaths)};
           const buildIdentifier = (url) => {
             return decodeURIComponent(url)
-                .substr(2)
-                .replace(/[\\/\\.]|\\s+/g, '-')
-                .replace(/[^a-z0-9\\-]/gi, '');
+              .substr(2)
+              .replace(/[\\/\\.]|\\s+/g, '-')
+              .replace(/[^a-z0-9\\-]/gi, '');
           };
           describe('Playground snapshot tests', () => {
             for (let i = 0; i < tests.length; i++) {
@@ -152,17 +162,15 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
               it(\`should match \${test.label}\`, async () => {
                 const url = \`${hostUrl}?scenario=\${test.url}\`;
                 console.log(\`Checking [\${i + 1}/\${tests.length}]: \${url}\`);
-                const page = await browser.newPage();
-                await page.goto(url, {'waitUntil' : 'load'});;
+                await page.goto(url, { waitUntil: 'load' });
                 await page.waitFor(() => !!document.querySelector('playground-host'));
                 const image = await page.screenshot({ fullPage: true });
                 expect(image).toMatchImageSnapshot({
-                    customSnapshotsDir: '${absoluteSnapshotDirectory}',
-                    customDiffDir: '${absoluteDiffDirectory}',
-                    customSnapshotIdentifier: () => buildIdentifier(test.url),
-                    ${extraConfig}
+                  customSnapshotsDir: '${absoluteSnapshotDirectory}',
+                  customDiffDir: '${absoluteDiffDirectory}',
+                  customSnapshotIdentifier: () => buildIdentifier(test.url),
+                  ${extraConfig}
                 });
-                page.close();
               }, 30000);
             }
           });

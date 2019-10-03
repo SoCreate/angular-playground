@@ -1,3 +1,10 @@
+# 6.0.3 (2019-10-3)
+
+<a name="6.0.3"></a>
+
+### Features
+* **visual regressions:** Add quick fail when there are Typescript compilation errors
+
 # 6.0.2 (2019-9-25)
 
 <a name="6.0.2"></a>
@@ -10,7 +17,7 @@
 <a name="6.0.1"></a>
 
 ### Bug Fixes
-* **schematic:** Fix issue ([#199](https://github.com/SoCreate/angular-playground/issues/199)) with `ng add` setting improper `tsconfig.app.json` path after upgrade to Angular version 8.  
+* **schematic:** Fix issue ([#199](https://github.com/SoCreate/angular-playground/issues/199)) with `ng add` setting improper `tsconfig.app.json` path after upgrade to Angular version 8.
 
 # 6.0.0 (2019-7-3)
 
