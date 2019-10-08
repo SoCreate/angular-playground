@@ -1,3 +1,10 @@
+# 6.0.4 (2019-10-8)
+
+<a name="6.0.4"></a>
+
+### Features
+* **visual regressions:** Don't resolve absolute paths like relative ones
+
 # 6.0.3 (2019-10-3)
 
 <a name="6.0.3"></a>
