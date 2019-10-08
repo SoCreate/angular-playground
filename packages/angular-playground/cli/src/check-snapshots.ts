@@ -1,6 +1,6 @@
 import { copyFileSync, writeFileSync, unlinkSync, existsSync } from 'fs';
 import { Browser, ConsoleMessage, launch } from 'puppeteer';
-import { resolve as resolvePath } from 'path';
+import { resolve as resolvePath, isAbsolute } from 'path';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import { runCLI } from '@jest/core';
@@ -94,9 +94,14 @@ async function waitForNgServe(hostUrl: string, timeoutAttempts: number) {
     }
 }
 
+function normalizeResolvePath(directory) {
+    return isAbsolute(directory)
+        ? directory.replace(/\\/g, '/')
+        : resolvePath('.', directory).replace(/\\/g, '/');
+}
+
 function deleteSnapshots(config: Config) {
     try {
-        const normalizeResolvePath = (directory: string) => resolvePath('.', directory).replace(/\\/g, '/');
         const absoluteSnapshotDirectory = normalizeResolvePath(config.snapshotDirectory);
         const items: SandboxFileInformation[] = require(SANDBOX_DEST).getSandboxMenuItems();
         const buildIdentifier = (url) => {
@@ -129,7 +134,6 @@ function deleteSnapshots(config: Config) {
 }
 
 function writeSandboxesToTestFile(config: Config, hostUrl: string) {
-    const normalizeResolvePath = (directory: string) => resolvePath('.', directory).replace(/\\/g, '/');
     const absoluteSnapshotDirectory = normalizeResolvePath(config.snapshotDirectory);
     const absoluteDiffDirectory = normalizeResolvePath(config.diffDirectory);
     try {
