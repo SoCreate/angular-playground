@@ -143,16 +143,21 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
             item.scenarioMenuItems.forEach((scenarioItem) => {
                 if (item.key.includes(config.pathToSandboxes)) {
                     testPaths.push({
+                        sandboxKey: item.key,
+                        scenarioKey: scenarioItem.key,
                         url: `${encodeURIComponent(item.key)}/${encodeURIComponent(scenarioItem.description)}`,
-                        label: `${item.name} ${scenarioItem.description}`,
+                        label: `${item.name} [${scenarioItem.description}]`,
                     });
                 }
             });
         }, []);
+
         const extraConfig = Object.keys(config.imageSnapshotConfig)
             .map(key => `${key}: ${JSON.stringify(config.imageSnapshotConfig[key])}`)
             .join(',');
         const result = `
+          // imports
+          const chalk = require('chalk');
           const tests = ${JSON.stringify(testPaths)};
           const buildIdentifier = (url) => {
             return decodeURIComponent(url)
@@ -160,21 +165,56 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
               .replace(/[\\/\\.]|\\s+/g, '-')
               .replace(/[^a-z0-9\\-]/gi, '');
           };
+          // function to check if sandbox url matches an excluded pattern
+          const excluded = ${JSON.stringify(config.visualRegressionIgnore)}.map(item => new RegExp(item.regex, item.flags));
+          const checkIfExcluded = (url) => {
+            for (const excludedRegex of excluded) {
+              if (excludedRegex.test(url)) {
+                return true;
+              }
+            }
+            return false;
+          }
+          beforeAll(async () => {
+            await page.goto('${hostUrl}');
+            // set current time to fixed value
+            await page.evaluate(() => {
+              Date.now = () => ${config.visualRegressionMockDate};
+            });
+          });
           describe('Playground snapshot tests', () => {
             for (let i = 0; i < tests.length; i++) {
               const test = tests[i];
+
               it(\`should match \${test.label}\`, async () => {
-                const url = \`${hostUrl}?scenario=\${test.url}\`;
-                console.log(\`Checking [\${i + 1}/\${tests.length}]: \${url}\`);
-                await page.goto(url, { waitUntil: 'load' });
-                await page.waitFor(() => !!document.querySelector('playground-host'));
-                const image = await page.screenshot({ fullPage: true });
-                expect(image).toMatchImageSnapshot({
-                  customSnapshotsDir: '${absoluteSnapshotDirectory}',
-                  customDiffDir: '${absoluteDiffDirectory}',
-                  customSnapshotIdentifier: () => buildIdentifier(test.url),
-                  ${extraConfig}
-                });
+                if (!checkIfExcluded(buildIdentifier(test.url))) {
+                  const url = \`${hostUrl}?scenario=\${test.url}\`;
+                  console.log(\`Checking [\${i + 1}/\${tests.length}]: \${url}\`);
+
+                  // load scenario
+                  const waitForNavigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
+                  await page.evaluate((sandboxKey, scenarioKey) => window.loadScenario(sandboxKey, scenarioKey),
+                    test.sandboxKey, test.scenarioKey)
+                  await Promise.all([
+                    waitForNavigation,
+                    page.waitFor(() => window.isPlaygroundComponentLoaded()),
+                  ]);
+                  const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+                  await sleep(100); // sleep for a bit in case page elements are still being rendered
+
+                  // take screenshot
+                  const image = await page.screenshot({ fullPage: true });
+
+                  // check for diffs
+                  expect(image).toMatchImageSnapshot({
+                    customSnapshotsDir: '${absoluteSnapshotDirectory}',
+                    customDiffDir: '${absoluteDiffDirectory}',
+                    customSnapshotIdentifier: () => buildIdentifier(test.url),
+                    ${extraConfig}
+                  });
+                } else {
+                  console.log(chalk.red(\`SKIPPED [\${i + 1}/\${tests.length}]: \${buildIdentifier(test.url)}\`));
+                }
               }, 30000);
             }
           });

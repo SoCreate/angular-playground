@@ -24,6 +24,8 @@ export interface Config {
     deleteSnapshots: boolean;
     pathToSandboxes: string;
     imageSnapshotConfig: { [key: string]: any};
+    visualRegressionIgnore: Array<{ regex: string, flags?: string }>;
+    visualRegressionMockDate: number; // date in ms
 
     angularAppName?: string;
     angularCliPath?: string;
@@ -67,6 +69,7 @@ export function configure(argv: any): Config {
         .option('--update-snapshots', 'Update stored snapshots', false)
         .option('--delete-snapshots', 'Delete stored snapshots', false)
         .option('--path-to-sandboxes <dir>', 'Subdirectory of project in which to target sandbox files', '')
+        .option('--visual-regression-mock-date <dateInMs>', 'Date to set in puppeteer (in ms from epoch) for visual regression tests.', 0)
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
@@ -110,6 +113,8 @@ export function applyConfigurationFile(program: any): Config {
         deleteSnapshots: playgroundConfig.deleteSnapshots || program.deleteSnapshots,
         pathToSandboxes: playgroundConfig.pathToSandboxes || program.pathToSandboxes,
         imageSnapshotConfig: playgroundConfig.imageSnapshotConfig || {},
+        visualRegressionIgnore: playgroundConfig.visualRegressionIgnore || [],
+        visualRegressionMockDate: playgroundConfig.visualRegressionMockDate || program.visualRegressionMockDate,
     };
 
     if (config.verifySandboxes && config.reportType && !config.reportPath) {

@@ -1,4 +1,12 @@
-import { Component, ElementRef, Inject, QueryList, ViewChildren } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Inject,
+    OnInit,
+    QueryList,
+    ViewChildren,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EventManager } from '@angular/platform-browser';
 import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from '../lib/app-state';
@@ -16,7 +24,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     @ViewChildren('scenarioElement') scenarioLinkElements: QueryList<ElementRef>;
     commandBarActive = false;
     commandBarPreview = false;
@@ -32,6 +40,7 @@ export class AppComponent {
         private urlService: UrlService,
         private eventManager: EventManager,
         private levenshteinDistance: LevenshteinDistance,
+        private changeDetectorRef: ChangeDetectorRef,
         @Inject(MIDDLEWARE) private middleware: Observable<Middleware>,
     ) {}
 
@@ -84,6 +93,15 @@ export class AppComponent {
                 }
             });
         }
+
+        // expose select scenario functionality for visual regression test
+        (window as any).loadScenario = (sandboxKey: string, scenarioKey: number) => {
+            this.selectScenario(sandboxKey, scenarioKey);
+            this.changeDetectorRef.detectChanges();
+        };
+
+        // set flag to check when component is loaded
+        (window as any).isPlaygroundComponentLoaded = () => false;
     }
 
     onFilterBoxArrowDown(event: any, switchToScenario = false) {

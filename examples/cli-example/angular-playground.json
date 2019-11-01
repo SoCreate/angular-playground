@@ -9,5 +9,14 @@
         },
         "diffDirection": "vertical",
         "noColors": true
-    }
+    },
+    "visualRegressionIgnore": [
+        {
+            "regex": "app-feature1",
+            "flags": "g"
+        },
+        {
+            "regex": "app.+?shared.+?emoji"
+        }
+    ]
 }
