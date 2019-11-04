@@ -82,7 +82,10 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
                     this.zone.runOutsideAngular(() => {
                         const module = this.createModule(sandbox, scenario);
                         platformBrowserDynamic().bootstrapModule(module)
-                            .then(app => this.activeApps.push(app))
+                            .then(app => {
+                                this.activeApps.push(app);
+                                (window as any).isPlaygroundComponentLoaded = () => true;
+                            })
                             .catch(err => console.error(err));
                     });
                 }

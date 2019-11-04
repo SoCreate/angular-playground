@@ -1,3 +1,11 @@
+# 6.1.0 (2019-11-1)
+
+<a name="6.1.0"></a>
+
+### Features
+* **visual regressions:** Improved performance
+* **visual regressions:** New options: a list of paths to ignore, and a mock date to use in the visual regression tests (useful for components that rely on the current date)
+
 # 6.0.4 (2019-10-8)
 
 <a name="6.0.4"></a>
