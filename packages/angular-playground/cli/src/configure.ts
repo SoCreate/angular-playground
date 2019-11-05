@@ -69,7 +69,7 @@ export function configure(argv: any): Config {
         .option('--update-snapshots', 'Update stored snapshots', false)
         .option('--delete-snapshots', 'Delete stored snapshots', false)
         .option('--path-to-sandboxes <dir>', 'Subdirectory of project in which to target sandbox files', '')
-        .option('--visual-regression-mock-date <dateInMs>', 'Date to set in puppeteer (in ms from epoch) for visual regression tests.', 0)
+        .option('--visual-regression-mock-date <dateInMs>', 'Date to set in puppeteer (in ms from epoch) for visual regression tests.', Date.now())
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')

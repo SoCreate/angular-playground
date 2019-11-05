@@ -158,6 +158,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
         const result = `
           // imports
           const chalk = require('chalk');
+          // declarations
           const tests = ${JSON.stringify(testPaths)};
           const buildIdentifier = (url) => {
             return decodeURIComponent(url)
@@ -165,8 +166,8 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
               .replace(/[\\/\\.]|\\s+/g, '-')
               .replace(/[^a-z0-9\\-]/gi, '');
           };
-          // function to check if sandbox url matches an excluded pattern
           const excluded = ${JSON.stringify(config.visualRegressionIgnore)}.map(item => new RegExp(item.regex, item.flags));
+          // checks if sandbox identifier matches an excluded regex
           const checkIfExcluded = (url) => {
             for (const excludedRegex of excluded) {
               if (excludedRegex.test(url)) {
@@ -175,13 +176,14 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string) {
             }
             return false;
           }
+          // set up tests
           beforeAll(async () => {
             await page.goto('${hostUrl}');
-            // set current time to fixed value
-            await page.evaluate(() => {
-              Date.now = () => ${config.visualRegressionMockDate};
-            });
+            // mock current time
+            await page.addScriptTag({ path: './node_modules/mockdate/src/mockdate.js' });
+            await page.addScriptTag({ content: 'MockDate.set(${config.visualRegressionMockDate}, 0);' });
           });
+          // run tests
           describe('Playground snapshot tests', () => {
             for (let i = 0; i < tests.length; i++) {
               const test = tests[i];
