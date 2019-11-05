@@ -1,3 +1,10 @@
+# 6.1.1 (2019-11-5)
+
+<a name="6.1.1"></a>
+
+### Features
+* **visual regressions:** Use mockdate package to set time in visual regression tests
+
 # 6.1.0 (2019-11-1)
 
 <a name="6.1.0"></a>
