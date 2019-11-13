@@ -8,7 +8,8 @@ export interface Config {
     chunk: boolean;
     watch: boolean;
     serve: boolean;
-    buildWithServiceWorkers: boolean;
+    build: boolean;
+    buildWithServiceWorker: boolean;
     baseHref: string;
 
     verifySandboxes: boolean;
@@ -52,7 +53,8 @@ export function configure(argv: any): Config {
         .option('--no-watch', 'Disable sandboxes watch', false)
         .option('--no-serve', 'Disable cli serve', false)
         .option('--no-chunk', 'Don\'t chunk sandbox files individually', false)
-        .option('--build', 'Build your sandboxes with service workers enabled. Requires @angular/service-worker', false)
+        .option('--build', 'Build your sandboxes for production with service workers disabled.', false)
+        .option('--build-with-service-worker', 'Build your sandboxes with service workers enabled. Requires @angular/service-worker', false)
         .option('--base-href <href>', 'Specify a base-href for @angular/cli build', '/')
 
         // Sandbox verification
@@ -97,7 +99,8 @@ export function applyConfigurationFile(program: any): Config {
         chunk: negate(playgroundConfig.noChunk) || program.chunk,
         watch: negate(playgroundConfig.noWatch) || program.watch,
         serve: negate(playgroundConfig.noServe) || program.serve,
-        buildWithServiceWorkers: playgroundConfig.build || program.build,
+        build: playgroundConfig.build || program.build,
+        buildWithServiceWorker: playgroundConfig.buildWithServiceWorker || program.buildWithServiceWorker,
         baseHref: playgroundConfig.baseHref || program.baseHref,
 
         verifySandboxes: playgroundConfig.verifySandboxes || program.checkErrors,
