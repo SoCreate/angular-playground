@@ -11,6 +11,7 @@
     "e2e": "ng e2e",
     "playground": "angular-playground",
     "playground:prod": "angular-playground --build",
+    "playground:prod-service-worker": "angular-playground --build-with-service-worker",
     "playground:check-errors": "angular-playground --check-errors",
     "playground:build": "(cd ../../ && sh ./scripts/build.sh)",
     "verify-sandboxes": "angular-playground --config angular-playground.json --check-errors --report-path ./result.xml --report-type xml",

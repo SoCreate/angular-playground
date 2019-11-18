@@ -27,6 +27,7 @@ describe('configure', () => {
                 serve: true,
                 chunk: true,
                 build: false,
+                buildWithServiceWorker: false,
                 ngCliPort: 4201,
                 ngCliHost: '127.0.0.1',
                 ngCliCmd: 'node_modules/@angular/cli/bin/ng',
@@ -52,7 +53,11 @@ describe('configure', () => {
             });
 
             it('should provide default value for build', () => {
-                expect(config.buildWithServiceWorkers).toBe(false);
+                expect(config.build).toBe(false);
+            });
+
+            it('should provide default value for buildWithServiceWorker', () => {
+                expect(config.buildWithServiceWorker).toBe(false);
             });
 
             it('should provide default value for @angular/cli host', () => {

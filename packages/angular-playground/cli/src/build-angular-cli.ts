@@ -1,18 +1,24 @@
 import { exec } from 'child_process';
 
-export async function buildAngularCli(appName: string, baseHref: string, maxBuffer: number | string) {
+export async function buildAngularCli(appName: string, enableServiceWorker: boolean, baseHref: string, maxBuffer: number | string) {
     let isInstalled = await serviceWorkerIsInstalled();
-    if (!isInstalled) {
-        throw new Error('\n\nError: --build requires @angular/service-worker to be installed locally: \n' +
+    if (enableServiceWorker && !isInstalled) {
+        throw new Error('\n\nError: --build-with-service-worker requires @angular/service-worker to be installed locally: \n' +
         'try running "npm install @angular/service-worker" then run "angular-playground --build" \n' +
         'see docs: https://github.com/angular/angular-cli/wiki/build#service-worker\n\n');
     }
 
     console.log('Building for production with sandboxes...');
 
-    const options = Number.isInteger(+maxBuffer) ? {maxBuffer: +maxBuffer} : {};
+    const options = Number.isInteger(+maxBuffer) ? { maxBuffer: +maxBuffer } : {};
     // Cannot build w/ AOT due to runtime compiler dependency
-    exec(`ng build ${appName} --prod --aot=false --base-href=${baseHref}`,
+    const flags = [
+        '--prod',
+        '--aot=false',
+        `--base-href=${baseHref}`,
+        `--service-worker=${enableServiceWorker}`,
+    ];
+    exec(`ng build ${appName} ${flags.join(' ')}`,
         options,
         (err, stdout, stderr) => {
             if (err) throw err;

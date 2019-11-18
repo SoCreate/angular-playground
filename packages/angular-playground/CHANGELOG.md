@@ -1,3 +1,10 @@
+# 6.1.2 (2019-11-13)
+
+<a name="6.1.2"></a>
+
+### Features
+* **build:** Make service worker optional for production builds
+
 # 6.1.1 (2019-11-5)
 
 <a name="6.1.1"></a>
