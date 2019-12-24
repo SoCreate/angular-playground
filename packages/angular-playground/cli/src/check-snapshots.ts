@@ -1,4 +1,4 @@
-import { copyFileSync, writeFileSync, unlinkSync, existsSync, readdir } from 'fs';
+import { copyFileSync, writeFileSync, unlinkSync, existsSync, readdirSync } from 'fs';
 import { Browser, ConsoleMessage, launch } from 'puppeteer';
 import { resolve as resolvePath, isAbsolute } from 'path';
 import { promisify } from 'util';
@@ -6,8 +6,17 @@ import { exec } from 'child_process';
 import { runCLI } from '@jest/core';
 import { Config as JestConfig } from '@jest/types';
 import { SandboxFileInformation } from './build-sandboxes';
-import { Config, ViewportOptions } from './configure';
+import { Config } from './configure';
 import { delay, removeDynamicImports } from './utils';
+
+export interface ViewportOptions {
+  width: number;
+  height: number;
+  deviceScaleFactor?: number;
+  isMobile?: boolean;
+  hasTouch?: boolean;
+  isLandscape?: boolean;
+}
 
 // Used to tailor the version of headless chromium ran by puppeteer
 const CHROME_ARGS = ['--disable-gpu', '--no-sandbox'];
@@ -25,30 +34,24 @@ process.on('unhandledRejection', async () => {
 export async function checkSnapshots(config: Config) {
     copyFileSync(SANDBOX_PATH, SANDBOX_DEST);
     removeDynamicImports(SANDBOX_DEST);
-    clearOldTestFiles(config.viewportSizes[0]);
+
     if (config.deleteSnapshots) {
         deleteSnapshots(config);
     } else {
         const hostUrl = `http://${config.angularCliHost}:${config.angularCliPort}`;
-
         let overallExitCode = 0;
+
         if (config.viewportSizes.length > 0) {
             for (const viewportConfig of config.viewportSizes) {
-                const viewportSize = {
-                  width: viewportConfig.width,
-                  height: viewportConfig.height,
-                };
-                const testPath = getTestPath(viewportSize, `-${formatViewportSize(viewportSize)}`);
-                writeSandboxesToTestFile(config, hostUrl, testPath, viewportSize);
-                const exitCode = await main(config, hostUrl, viewportSize);
+                const testPath = getTestPath(`-${formatViewportSize(viewportConfig)}`);
+                const exitCode = await main(config, hostUrl, testPath, viewportConfig);
                 if (exitCode !== 0) {
                   overallExitCode = exitCode;
                 }
             }
         } else {
             const testPath = getTestPath();
-            writeSandboxesToTestFile(config, hostUrl, testPath);
-            overallExitCode = await main(config, hostUrl);
+            overallExitCode = await main(config, hostUrl, testPath);
         }
         process.exit(overallExitCode);
     }
@@ -56,20 +59,24 @@ export async function checkSnapshots(config: Config) {
 
 /////////////////////////////////
 
-async function main(config: Config, hostUrl: string, viewportSize?: ViewportOptions) {
-    const timeoutAttempts = config.timeout;
+async function main(config: Config, hostUrl: string, testPath: string, viewportConfig?: ViewportOptions) {
+    // create test file to run with jest
+    writeSandboxesToTestFile(config, hostUrl, testPath, viewportConfig);
+
+    // launch puppeteer headless browser to render scenarios
     browser = await launch({
         headless: true,
         handleSIGINT: false,
         args: CHROME_ARGS,
     });
 
+    const timeoutAttempts = config.timeout;
     await waitForNgServe(hostUrl, timeoutAttempts);
     const execAsync = promisify(exec);
     await execAsync('cd node_modules/angular-playground');
 
-    const testRegex = viewportSize
-        ? `test-${formatViewportSize(viewportSize)}\\.js$`
+    const testRegex = viewportConfig
+        ? `test-${formatViewportSize(viewportConfig)}\\.js$`
         : 'test\\.js';
     const argv = {
         config: 'node_modules/angular-playground/dist/jest/jest-puppeteer.config.js',
@@ -119,9 +126,8 @@ async function waitForNgServe(hostUrl: string, timeoutAttempts: number) {
 }
 
 function normalizeResolvePath(directory) {
-    return isAbsolute(directory)
-        ? directory.replace(/\\/g, '/')
-        : resolvePath('.', directory).replace(/\\/g, '/');
+    const absolutePath = isAbsolute(directory) ? directory : resolvePath('.', directory);
+    return absolutePath.replace(/\\/g, '/');
 }
 
 function deleteSnapshots(config: Config) {
@@ -157,7 +163,7 @@ function deleteSnapshots(config: Config) {
     }
 }
 
-function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: string, viewportSize?: ViewportOptions) {
+function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: string, viewportConfig?: ViewportOptions) {
     const absoluteSnapshotDirectory = normalizeResolvePath(config.snapshotDirectory);
     const absoluteDiffDirectory = normalizeResolvePath(config.diffDirectory);
     try {
@@ -185,7 +191,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
           // declarations
           const tests = ${JSON.stringify(testPaths)};
           const buildIdentifier = (url) => {
-            return decodeURIComponent(url + '-' + ${JSON.stringify(formatViewportSize(viewportSize))})
+            return decodeURIComponent(url + '-' + ${JSON.stringify(formatViewportSize(viewportConfig))})
               .substr(2)
               .replace(/[\\/\\.]|\\s+/g, '-')
               .replace(/[^a-z0-9\\-]/gi, '');
@@ -202,14 +208,14 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
           }
           // set up tests
           beforeAll(async () => {
-            ${viewportSize ? `await page.setViewport(${JSON.stringify(viewportSize)})` : ''}
+            ${viewportConfig ? `await page.setViewport(${JSON.stringify(viewportConfig)})` : ''}
             await page.goto('${hostUrl}');
             // mock current time
             await page.addScriptTag({ path: './node_modules/mockdate/src/mockdate.js' });
             await page.addScriptTag({ content: 'MockDate.set(${config.visualRegressionMockDate}, 0);' });
           });
           // run tests
-          describe('Playground snapshot tests${viewportSize ? ` [${formatViewportSize(viewportSize)}]` : ''}', () => {
+          describe('Playground snapshot tests${viewportConfig ? ` [${formatViewportSize(viewportConfig)}]` : ''}', () => {
             for (let i = 0; i < tests.length; i++) {
               const test = tests[i];
 
@@ -230,7 +236,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
                   await sleep(100); // sleep for a bit in case page elements are still being rendered
 
                   // take screenshot
-                  const image = await page.screenshot({ fullPage: ${!viewportSize} });
+                  const image = await page.screenshot({ fullPage: ${!viewportConfig} });
 
                   // check for diffs
                   expect(image).toMatchImageSnapshot({
@@ -246,28 +252,28 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
             }
           });
         `;
+        clearOldTestFiles();
         writeFileSync(testPath, result, { encoding: 'utf-8' });
     } catch (err) {
         throw new Error(`Failed to create snapshot test file. ${err}`);
     }
 }
 
-const clearOldTestFiles = (viewportSize: ViewportOptions) => {
+const clearOldTestFiles = () => {
     try {
-        const removeTestPath = getTestPath(viewportSize, '*');
-        readdir('.', (error, files) => {
-            if (error) throw error;
-            files.filter(name => new RegExp(removeTestPath).test(name)).forEach(unlinkSync);
-        });
+        const folderPath = getTestPath().replace('test.js', '');
+        const oldTestFiles = readdirSync(folderPath)
+          .filter(name => /test(-\d+x\d+)\.js$/.test(name));
+        for (const name of oldTestFiles) {
+          unlinkSync(`${folderPath}${name}`);
+        }
     } catch (err) {
         throw new Error(`Couldn't delete previous test files.`);
     }
 };
 
-const getTestPath = (viewportSize?: ViewportOptions, suffix = '') =>
-    viewportSize
-        ? TEST_PATH_BASE.replace('test.js', `test${suffix}.js`)
-        : TEST_PATH_BASE;
+const getTestPath = (suffix = '') =>
+    TEST_PATH_BASE.replace('test.js', `test${suffix}.js`);
 
-const formatViewportSize = (viewportSize?: ViewportOptions) =>
-    viewportSize ? `${viewportSize.width}x${viewportSize.height}` : '';
+const formatViewportSize = (viewportConfig?: ViewportOptions) =>
+    viewportConfig ? `${viewportConfig.width}x${viewportConfig.height}` : '';

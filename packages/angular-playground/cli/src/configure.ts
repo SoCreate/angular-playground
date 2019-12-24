@@ -2,15 +2,7 @@ import * as commander from 'commander';
 import { resolve as resolvePath } from 'path';
 import { existsSync } from 'fs';
 import { REPORT_TYPE } from './error-reporter';
-
-export interface ViewportOptions {
-  width: number;
-  height: number;
-  deviceScaleFactor?: number;
-  isMobile?: boolean;
-  hasTouch?: boolean;
-  isLandscape?: boolean;
-}
+import { ViewportOptions } from './check-snapshots';
 
 export interface Config {
     sourceRoots: string[];
