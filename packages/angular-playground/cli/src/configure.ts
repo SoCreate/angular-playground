@@ -2,6 +2,7 @@ import * as commander from 'commander';
 import { resolve as resolvePath } from 'path';
 import { existsSync } from 'fs';
 import { REPORT_TYPE } from './error-reporter';
+import { ViewportOptions } from './check-snapshots';
 
 export interface Config {
     sourceRoots: string[];
@@ -21,6 +22,7 @@ export interface Config {
     checkVisualRegressions: boolean;
     snapshotDirectory: string;
     diffDirectory: string;
+    viewportSizes: ViewportOptions[];
     updateSnapshots: boolean;
     deleteSnapshots: boolean;
     pathToSandboxes: string;
@@ -112,6 +114,7 @@ export function applyConfigurationFile(program: any): Config {
         checkVisualRegressions: playgroundConfig.checkVisualRegressions || program.checkVisualRegressions,
         snapshotDirectory: playgroundConfig.snapshotDirectory || program.snapshotDirectory,
         diffDirectory: playgroundConfig.diffDirectory || program.diffDirectory,
+        viewportSizes: playgroundConfig.viewportSizes || [],
         updateSnapshots: playgroundConfig.updateSnapshots || program.updateSnapshots,
         deleteSnapshots: playgroundConfig.deleteSnapshots || program.deleteSnapshots,
         pathToSandboxes: playgroundConfig.pathToSandboxes || program.pathToSandboxes,
