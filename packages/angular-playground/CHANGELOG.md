@@ -1,3 +1,10 @@
+# 6.2.0 (2020-1-8)
+
+<a name="6.2.0"></a>
+
+### Features
+* **visual regressions:** Add ability to have different configurations for testing image regressions at different view port sizes
+
 # 6.1.2 (2019-11-13)
 
 <a name="6.1.2"></a>
