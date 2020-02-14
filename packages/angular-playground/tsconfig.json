@@ -7,7 +7,10 @@
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "dom"
+    ],
     "module": "es6",
     "moduleResolution": "node",
     "noImplicitAny": false,
@@ -23,5 +26,8 @@
   },
   "include": [
     "index.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "enableIvy": false
+  }
 }
