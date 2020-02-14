@@ -51,9 +51,7 @@
   },
   "homepage": "http://www.angularplayground.it",
   "schematics": "./schematics/src/collection.json",
-  "peerDependencies": {
-    "zone.js": ">=0.8.28"
-  },
+  "peerDependencies": {},
   "dependencies": {
     "@angular-devkit/core": "^0.8.9",
     "@angular-devkit/schematics": "^0.8.9",
@@ -73,13 +71,13 @@
     "tslib": "^1.10.0"
   },
   "devDependencies": {
-    "@angular/common": "^8.2.14",
-    "@angular/compiler": "^8.2.14",
-    "@angular/compiler-cli": "^8.2.14",
-    "@angular/core": "^8.2.14",
-    "@angular/forms": "^8.2.14",
-    "@angular/platform-browser": "^8.2.14",
-    "@angular/platform-browser-dynamic": "^8.2.14",
+    "@angular/common": "^9.0.1",
+    "@angular/compiler": "^9.0.1",
+    "@angular/compiler-cli": "^9.0.1",
+    "@angular/core": "^9.0.1",
+    "@angular/forms": "^9.0.1",
+    "@angular/platform-browser": "^9.0.1",
+    "@angular/platform-browser-dynamic": "^9.0.1",
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.8",
     "@types/puppeteer": "^1.20.0",
@@ -91,7 +89,7 @@
     "rxjs": "^6.5.4",
     "ts-jest": "^24.1.0",
     "tslint": "5.17.0",
-    "typescript": "~3.5.3",
-    "zone.js": "0.9.1"
+    "typescript": "~3.7.5",
+    "zone.js": "0.10.2"
   }
 }
