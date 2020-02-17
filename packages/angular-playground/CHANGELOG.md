@@ -1,3 +1,11 @@
+# 6.2.0 (2020-02-17)
+
+<a name="6.2.0"></a>
+
+### Features
+* **angular:** Upgrade to be compatible with Angular version 9.
+* **build:** Use the View Engine compiler to maintain compatibility with both default V9 applications that use Ivy and applications that have opted to continue using View Engine.
+
 # 6.1.2 (2019-11-13)
 
 <a name="6.1.2"></a>
