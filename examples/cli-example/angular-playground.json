@@ -3,6 +3,16 @@
     "angularCli": {
         "appName": "playground"
     },
+    "viewportSizes": [
+      {
+        "width": 401,
+        "height": 400
+      },
+      {
+        "width": 1000,
+        "height": 800
+      }
+    ],
     "imageSnapshotConfig": {
         "customDiffConfig": {
             "threshold": 0.1
