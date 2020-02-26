@@ -1,20 +1,23 @@
 {
   "compilerOptions": {
     "baseUrl": "",
-    "sourceMap": true,
-    "declaration": true,
     "outDir": "./dist/",
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "lib": ["es6", "dom"],
-    "module": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
-    "noImplicitAny": false,
+    "importHelpers": true,
     "target": "es2015",
     "newLine": "LF",
+    "noImplicitAny": false,
     "typeRoots": [
       "node_modules/@types"
+    ],
+    "lib": [
+        "es2018",
+        "dom"
     ],
     "types": [
       "node",
@@ -23,5 +26,8 @@
   },
   "include": [
     "index.ts"
-  ]
+  ],
+    "angularCompilerOptions": {
+        "enableIvy": false
+    }
 }
