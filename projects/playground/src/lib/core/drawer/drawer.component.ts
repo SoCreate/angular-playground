@@ -2,8 +2,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
     selector: 'ap-drawer',
-    templateUrl: './drawer/drawer.component.html',
-    styleUrls: ['./drawer/drawer.component.css'],
+    templateUrl: './drawer.component.html',
+    styleUrls: ['./drawer.component.css'],
 })
 export class DrawerComponent {
     @Output() openCommandBarClick = new EventEmitter();

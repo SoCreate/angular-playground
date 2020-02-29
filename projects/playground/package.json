@@ -1,0 +1,9 @@
+{
+  "name": "angular-playground",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^9.0.2",
+    "@angular/core": "^9.0.2",
+    "tslib": "^1.10.0"
+  }
+}

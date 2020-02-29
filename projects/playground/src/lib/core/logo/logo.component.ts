@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'ap-logo',
-    templateUrl: './logo/logo.component.html',
+    templateUrl: './logo.component.html',
     styles: [`
     .command-bar__logo {
         height: 30px;

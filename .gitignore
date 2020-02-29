@@ -1,46 +1,51 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/packages/angular-playground/dist/
-/packages/angular-playground/build/
-/src/**/*.ngfactory.ts
-*.ngsummary.json
-**/.idea/*
+/dist
+/tmp
+/out-tsc
+# Only exists if Bazel was run
+/bazel-out
 
 # dependencies
-node_modules
-/bower_components
+/node_modules
+
+# profiling files
+chrome-profiler-events*.json
+speed-measure-plugin*.json
 
 # IDEs and editors
 /.idea
-/.vscode
 .project
 .classpath
 .c9/
 *.launch
 .settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
 
 # misc
 /.sass-cache
 /connect.lock
-/coverage/*
+/coverage
 /libpeerconnection.log
-npm-debug.log*
+npm-debug.log
+yarn-error.log
 testem.log
 /typings
-/packages/angular-playground/output.json
-/packages/angular-playground/sandboxes_modified.js
 
-# e2e
-/e2e/*.js
-/e2e/*.map
-
-# schematics
-/packages/angular-playground/schematics/**/*.js
-/packages/angular-playground/schematics/**/*.d.ts
-/packages/angular-playground/schematics/**/*.map
-
-#System Files
+# System Files
 .DS_Store
 Thumbs.db
-/debug.log
+
+# schematics
+/projects/schematics/**/*.js
+/projects/schematics/**/*.d.ts
+/projects/schematics/**/*.map

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'ap-pin',
-    templateUrl: './pin/pin.component.html',
+    templateUrl: './pin.component.html',
     styles: [`
    .command-bar__scenario-icon {
         display: inline-block;

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
 import { PlaygroundCommonModule } from './playground-common.module';
 import { Middleware, MIDDLEWARE } from '../lib/middlewares';
 import { initializePlayground } from '../lib/initialize-playground';
@@ -23,7 +22,9 @@ const middleware = _middleware.asObservable();
     providers: [
         { provide: MIDDLEWARE, useValue: middleware },
     ],
-    bootstrap: [AppComponent],
+    exports: [
+      PlaygroundCommonModule
+    ]
 })
 export class PlaygroundModule {
     static configure(configuration: Middleware) {
