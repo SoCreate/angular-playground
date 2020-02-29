@@ -22,10 +22,10 @@
       "@angular/*": [
         "./node_modules/@angular/*"
       ]
-    },
-    "angularCompilerOptions": {
-      "fullTemplateTypeCheck": true,
-      "strictInjectionParameters": true
     }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
   }
 }
