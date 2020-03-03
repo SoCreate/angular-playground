@@ -102,6 +102,7 @@ export class AppComponent implements OnInit {
 
         // set flag to check when component is loaded
         (window as any).isPlaygroundComponentLoaded = () => false;
+        (window as any).isPlaygroundComponentLoadedWithErrors = () => false;
     }
 
     onFilterBoxArrowDown(event: any, switchToScenario = false) {

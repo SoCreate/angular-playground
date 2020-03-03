@@ -1,5 +1,5 @@
 import { writeFileSync, unlinkSync, existsSync, readdirSync } from 'fs';
-import { Browser, ConsoleMessage, launch } from 'puppeteer';
+import { Browser, launch } from 'puppeteer';
 import { resolve as resolvePath, isAbsolute } from 'path';
 import { promisify } from 'util';
 import { exec } from 'child_process';
@@ -7,7 +7,7 @@ import { runCLI } from '@jest/core';
 import { Config as JestConfig } from '@jest/types';
 import { SANDBOX_MENU_ITEMS_FILE, SandboxFileInformation } from './build-sandboxes';
 import { Config } from './configure';
-import { delay } from './utils';
+import { waitForNgServe } from './utils';
 
 export interface ViewportOptions {
   width: number;
@@ -66,7 +66,7 @@ async function main(config: Config, hostUrl: string, testPath: string, viewportC
     });
 
     const timeoutAttempts = config.timeout;
-    await waitForNgServe(hostUrl, timeoutAttempts);
+    await waitForNgServe(browser, hostUrl, timeoutAttempts);
     const execAsync = promisify(exec);
     await execAsync('cd node_modules/angular-playground');
 
@@ -87,38 +87,7 @@ async function main(config: Config, hostUrl: string, testPath: string, viewportC
     return exitCode;
 }
 
-/**
- * Creates a Chromium page and navigates to the host url.
- * If Chromium is not able to connect to the provided page, it will issue a series
- * of retries before it finally fails.
- */
-async function waitForNgServe(hostUrl: string, timeoutAttempts: number) {
-    if (timeoutAttempts === 0) {
-        await browser.close();
-        throw new Error('Unable to connect to Playground.');
-    }
 
-    const page = await browser.newPage();
-    let ngServeErrors = 0;
-
-    try {
-        page.on('console', (msg: ConsoleMessage) => {
-            if (msg.type() === 'error') {
-                ngServeErrors++;
-            }
-        });
-        await page.goto(hostUrl);
-        setTimeout(() => page.close()); // close page to prevent memory leak
-    } catch (e) {
-        await page.close();
-        await delay(1000);
-        await waitForNgServe(hostUrl, timeoutAttempts - 1);
-    }
-
-    if (ngServeErrors > 0) {
-        throw new Error('ng serve failure');
-    }
-}
 
 function normalizeResolvePath(directory) {
     const absolutePath = isAbsolute(directory) ? directory : resolvePath('.', directory);
@@ -225,7 +194,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
                     test.sandboxKey, test.scenarioKey)
                   await Promise.all([
                     waitForNavigation,
-                    page.waitFor(() => window.isPlaygroundComponentLoaded()),
+                    page.waitFor(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors()),
                   ]);
                   const sleep = (ms) => new Promise(res => setTimeout(res, ms));
                   await sleep(100); // sleep for a bit in case page elements are still being rendered

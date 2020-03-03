@@ -1,40 +1,40 @@
 import * as puppeteer from 'puppeteer';
 import chalk from 'chalk';
-import { ConsoleMessage } from 'puppeteer';
+import { ConsoleMessage, Page } from 'puppeteer';
 import { SANDBOX_MENU_ITEMS_FILE, SandboxFileInformation } from '../build-sandboxes';
 import { ErrorReporter, REPORT_TYPE } from '../error-reporter';
 import { Config } from '../configure';
-import { delay } from '../utils';
+import { waitForNgServe } from '../utils';
 
 // Used to tailor the version of headless chromium ran by puppeteer
-const CHROME_ARGS = [ '--disable-gpu', '--no-sandbox' ];
+const CHROME_ARGS = ['--disable-gpu', '--no-sandbox'];
 
 
 export interface ScenarioSummary {
-    url: string;
     name: string;
     description: string;
+    sandboxKey: string;
+    scenarioKey: number;
 }
 
 let browser: puppeteer.Browser;
 let currentScenario = '';
 let currentScenarioDescription = '';
 let reporter: ErrorReporter;
-let hostUrl = '';
 
 // Ensure Chromium instances are destroyed on error
-process.on('unhandledRejection', () => {
-    if (browser) browser.close();
+process.on('unhandledRejection', async () => {
+    if (browser) { await browser.close(); }
 });
 
 export async function verifySandboxes(config: Config) {
-    hostUrl = `http://localhost:${config.angularCliPort}`;
     await main(config);
 }
 
 /////////////////////////////////
 
 async function main(config: Config) {
+    const hostUrl = `http://localhost:${config.angularCliPort}`;
     const timeoutAttempts = config.timeout;
     browser = await puppeteer.launch({
         headless: true,
@@ -42,16 +42,19 @@ async function main(config: Config) {
         args: CHROME_ARGS,
     });
 
+    await waitForNgServe(browser, hostUrl, timeoutAttempts);
+
     const scenarios = getSandboxMetadata(hostUrl, config.randomScenario);
+    console.log(`Retrieved ${scenarios.length} scenarios.\n`);
 
     reporter = new ErrorReporter(scenarios, config.reportPath, config.reportType);
-    console.log(`Retrieved ${scenarios.length} scenarios.\n`);
+    const page = await setupPageAndErrorHandling(hostUrl);
     for (let i = 0; i < scenarios.length; i++) {
         console.log(`Checking [${i + 1}/${scenarios.length}]: ${scenarios[i].name}: ${scenarios[i].description}`);
-        await openScenarioInNewPage(scenarios[i], timeoutAttempts);
+        await openScenario(scenarios[i], page);
     }
-
-    browser.close();
+    await page.close();
+    await browser.close();
 
     const hasErrors = reporter.errors.length > 0;
     // always generate report if report type is a file, or if there are errors
@@ -62,30 +65,28 @@ async function main(config: Config) {
     process.exit(exitCode);
 }
 
-/**
- * Creates a Chromium page and navigates to a scenario (URL).
- * If Chromium is not able to connect to the provided page, it will issue a series
- * of retries before it finally fails.
- */
-async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts: number) {
-    if (timeoutAttempts === 0) {
-        await browser.close();
-        throw new Error('Unable to connect to Playground.');
-    }
-
+async function setupPageAndErrorHandling(hostUrl): Promise<Page> {
     const page = await browser.newPage();
     page.on('console', (msg: ConsoleMessage) => onConsoleErr(msg));
+    await page.goto(hostUrl);
+    return page;
+}
+
+async function openScenario(scenario: ScenarioSummary, page: Page) {
     currentScenario = scenario.name;
     currentScenarioDescription = scenario.description;
 
-    try {
-        await page.goto(scenario.url);
-        setTimeout(() => page.close(), 10000); // close page after 10s to prevent memory leak
-    } catch (e) {
-        await page.close();
-        await delay(1000);
-        await openScenarioInNewPage(scenario, timeoutAttempts - 1);
-    }
+    const waitForNavigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
+    // @ts-ignore
+    await page.evaluate((sandboxKey, scenarioKey) => window.loadScenario(sandboxKey, scenarioKey),
+        scenario.sandboxKey, scenario.scenarioKey);
+    await Promise.all([
+        waitForNavigation,
+        // @ts-ignore
+        page.waitFor(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors())
+    ]);
+    const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+    await sleep(100); // sleep for a bit in case page elements are still being rendered
 }
 
 /**
@@ -96,22 +97,34 @@ async function openScenarioInNewPage(scenario: ScenarioSummary, timeoutAttempts:
 function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean): ScenarioSummary[] {
     const scenarios: ScenarioSummary[] = [];
 
-    loadSandboxMenuItems().forEach((scenario: SandboxFileInformation) => {
+    loadSandboxMenuItems().forEach((sandboxItem: SandboxFileInformation) => {
         if (selectRandomScenario) {
-            const randomItemKey = getRandomKey(scenario.scenarioMenuItems.length);
-            for (const item of scenario.scenarioMenuItems) {
+            const randomItemKey = getRandomKey(sandboxItem.scenarioMenuItems.length);
+            for (const item of sandboxItem.scenarioMenuItems) {
                 if (item.key === randomItemKey) {
-                    const url = `${baseUrl}?scenario=${encodeURIComponent(scenario.key)}/${encodeURIComponent(item.description)}`;
-                    scenarios.push({ url, name: scenario.key, description: item.description });
+                    scenarios.push(
+                        {
+                            name: sandboxItem.key,
+                            description: item.description,
+                            sandboxKey: sandboxItem.key,
+                            scenarioKey: item.key
+                        }
+                    );
                     break;
                 }
             }
         } else {
             // Grab all scenarios
-            scenario.scenarioMenuItems
+            sandboxItem.scenarioMenuItems
                 .forEach((item) => {
-                    const url = `${baseUrl}?scenario=${encodeURIComponent(scenario.key)}/${encodeURIComponent(item.description)}`;
-                    scenarios.push({ url, name: scenario.key, description: item.description });
+                    scenarios.push(
+                        {
+                            name: sandboxItem.key,
+                            description: item.description,
+                            sandboxKey: sandboxItem.key,
+                            scenarioKey: item.key
+                        }
+                    );
                 });
         }
     });

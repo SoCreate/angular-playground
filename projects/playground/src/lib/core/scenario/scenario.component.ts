@@ -101,7 +101,10 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
                 this.activeApps.push(app);
                 (window as any).isPlaygroundComponentLoaded = () => true;
               })
-              .catch(err => console.error(err));
+              .catch(err => {
+                  (window as any).isPlaygroundComponentLoadedWithErrors = () => true;
+                  console.error(err);
+              });
           });
         }
       }

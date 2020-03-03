@@ -21,11 +21,12 @@ export async function run() {
     }
 
     if (config.verifySandboxes || (config.checkVisualRegressions && !config.deleteSnapshots)) {
-        config.angularCliPort = await getPort({ host: config.angularCliHost });
+        config.angularCliPort = await getPort({host: config.angularCliHost});
     }
 
     if ((config.watch && !config.deleteSnapshots) || config.verifySandboxes || (config.checkVisualRegressions && !config.deleteSnapshots)) {
-        startWatch(config.sourceRoots, () => buildSandboxes(config.sourceRoots, config.chunk));
+        startWatch(config.sourceRoots, () =>
+            buildSandboxes(config.sourceRoots, config.chunk, config.verifySandboxes || config.checkVisualRegressions));
     }
 
     if ((config.serve && !config.deleteSnapshots) || config.verifySandboxes || (config.checkVisualRegressions && !config.deleteSnapshots)) {
@@ -45,10 +46,10 @@ export async function run() {
     }
 
     if (config.checkVisualRegressions) {
-      try {
-          await checkSnapshots(config);
-      } catch (err) {
-          throw err;
-      }
-  }
+        try {
+            await checkSnapshots(config);
+        } catch (err) {
+            throw err;
+        }
+    }
 }
