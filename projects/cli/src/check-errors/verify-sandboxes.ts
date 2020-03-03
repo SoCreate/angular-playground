@@ -76,15 +76,12 @@ async function openScenario(scenario: ScenarioSummary, page: Page) {
     currentScenario = scenario.name;
     currentScenarioDescription = scenario.description;
 
-    const waitForNavigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
     // @ts-ignore
     await page.evaluate((sandboxKey, scenarioKey) => window.loadScenario(sandboxKey, scenarioKey),
         scenario.sandboxKey, scenario.scenarioKey);
-    await Promise.all([
-        waitForNavigation,
-        // @ts-ignore
-        page.waitFor(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors())
-    ]);
+    // @ts-ignore
+    await page.waitFor(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors());
+
     const sleep = (ms) => new Promise(res => setTimeout(res, ms));
     await sleep(100); // sleep for a bit in case page elements are still being rendered
 }

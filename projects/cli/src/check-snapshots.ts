@@ -189,13 +189,9 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
                   console.log(\`Checking [\${i + 1}/\${tests.length}]: \${url}\`);
 
                   // load scenario
-                  const waitForNavigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
                   await page.evaluate((sandboxKey, scenarioKey) => window.loadScenario(sandboxKey, scenarioKey),
                     test.sandboxKey, test.scenarioKey)
-                  await Promise.all([
-                    waitForNavigation,
-                    page.waitFor(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors()),
-                  ]);
+                  await page.waitFor(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors());
                   const sleep = (ms) => new Promise(res => setTimeout(res, ms));
                   await sleep(100); // sleep for a bit in case page elements are still being rendered
 

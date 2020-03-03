@@ -299,6 +299,9 @@ export class AppComponent implements OnInit {
     }
 
     private selectScenario(sandboxKey: string, scenarioKey: number) {
+        // set flag to check when component is loaded
+        (window as any).isPlaygroundComponentLoaded = () => false;
+        (window as any).isPlaygroundComponentLoadedWithErrors = () => false;
         this.selectedSandboxAndScenarioKeys = { sandboxKey, scenarioKey };
         this.urlService.setSelected(sandboxKey, scenarioKey);
     }
