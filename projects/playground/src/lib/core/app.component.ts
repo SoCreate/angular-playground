@@ -20,7 +20,7 @@ import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
-    selector: 'ap-root',
+    selector: 'playground-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
 })

@@ -1,4 +1,4 @@
-import { writeFile, readFileSync } from 'fs';
+import { writeFile, readFileSync, existsSync } from 'fs';
 import { join as joinPath, resolve as resolvePath } from 'path';
 import { fromDirMultiple } from './from-dir';
 import { StringBuilder } from './string-builder';
@@ -15,21 +15,14 @@ export interface SandboxFileInformation {
     }[];
 }
 
-export function buildSandboxes(srcPaths: string[], chunk: boolean): Promise<string> {
+export async function buildSandboxes(srcPaths: string[], chunk: boolean): Promise<string[]> {
     const chunkMode = chunk ? 'lazy' : 'eager';
     const homes = srcPaths.map(srcPath => resolvePath(srcPath));
     const sandboxes = findSandboxes(homes);
-    const filePath = resolvePath(__dirname, '../../build/src/shared/sandboxes.js');
-    const fileContent = buildSandboxFileContents(sandboxes, chunkMode);
 
-    return new Promise((resolve, reject) => {
-        writeFile(filePath, fileContent, err => {
-            if (err) {
-                reject(new Error('Unable to compile sandboxes.'));
-            }
-            console.log('Successfully compiled sandbox files.');
-            resolve(filePath);
-        });
+    return await buildSandboxFileContents(sandboxes, chunkMode).then(results => {
+        console.log('Successfully compiled sandbox files.');
+        return results;
     });
 }
 
@@ -54,7 +47,7 @@ export function findSandboxes(homes: string[]): SandboxFileInformation[] {
             let scenarioMatches;
             let scenarioIndex = 1;
             while ((scenarioMatches = scenarioRegex.exec(contents)) !== null) {
-                scenarioMenuItems.push({ key: scenarioIndex, description: scenarioMatches[1] });
+                scenarioMenuItems.push({key: scenarioIndex, description: scenarioMatches[1]});
                 scenarioIndex++;
             }
 
@@ -73,17 +66,46 @@ export function findSandboxes(homes: string[]): SandboxFileInformation[] {
     return sandboxes;
 }
 
-export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], chunkMode: string): string {
-    const content = new StringBuilder();
-    content.addLine(`function getSandboxMenuItems() {`);
-    content.addLine(`return ${JSON.stringify(sandboxes)};`);
-    content.addLine(`}`);
-    content.addLine('exports.getSandboxMenuItems = getSandboxMenuItems;');
+async function writeSandboxContent(filePath, fileContent): Promise<string> {
+    return new Promise((resolve, reject) => {
+        writeFile(filePath, fileContent, err => {
+            if (err) {
+                reject(new Error('Unable to compile sandboxes.'));
+            }
+            resolve(filePath);
+        });
+    });
+}
 
-    content.addLine(`function getSandbox(path) {`);
+export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], chunkMode: string) {
+    const rootPaths = [resolvePath(__dirname, '../playground')];
+    const ivyRootPath = resolvePath(__dirname, '../../__ivy_ngcc__');
+    if (existsSync(ivyRootPath)) {
+        rootPaths.push(ivyRootPath);
+    }
+    const promises: Promise<string>[] = [];
+    fromDirMultiple(rootPaths, /angular-playground.*\.js/, (filename) => {
+            let contents = readFileSync(filename, 'utf8');
+
+            if (contents.indexOf('*GET_SANDBOX*') !== -1) {
+                const sandboxMenuItemsMethodBody = buildGetSandboxMenuItemMethodBodyContent(sandboxes);
+                contents = contents.replace(/(\/\*GET_SANDBOX_MENU_ITEMS\*\/).*?(?=\/\*END_GET_SANDBOX_MENU_ITEMS\*\/)/s, `$1\n ${sandboxMenuItemsMethodBody} \n`);
+
+                const sandboxMethodBody = buildGetSandboxMethodBodyContent(sandboxes, chunkMode);
+                contents = contents.replace(/(\/\*GET_SANDBOX\*\/).*?(?=\/\*END_GET_SANDBOX\*\/)/s, `$1\n ${sandboxMethodBody} \n`);
+
+                promises.push(writeSandboxContent(filename, contents));
+            }
+        }
+    );
+    return Promise.all(promises);
+}
+
+export function buildGetSandboxMethodBodyContent(sandboxes: SandboxFileInformation[], chunkMode: string): string {
+    const content = new StringBuilder();
     content.addLine(`switch(path) {`);
 
-    sandboxes.forEach(({ key, srcPath }, i) => {
+    sandboxes.forEach(({key, srcPath}, i) => {
         let fullPath = joinPath(srcPath, key);
         // Normalize slash syntax for Windows/Unix filepaths
         fullPath = slash(fullPath);
@@ -91,10 +113,12 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ch
         content.addLine(`  return import( /* webpackMode: "${chunkMode}" */ '${fullPath}').then(function(_){ return _.default.serialize('${key}'); });`);
     });
     content.addLine(`}`);
-    content.addLine(`}`);
-    content.addLine('exports.getSandbox = getSandbox;');
 
     return content.dump();
+}
+
+export function buildGetSandboxMenuItemMethodBodyContent(sandboxes: SandboxFileInformation[]): string {
+    return `return ${JSON.stringify(sandboxes)};`;
 }
 
 // Turns windows URL string ('c:\\etc\\') into URL node expects ('c:/etc/')

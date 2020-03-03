@@ -2,7 +2,16 @@
   "name": "angular-playground",
   "version": "6.2.0",
   "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
-  "typings": "dist/playground/public-api.d.ts",
+  "typings": "dist/playground/angular-playground.d.ts",
+  "main": "dist/playground/bundles/angular-playground.umd.js",
+  "module": "dist/playground/fesm5/angular-playground.js",
+  "es2015": "dist/playground/fesm2015/angular-playground.js",
+  "esm5": "dist/playground/esm5/angular-playground.js",
+  "esm2015": "dist/playground/esm2015/angular-playground.js",
+  "fesm5": "dist/playground/fesm5/angular-playground.js",
+  "fesm2015": "dist/playground/fesm2015/angular-playground.js",
+  "metadata": "dist/playground/angular-playground.metadata.json",
+  "sideEffects": false,
   "bin": {
     "angular-playground": "dist/bin/index.js"
   },
@@ -25,7 +34,6 @@
   "scripts": {
     "build": "rm -f -r dist && npm run playground:build && npm run cli:build && npm run schematics:build && npm run copy-jest-files",
     "playground:build": "ng build playground --prod",
-    "ngcc": "ngcc -s dist/playground",
     "cli:build": "tsc -p ./projects/cli/tsconfig.json",
     "schematics:build": "tsc -p ./projects/schematics/tsconfig.json",
     "prepublishOnly": "npm run build",
