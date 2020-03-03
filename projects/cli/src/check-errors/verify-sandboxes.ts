@@ -1,17 +1,14 @@
 import * as puppeteer from 'puppeteer';
-import { resolve as resolvePath } from 'path';
 import chalk from 'chalk';
-import { copyFileSync } from 'fs';
 import { ConsoleMessage } from 'puppeteer';
-import { SandboxFileInformation } from '../build-sandboxes';
+import { SANDBOX_MENU_ITEMS_FILE, SandboxFileInformation } from '../build-sandboxes';
 import { ErrorReporter, REPORT_TYPE } from '../error-reporter';
 import { Config } from '../configure';
-import { delay, removeDynamicImports } from '../utils';
+import { delay } from '../utils';
 
 // Used to tailor the version of headless chromium ran by puppeteer
 const CHROME_ARGS = [ '--disable-gpu', '--no-sandbox' ];
-const SANDBOX_PATH = resolvePath(__dirname, '../../../build/src/shared/sandboxes.js');
-const SANDBOX_DEST = resolvePath(__dirname, '../../../sandboxes_modified.js');
+
 
 export interface ScenarioSummary {
     url: string;
@@ -32,8 +29,6 @@ process.on('unhandledRejection', () => {
 
 export async function verifySandboxes(config: Config) {
     hostUrl = `http://localhost:${config.angularCliPort}`;
-    copyFileSync(SANDBOX_PATH, SANDBOX_DEST);
-    removeDynamicImports(SANDBOX_DEST);
     await main(config);
 }
 
@@ -129,7 +124,7 @@ function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean): Sce
  */
 function loadSandboxMenuItems(): SandboxFileInformation[] {
     try {
-        return require(SANDBOX_DEST).getSandboxMenuItems();
+        return require(SANDBOX_MENU_ITEMS_FILE).getSandboxMenuItems();
     } catch (err) {
         throw new Error(`Failed to load sandbox menu items. ${err}`);
     }

@@ -1,13 +1,13 @@
-import { copyFileSync, writeFileSync, unlinkSync, existsSync, readdirSync } from 'fs';
+import { writeFileSync, unlinkSync, existsSync, readdirSync } from 'fs';
 import { Browser, ConsoleMessage, launch } from 'puppeteer';
 import { resolve as resolvePath, isAbsolute } from 'path';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import { runCLI } from '@jest/core';
 import { Config as JestConfig } from '@jest/types';
-import { SandboxFileInformation } from './build-sandboxes';
+import { SANDBOX_MENU_ITEMS_FILE, SandboxFileInformation } from './build-sandboxes';
 import { Config } from './configure';
-import { delay, removeDynamicImports } from './utils';
+import { delay } from './utils';
 
 export interface ViewportOptions {
   width: number;
@@ -20,21 +20,16 @@ export interface ViewportOptions {
 
 // Used to tailor the version of headless chromium ran by puppeteer
 const CHROME_ARGS = ['--disable-gpu', '--no-sandbox'];
-const SANDBOX_PATH = resolvePath(__dirname, '../../../dist/build/src/shared/sandboxes.js');
-const SANDBOX_DEST = resolvePath(__dirname, '../../../sandboxes_modified.js');
-const TEST_PATH_BASE = resolvePath(__dirname, '../../../dist/jest/test.js');
+const TEST_PATH_BASE = resolvePath(__dirname, '../../dist/jest/test.js');
 
 let browser: Browser;
 
 // Ensure Chromium instances are destroyed on error
 process.on('unhandledRejection', async () => {
-    if (browser) await browser.close();
+    if (browser) { await browser.close(); }
 });
 
 export async function checkSnapshots(config: Config) {
-    copyFileSync(SANDBOX_PATH, SANDBOX_DEST);
-    removeDynamicImports(SANDBOX_DEST);
-
     if (config.deleteSnapshots) {
         deleteSnapshots(config);
     } else {
@@ -133,7 +128,7 @@ function normalizeResolvePath(directory) {
 function deleteSnapshots(config: Config) {
     try {
         const absoluteSnapshotDirectory = normalizeResolvePath(config.snapshotDirectory);
-        const items: SandboxFileInformation[] = require(SANDBOX_DEST).getSandboxMenuItems();
+        const items: SandboxFileInformation[] = require(SANDBOX_MENU_ITEMS_FILE).getSandboxMenuItems();
         const buildIdentifier = (url) => {
             return decodeURIComponent(url)
                 .substr(2)
@@ -167,7 +162,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
     const absoluteSnapshotDirectory = normalizeResolvePath(config.snapshotDirectory);
     const absoluteDiffDirectory = normalizeResolvePath(config.diffDirectory);
     try {
-        const items: SandboxFileInformation[] = require(SANDBOX_DEST).getSandboxMenuItems();
+        const items: SandboxFileInformation[] = require(SANDBOX_MENU_ITEMS_FILE).getSandboxMenuItems();
         const testPaths = [];
         items.forEach((item) => {
             item.scenarioMenuItems.forEach((scenarioItem) => {

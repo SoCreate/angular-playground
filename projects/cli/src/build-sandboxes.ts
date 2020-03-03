@@ -3,6 +3,8 @@ import { join as joinPath, resolve as resolvePath } from 'path';
 import { fromDirMultiple } from './from-dir';
 import { StringBuilder } from './string-builder';
 
+export const SANDBOX_MENU_ITEMS_FILE = resolvePath(__dirname, './sandbox-menu-items.js');
+
 export interface SandboxFileInformation {
     key: string;
     srcPath: string;
@@ -15,10 +17,14 @@ export interface SandboxFileInformation {
     }[];
 }
 
-export async function buildSandboxes(srcPaths: string[], chunk: boolean): Promise<string[]> {
+export async function buildSandboxes(srcPaths: string[], chunk: boolean, makeSandboxMenuItemFile = false): Promise<string[]> {
     const chunkMode = chunk ? 'lazy' : 'eager';
     const homes = srcPaths.map(srcPath => resolvePath(srcPath));
     const sandboxes = findSandboxes(homes);
+
+    if (makeSandboxMenuItemFile) {
+        await buildSandboxMenuItemFile(sandboxes);
+    }
 
     return await buildSandboxFileContents(sandboxes, chunkMode).then(results => {
         console.log('Successfully compiled sandbox files.');
@@ -119,6 +125,16 @@ export function buildGetSandboxMethodBodyContent(sandboxes: SandboxFileInformati
 
 export function buildGetSandboxMenuItemMethodBodyContent(sandboxes: SandboxFileInformation[]): string {
     return `return ${JSON.stringify(sandboxes)};`;
+}
+
+export async function buildSandboxMenuItemFile(sandboxes: SandboxFileInformation[]) {
+    const content = new StringBuilder();
+    content.addLine(`function getSandboxMenuItems() {`);
+    content.addLine(`return ${JSON.stringify(sandboxes)};`);
+    content.addLine(`}`);
+    content.addLine('exports.getSandboxMenuItems = getSandboxMenuItems;');
+
+    await writeSandboxContent(SANDBOX_MENU_ITEMS_FILE, content.dump());
 }
 
 // Turns windows URL string ('c:\\etc\\') into URL node expects ('c:/etc/')

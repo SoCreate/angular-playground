@@ -11,7 +11,7 @@ export async function run() {
     const config: Config = configure(process.argv);
 
     try {
-        await buildSandboxes(config.sourceRoots, config.chunk);
+        await buildSandboxes(config.sourceRoots, config.chunk, config.verifySandboxes || config.checkVisualRegressions);
     } catch (err) {
         throw err;
     }
