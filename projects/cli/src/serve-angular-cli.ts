@@ -23,7 +23,7 @@ export async function serveAngularCli(config: Config) {
 
 function configureArguments(config: Config): string[] {
     let args = [config.angularCliPath, 'serve', config.angularAppName];
-    const publicHost = `${config.angularCliHost}/${config.angularCliPort}`;
+    const publicHost = `${config.angularCliHost}:${config.angularCliPort}`;
 
     if (!config.angularAppName) {
         throw new Error(`Please provide Playground's appName in your angular-playground.json file.`);
@@ -37,6 +37,5 @@ function configureArguments(config: Config): string[] {
     if (config.angularCliAdditionalArgs) {
         args = args.concat(config.angularCliAdditionalArgs);
     }
-
     return args;
 }
