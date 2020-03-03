@@ -32,14 +32,19 @@
     "testURL": "http://localhost"
   },
   "scripts": {
-    "build": "rm -f -r dist && npm run playground:build && npm run cli:build && npm run schematics:build && npm run copy-jest-files",
+    "build": "npm run playground:build && npm run cli:build && npm run schematics:build && npm run copy-jest-files",
+    "rebuild": "npm run clean && npm run playground:build && npm run cli:build && npm run schematics:build && npm run copy-jest-files",
+    "clean": "rm -f -r dist && rm -f -r _stage",
+    "stage": "npm run build && mkdir _stage && cp package.json _stage && cp -r dist _stage",
+    "cleanstage": "rm -f -r _stage/__ivy_ngcc__ && rm -f -r _stage/dist",
+    "restage": "npm run build && npm run cleanstage && cp -f package.json _stage && cp -r dist _stage",
     "playground:build": "ng build playground --prod",
     "cli:build": "tsc -p ./projects/cli/tsconfig.json",
     "schematics:build": "tsc -p ./projects/schematics/tsconfig.json",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run rebuild",
     "test": "jest",
     "lint": "tslint --project tsconfig.json",
-    "copy-jest-files": "cd dist && mkdir jest && cd .. && cp projects/jest/src/* dist/jest"
+    "copy-jest-files": "rm -f -r dist/jest && cd dist && mkdir jest && cd .. && cp projects/jest/src/* dist/jest"
   },
   "repository": {
     "type": "git",

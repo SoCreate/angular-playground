@@ -4,11 +4,13 @@
 
 # build angular-playground package and link it globally
 cd ./
-npm run build
+npm run rebuild
+npm run stage
+cd ./_stage
 npm link
 
 # link the angular-playground package in the cli example
-cd ./examples/cli-example
+cd ../examples/cli-example
 npm link angular-playground
 
 echo 'finished setting up cli-example'
