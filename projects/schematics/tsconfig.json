@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": "tsconfig",
+    "baseUrl": ".",
     "lib": [
-      "es2017",
+      "es2018",
       "dom"
     ],
     "declaration": true,
@@ -15,6 +15,7 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "rootDir": "src/",
+    "outDir": "../../dist/schematics",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": true,
@@ -29,6 +30,7 @@
     "src/**/*"
   ],
   "exclude": [
-    "src/*/files/**/*"
+    "src/*/files/**/*",
+    "src/**/*.spec.ts"
   ]
 }

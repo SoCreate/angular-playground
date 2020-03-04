@@ -16,8 +16,7 @@
     "angular-playground": "dist/bin/index.js"
   },
   "files": [
-    "dist",
-    "projects/schematics"
+    "dist"
   ],
   "jest": {
     "transform": {
@@ -33,18 +32,23 @@
   },
   "scripts": {
     "build": "npm run playground:build && npm run cli:build && npm run schematics:build && npm run copy-jest-files",
-    "rebuild": "npm run clean && npm run playground:build && npm run cli:build && npm run schematics:build && npm run copy-jest-files",
+    "rebuild": "npm run clean && npm run build",
     "clean": "rm -f -r dist && rm -f -r _stage",
     "stage": "npm run build && mkdir _stage && cp package.json _stage && cp -r dist _stage",
     "cleanstage": "rm -f -r _stage/__ivy_ngcc__ && rm -f -r _stage/dist",
     "restage": "npm run build && npm run cleanstage && cp -f package.json _stage && cp -r dist _stage",
     "playground:build": "ng build playground --prod",
     "cli:build": "tsc -p ./projects/cli/tsconfig.json",
+    "copy:schemas": "cp projects/schematics/src/sandbox/schema.json dist/schematics/sandbox",
+    "copy:ng-addFiles": "cp -r projects/schematics/src/ng-add/files dist/schematics/ng-add",
+    "copy:sandboxFiles": "cp -r projects/schematics/src/sandbox/files dist/schematics/sandbox",
+    "copy:collection": "cp projects/schematics/src/collection.json dist/schematics/collection.json",
     "schematics:build": "tsc -p ./projects/schematics/tsconfig.json",
     "prepublishOnly": "npm run rebuild",
     "test": "jest",
     "lint": "tslint --project tsconfig.json",
-    "copy-jest-files": "rm -f -r dist/jest && cd dist && mkdir jest && cd .. && cp projects/jest/src/* dist/jest"
+    "copy-jest-files": "rm -f -r dist/jest && cd dist && mkdir jest && cd .. && cp projects/jest/src/* dist/jest",
+    "postbuild": "npm run copy:schemas && npm run copy:ng-addFiles && npm run copy:sandboxFiles && npm run copy:collection"
   },
   "repository": {
     "type": "git",
@@ -62,7 +66,7 @@
     "url": "https://github.com/SoCreate/angular-playground/issues"
   },
   "homepage": "http://www.angularplayground.it",
-  "schematics": "./projects/schematics/src/collection.json",
+  "schematics": "./dist/schematics/collection.json",
   "peerDependencies": {
     "@angular/common": ">=9.0.0",
     "@angular/compiler": ">=9.0.0",

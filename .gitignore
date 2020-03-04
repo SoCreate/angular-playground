@@ -45,8 +45,3 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-# schematics
-/projects/schematics/**/*.js
-/projects/schematics/**/*.d.ts
-/projects/schematics/**/*.map
