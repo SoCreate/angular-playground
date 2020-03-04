@@ -1,8 +1,9 @@
-import { normalize, strings } from '@angular-devkit/core';
+import { experimental, normalize, strings } from '@angular-devkit/core';
 import {
   apply,
   branchAndMerge,
-  chain, filter,
+  chain,
+  filter,
   mergeWith,
   move,
   Rule,
@@ -11,15 +12,11 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import {
-  addProjectToWorkspace,
-  getWorkspace,
-  WorkspaceProject,
-  WorkspaceSchema,
-} from '@schematics/angular/utility/config';
+import { addProjectToWorkspace, getWorkspace, } from '@schematics/angular/utility/config';
 import { addNpmScriptToPackageJson } from '../utils/npm-script';
 import { moveDependencyFromDepsToDevDeps } from '../utils/package';
 import { getProject, getSourceRoot } from '../utils/project';
+import { Builders, ProjectType, WorkspaceProject, WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 export default function add(options: any): Rule {
   return chain([
@@ -38,27 +35,27 @@ export function updateNpmConfig(): Rule {
 }
 
 function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: WorkspaceSchema,
-                               project: WorkspaceProject, packageName: string): Rule {
+                               project: experimental.workspace.WorkspaceProject, packageName: string): Rule {
 
   const projectRoot = normalize(project.root);
   const projectRootParts = projectRoot.split('/');
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
-  const tsConfigType = project.projectType === 'application' ? 'app' : 'lib';
 
-  const newProject: Partial<WorkspaceProject> = {
+  const newProject: Partial<experimental.workspace.WorkspaceProject> = {
     root: projectRoot,
     sourceRoot,
-    projectType: 'application',
+    projectType: ProjectType.Application,
     architect: {
       build: {
-        builder: '@angular-devkit/build-angular:browser',
+        builder: Builders.Browser,
         options: {
           outputPath: constructPath(['dist', 'playground']),
           index: constructPath([...sourceRootParts, 'index.html']),
           main: constructPath([...sourceRootParts, 'main.playground.ts']),
           polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
-          tsConfig: constructPath([...projectRootParts, `tsconfig.${tsConfigType}.json`]),
+          tsConfig: constructPath([...projectRootParts, `tsconfig.playground.json`]),
+          aot: false,
           assets: [
             constructPath([...sourceRootParts, 'favicon.ico']),
             constructPath([...sourceRootParts, 'assets']),
@@ -81,18 +78,17 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
             sourceMap: false,
             extractCss: true,
             namedChunks: false,
-            aot: false,
             extractLicenses: true,
             vendorChunk: false,
-            buildOptimizer: false,
+            buildOptimizer: true,
           },
         },
       },
       serve: {
-        builder: '@angular-devkit/build-angular:dev-server',
+        builder: Builders.DevServer,
         options: {
           browserTarget: 'playground:build',
-          port: 4201,
+          port: 4201
         },
       },
     },
@@ -141,6 +137,10 @@ function createNewFiles(options: any): Rule {
         sourceRoots: [sourceRoot],
       }),
     ]);
+    const tsconfigJsonTemplateSource = apply(url('./files'), [
+      filter(path => path.endsWith('tsconfig.playground.json')),
+      template({}),
+    ]);
     const playgroundMainTemplateSource = apply(url('./files'), [
       filter(path => path.endsWith('main.playground.ts')),
       template({}),
@@ -148,6 +148,7 @@ function createNewFiles(options: any): Rule {
     ]);
     return chain([
       branchAndMerge(mergeWith(angularPlaygroundJsonTemplateSource)),
+      branchAndMerge(mergeWith(tsconfigJsonTemplateSource)),
       branchAndMerge(mergeWith(playgroundMainTemplateSource)),
     ])(host, context);
   };

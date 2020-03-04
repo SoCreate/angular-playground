@@ -4,9 +4,10 @@ import { ErrorReporter, REPORT_TYPE } from '../src/error-reporter';
 
 describe('ErrorReporter', () => {
     const mockScenarios = [{
-        url: 'http://localhost:4201/textbox',
         name: 'textbox',
         description: 'Default',
+        sandboxKey: 'textbox',
+        scenarioKey: 1,
     }];
     let reporter;
 

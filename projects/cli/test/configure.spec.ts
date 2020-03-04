@@ -11,7 +11,7 @@ describe('configure', () => {
     });
 
     it('should return config object from configuration file', () => {
-        const programMock = { config: './cli/test/files/angular-test-config.json' };
+        const programMock = { config: './projects/cli/test/files/angular-test-config.json' };
         const config = applyConfigurationFile(programMock);
         expect(config).not.toBeUndefined();
     });
@@ -21,7 +21,7 @@ describe('configure', () => {
         beforeEach(() => {
             // Defaults provided from commander
             const programMock = {
-                config: './cli/test/files/empty-config.json',
+                config: './projects/cli/test/files/empty-config.json',
                 src: ['./src/'],
                 watch: true,
                 serve: true,

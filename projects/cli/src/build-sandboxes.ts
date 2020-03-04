@@ -26,7 +26,12 @@ export async function buildSandboxes(srcPaths: string[], chunk: boolean, makeSan
         await buildSandboxMenuItemFile(sandboxes);
     }
 
-    return await buildSandboxFileContents(sandboxes, chunkMode).then(results => {
+    const rootPaths = [resolvePath(__dirname, '../playground')];
+    const ivyRootPath = resolvePath(__dirname, '../../__ivy_ngcc__');
+    if (existsSync(ivyRootPath)) {
+        rootPaths.push(ivyRootPath);
+    }
+    return await buildSandboxFileContents(rootPaths, sandboxes, chunkMode, writeSandboxContent).then(results => {
         console.log('Successfully compiled sandbox files.');
         return results;
     });
@@ -83,12 +88,11 @@ async function writeSandboxContent(filePath, fileContent): Promise<string> {
     });
 }
 
-export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], chunkMode: string) {
-    const rootPaths = [resolvePath(__dirname, '../playground')];
-    const ivyRootPath = resolvePath(__dirname, '../../__ivy_ngcc__');
-    if (existsSync(ivyRootPath)) {
-        rootPaths.push(ivyRootPath);
-    }
+export function buildSandboxFileContents(
+    rootPaths: string[],
+    sandboxes: SandboxFileInformation[],
+    chunkMode: string,
+    writeContents: (file, contents) => Promise<string>) {
     const promises: Promise<string>[] = [];
     fromDirMultiple(rootPaths, /angular-playground.*\.js/, (filename) => {
             let contents = readFileSync(filename, 'utf8');
@@ -96,11 +100,9 @@ export function buildSandboxFileContents(sandboxes: SandboxFileInformation[], ch
             if (contents.indexOf('*GET_SANDBOX*') !== -1) {
                 const sandboxMenuItemsMethodBody = buildGetSandboxMenuItemMethodBodyContent(sandboxes);
                 contents = contents.replace(/(\/\*GET_SANDBOX_MENU_ITEMS\*\/).*?(?=\/\*END_GET_SANDBOX_MENU_ITEMS\*\/)/s, `$1\n ${sandboxMenuItemsMethodBody} \n`);
-
                 const sandboxMethodBody = buildGetSandboxMethodBodyContent(sandboxes, chunkMode);
                 contents = contents.replace(/(\/\*GET_SANDBOX\*\/).*?(?=\/\*END_GET_SANDBOX\*\/)/s, `$1\n ${sandboxMethodBody} \n`);
-
-                promises.push(writeSandboxContent(filename, contents));
+                promises.push(writeContents(filename, contents));
             }
         }
     );

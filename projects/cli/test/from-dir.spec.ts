@@ -1,8 +1,8 @@
 import { fromDirMultiple } from '../src/from-dir';
 
 describe('fromDir', () => {
-    const dir = './cli/test/files/from-dir-test/';
-    const dir2 = './cli/test/files/from-dir-test-multiple/';
+    const dir = './projects/cli/test/files/from-dir-test/';
+    const dir2 = './projects/cli/test/files/from-dir-test-multiple/';
 
     it('should throw error when directory does not exist', () => {
         const t = () => {

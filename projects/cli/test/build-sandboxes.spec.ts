@@ -1,10 +1,17 @@
-import { buildSandboxFileContents, findSandboxes, SandboxFileInformation, slash } from '../src/build-sandboxes';
+import {
+    buildGetSandboxMenuItemMethodBodyContent,
+    buildGetSandboxMethodBodyContent,
+    buildSandboxFileContents,
+    findSandboxes,
+    SandboxFileInformation,
+    slash
+} from '../src/build-sandboxes';
 
 describe('findSandboxes', () => {
     let sandboxes;
 
     beforeEach(() => {
-        sandboxes = findSandboxes(['./cli/test/files/sandboxes/', './cli/test/files/sandboxes-2/']);
+        sandboxes = findSandboxes(['./projects/cli/test/files/sandboxes/', './projects/cli/test/files/sandboxes-2/']);
     });
 
     it('should find sandbox files and assemble multiple sandboxes', () => {
@@ -12,12 +19,12 @@ describe('findSandboxes', () => {
     });
 
     it('should create a key that contains the path to the sandbox', () => {
-        expect(sandboxes[0].key).toBe('cli/test/files/sandboxes/example1.sandbox');
-        expect(sandboxes[1].key).toBe('cli/test/files/sandboxes/example2.sandbox');
-        expect(sandboxes[2].key).toBe('cli/test/files/sandboxes/example3.sandbox');
-        expect(sandboxes[3].key).toBe('cli/test/files/sandboxes/example4.sandbox');
-        expect(sandboxes[4].key).toBe('cli/test/files/sandboxes/example5.sandbox');
-        expect(sandboxes[5].key).toBe('cli/test/files/sandboxes/example6.sandbox');
+        expect(sandboxes[0].key).toBe('projects/cli/test/files/sandboxes/example1.sandbox');
+        expect(sandboxes[1].key).toBe('projects/cli/test/files/sandboxes/example2.sandbox');
+        expect(sandboxes[2].key).toBe('projects/cli/test/files/sandboxes/example3.sandbox');
+        expect(sandboxes[3].key).toBe('projects/cli/test/files/sandboxes/example4.sandbox');
+        expect(sandboxes[4].key).toBe('projects/cli/test/files/sandboxes/example5.sandbox');
+        expect(sandboxes[5].key).toBe('projects/cli/test/files/sandboxes/example6.sandbox');
     });
 
     it('should find the sandbox label among the configuration options', () => {
@@ -30,27 +37,27 @@ describe('findSandboxes', () => {
     });
 
     it('should put together correct metadata from a sandbox', () => {
-        expect(sandboxes[0].key).toBe('cli/test/files/sandboxes/example1.sandbox');
+        expect(sandboxes[0].key).toBe('projects/cli/test/files/sandboxes/example1.sandbox');
         expect(sandboxes[0].searchKey).toBe('ExampleComponent');
         expect(sandboxes[0].name).toBe('ExampleComponent');
         expect(sandboxes[0].label).toBe('');
 
-        expect(sandboxes[2].key).toBe('cli/test/files/sandboxes/example3.sandbox');
+        expect(sandboxes[2].key).toBe('projects/cli/test/files/sandboxes/example3.sandbox');
         expect(sandboxes[2].searchKey).toBe('ThreeDviewComponent');
         expect(sandboxes[2].name).toBe('ThreeDviewComponent');
         expect(sandboxes[2].label).toBe('');
 
-        expect(sandboxes[3].key).toBe('cli/test/files/sandboxes/example4.sandbox');
+        expect(sandboxes[3].key).toBe('projects/cli/test/files/sandboxes/example4.sandbox');
         expect(sandboxes[3].searchKey).toBe('ThreeDviewComponent');
         expect(sandboxes[3].name).toBe('ThreeDviewComponent');
         expect(sandboxes[3].label).toBe('');
 
-        expect(sandboxes[4].key).toBe('cli/test/files/sandboxes/example5.sandbox');
+        expect(sandboxes[4].key).toBe('projects/cli/test/files/sandboxes/example5.sandbox');
         expect(sandboxes[4].searchKey).toBe('ThreeDviewComponent');
         expect(sandboxes[4].name).toBe('ThreeDviewComponent');
         expect(sandboxes[4].label).toBe('');
 
-        expect(sandboxes[5].key).toBe('cli/test/files/sandboxes/example6.sandbox');
+        expect(sandboxes[5].key).toBe('projects/cli/test/files/sandboxes/example6.sandbox');
         expect(sandboxes[5].searchKey).toBe('ThreeDviewComponent');
         expect(sandboxes[5].name).toBe('ThreeDviewComponent');
         expect(sandboxes[5].label).toBe('');
@@ -92,6 +99,9 @@ describe('findSandboxes', () => {
 
 describe('buildSandboxFileContents', () => {
     let sandboxes: SandboxFileInformation[] = [];
+    const rootPaths = ['./projects/cli/test/files/sandboxes/'];
+    let contents: string;
+    const writeContent = (file, content) => contents = content;
 
     beforeEach(() => {
         sandboxes = [
@@ -128,45 +138,38 @@ describe('buildSandboxFileContents', () => {
         ];
     });
 
-    describe('exported functions', () => {
-        it('should return a function, getSandboxMenuItems, with the JSON string contents of the sandboxes', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'lazy');
+    describe('build sandbox code', () => {
+        it('should return from function with the JSON string contents of the sandboxes', () => {
+            const fileContents = buildGetSandboxMenuItemMethodBodyContent(sandboxes);
             expect(fileContents).toContain(JSON.stringify(sandboxes));
         });
 
-        it('should return a function, getSandbox, that includes imports to sandbox files', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'lazy');
+        it('should return from function imports to sandbox files', () => {
+            const fileContents = buildGetSandboxMethodBodyContent(sandboxes, 'lazy');
             expect(fileContents).toContain('import( /* webpackMode: "lazy" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
             expect(fileContents).toContain('import( /* webpackMode: "lazy" */ \'other-home/cli/test/files/sandboxes/other.sandbox\')');
-        });
-
-
-        it('should include exports for both sandbox-fetching functions', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'eager');
-            expect(fileContents).toContain('exports.getSandboxMenuItems = getSandboxMenuItems;');
-            expect(fileContents).toContain('exports.getSandbox = getSandbox;');
         });
     });
 
     describe('getSandbox', () => {
-        it('should return the serialized sandbox', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'lazy');
-            expect(fileContents).toContain('return _.default.serialize(\'cli/test/files/sandboxes/example1.sandbox\')');
-            expect(fileContents).toContain('return _.default.serialize(\'cli/test/files/sandboxes/other.sandbox\')');
+        it('should return the serialized sandbox', async () => {
+            await buildSandboxFileContents(rootPaths, sandboxes, 'lazy', writeContent);
+            expect(contents).toContain('return _.default.serialize(\'cli/test/files/sandboxes/example1.sandbox\')');
+            expect(contents).toContain('return _.default.serialize(\'cli/test/files/sandboxes/other.sandbox\')');
         });
     });
 
     describe('webpack strategy', () => {
-        it('should use lazy webpack resolution strategy if lazy is provided as a parameter', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'lazy');
-            expect(fileContents).toContain('import( /* webpackMode: "lazy" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
-            expect(fileContents).not.toContain('eager');
+        it('should use lazy webpack resolution strategy if lazy is provided as a parameter', async () => {
+            await buildSandboxFileContents(rootPaths, sandboxes, 'lazy', writeContent);
+            expect(contents).toContain('import( /* webpackMode: "lazy" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
+            expect(contents).not.toContain('eager');
         });
 
-        it('should use eager webpack resolution strategy if lazy is provided as a parameter', () => {
-            const fileContents = buildSandboxFileContents(sandboxes, 'eager');
-            expect(fileContents).toContain('import( /* webpackMode: "eager" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
-            expect(fileContents).not.toContain('lazy');
+        it('should use eager webpack resolution strategy if lazy is provided as a parameter', async () => {
+            await buildSandboxFileContents(rootPaths, sandboxes, 'eager', writeContent);
+            expect(contents).toContain('import( /* webpackMode: "eager" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
+            expect(contents).not.toContain('lazy');
         });
     });
 

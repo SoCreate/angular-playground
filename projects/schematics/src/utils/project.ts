@@ -1,6 +1,6 @@
-import { normalize } from '@angular-devkit/core';
+import { normalize, experimental } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
-import { getWorkspace, WorkspaceProject } from '@schematics/angular/utility/config';
+import { getWorkspace } from '@schematics/angular/utility/config';
 
 export function getProjectPath(
   host: Tree,
@@ -28,7 +28,7 @@ export function getProject(
   host: Tree,
   options: { project?: string | undefined; path?: string | undefined },
   typeFilter: 'application' | 'library' | null = null,
-): WorkspaceProject {
+): experimental.workspace.WorkspaceProject {
   const workspace = getWorkspace(host);
 
   if (!options.project) {
