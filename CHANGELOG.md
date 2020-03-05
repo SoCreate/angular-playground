@@ -1,3 +1,18 @@
+# 7.0.0-rc.1 (2020-3-5)
+
+<a name="7.0.0-rc.1"></a>
+
+### Features
+* **angular:** Upgrade to be compatible with Angular version 9 and work with Ivy compiler
+* **verify sandboxes:** Change verify sandboxes to not load an new page for every scenario error check to improve performance
+* **verify sandboxes:** Add ability to filter based on a path to only check a subset of sandboxes
+* **embeding:** Add ability to add a uniqueId to sandboxes to allow for URL not to be tied to the file location of the sandbox file
+* **visual regressions:** Make visual regression sleep duration configurable
+
+### Bug Fixes
+* **navigation menu:** Fixed issue with overlay not hiding when set to embed mode
+* **verify sandboxes:** Fix issue with verify sandboxes not catching compilation errors
+
 # 7.0.0-rc.0 (2020-3-4)
 
 <a name="7.0.0-rc.0"></a>
