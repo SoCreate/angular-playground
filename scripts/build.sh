@@ -4,7 +4,7 @@
 
 # build angular-playground package and link it globally
 cd ./
-npm run rebuild
+npm run clean
 npm run stage
 cd ./_stage
 npm link
