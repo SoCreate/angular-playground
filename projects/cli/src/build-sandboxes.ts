@@ -41,15 +41,16 @@ export function findSandboxes(homes: string[]): SandboxFileInformation[] {
     const sandboxes = [];
 
     fromDirMultiple(homes, /\.sandbox.ts$/, (filename, home) => {
-        let sandboxPath = filename.replace(home, '.').replace(/.ts$/, '').replace(/\\/g, '/');
+        const sandboxPath = filename.replace(home, '.').replace(/.ts$/, '').replace(/\\/g, '/');
         const contents = readFileSync(filename, 'utf8');
 
         const matchSandboxOf = /\s?sandboxOf\s*\(\s*([^)]+?)\s*\)/g.exec(contents);
         if (matchSandboxOf) {
             const typeName = matchSandboxOf[1].split(',')[0].trim();
             const labelText = /label\s*:\s*['"](.+)['"]/g.exec(matchSandboxOf[0]);
+            const uniqueIdText = /uniqueId\s*:\s*['"](.+)['"]/g.exec(matchSandboxOf[0]);
 
-            let scenarioMenuItems = [];
+            const scenarioMenuItems = [];
 
             // Tested with https://regex101.com/r/mtp2Fy/2
             // First scenario: May follow directly after sandboxOf function ).add
@@ -62,13 +63,14 @@ export function findSandboxes(homes: string[]): SandboxFileInformation[] {
                 scenarioIndex++;
             }
 
-            let label = labelText ? labelText[1] : '';
+            const label = labelText ? labelText[1] : '';
             sandboxes.push({
                 key: sandboxPath,
+                uniqueId: uniqueIdText ? uniqueIdText[1] : undefined,
                 srcPath: home,
                 searchKey: `${typeName}${label}`,
                 name: typeName,
-                label: label,
+                label,
                 scenarioMenuItems,
             });
         }
@@ -99,7 +101,10 @@ export function buildSandboxFileContents(
 
             if (contents.indexOf('*GET_SANDBOX*') !== -1) {
                 const sandboxMenuItemsMethodBody = buildGetSandboxMenuItemMethodBodyContent(sandboxes);
-                contents = contents.replace(/(\/\*GET_SANDBOX_MENU_ITEMS\*\/).*?(?=\/\*END_GET_SANDBOX_MENU_ITEMS\*\/)/s, `$1\n ${sandboxMenuItemsMethodBody} \n`);
+                contents = contents.replace(
+                    /(\/\*GET_SANDBOX_MENU_ITEMS\*\/).*?(?=\/\*END_GET_SANDBOX_MENU_ITEMS\*\/)/s,
+                    `$1\n ${sandboxMenuItemsMethodBody} \n`
+                );
                 const sandboxMethodBody = buildGetSandboxMethodBodyContent(sandboxes, chunkMode);
                 contents = contents.replace(/(\/\*GET_SANDBOX\*\/).*?(?=\/\*END_GET_SANDBOX\*\/)/s, `$1\n ${sandboxMethodBody} \n`);
                 promises.push(writeContents(filename, contents));

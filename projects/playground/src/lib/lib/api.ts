@@ -1,6 +1,7 @@
 import { Sandbox } from './app-state';
 
 export interface SandboxOfConfig {
+    uniqueId?: string;
     label?: string;
     imports?: any[];
     declarations?: any[];

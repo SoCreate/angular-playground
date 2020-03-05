@@ -24,6 +24,7 @@ export interface Scenario {
 
 export interface SandboxMenuItem {
     key: string;
+    uniqueId?: string;
     searchKey: string;
     name: string;
     label?: string;

@@ -20,7 +20,7 @@ export class UrlService {
 
     constructor(private location: Location) {
         this.sandboxMenuItems = SandboxLoader.getSandboxMenuItems();
-        let urlPath = location.path();
+        const urlPath = location.path();
         this._embed = /[?|&]embed=1/.exec(urlPath) !== null;
         this._select = this.parse('scenario', this.sandboxMenuItems, urlPath);
         if (this._select) {
@@ -36,27 +36,30 @@ export class UrlService {
             this.location.replaceState('');
             return;
         }
-        let scenarioDescription = this.sandboxMenuItems
-            .find(sandboxMenuItem => sandboxMenuItem.key.toLowerCase() === sandboxKey.toLowerCase())
-            .scenarioMenuItems.find(scenarioMenuItem => scenarioMenuItem.key === scenarioKey).description;
-        this.location.replaceState(`?scenario=${encodeURIComponent(sandboxKey)}/${encodeURIComponent(scenarioDescription)}`);
+        const sandBoxMenuItem = this.sandboxMenuItems
+            .find(sandboxMenuItem => sandboxMenuItem.key.toLowerCase() === sandboxKey.toLowerCase());
+        const scenarioMenuItem = sandBoxMenuItem.scenarioMenuItems.find(mi => mi.key === scenarioKey);
+        const key = sandBoxMenuItem.uniqueId ? sandBoxMenuItem.uniqueId : sandboxKey;
+        this.location.replaceState(`?scenario=${encodeURIComponent(key)}/${encodeURIComponent(scenarioMenuItem.description)}`);
     }
 
     private parse(key: string, sandboxMenuItems: SandboxMenuItem[], urlPath: string) {
-        let match = new RegExp('[?|&]' + key + '=([^&#]*)').exec(urlPath);
+        const match = new RegExp('[?|&]' + key + '=([^&#]*)').exec(urlPath);
         if (match !== null) {
-            let value = match[1];
-            let firstSlash = value.indexOf('/');
+            const value = match[1];
+            const firstSlash = value.indexOf('/');
 
-            let sbKey = value.substr(0, firstSlash);
+            const sbKey = value.substr(0, firstSlash);
             let sandboxKey = decodeURIComponent(sbKey);
-            let sandboxMenuItem = sandboxMenuItems
-                .find(smi => smi.key.toLowerCase() === sandboxKey.toLowerCase());
+            const sandboxMenuItem = sandboxMenuItems
+                .find(smi => smi.key.toLowerCase() === sandboxKey.toLowerCase()
+                    || (smi.uniqueId && smi.uniqueId === sandboxKey));
+            sandboxKey = sandboxMenuItem.key;
             if (!sandboxMenuItem) {
                 return { sandboxKey: null, scenarioKey: null };
             }
-            let scenarioDesc = decodeURIComponent(value.substr(firstSlash + 1, value.length).toLowerCase());
-            let scenarioKey = sandboxMenuItem.scenarioMenuItems
+            const scenarioDesc = decodeURIComponent(value.substr(firstSlash + 1, value.length).toLowerCase());
+            const scenarioKey = sandboxMenuItem.scenarioMenuItems
                 .findIndex(scenarioMenuItem => scenarioMenuItem.description.toLowerCase() === scenarioDesc) + 1;
             if (scenarioKey <= 0) {
                 return { sandboxKey: null, scenarioKey: null };
