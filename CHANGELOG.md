@@ -1,3 +1,16 @@
+# 7.0.0-rc.0 (2020-3-4)
+
+<a name="7.0.0-rc.0"></a>
+
+### Features
+* **angular:** Upgrade to be compatible with Angular version 9 and work with Ivy compiler
+* **verify sandboxes:** Change verify sandboxes to not load an new page for every scenario error check to improve performance
+* **embeding:** Add ability to add a uniqueId to sandboxes to allow for URL not to be tied to the file location of the sandbox file
+
+### Bug Fixes
+* **navigation menu:** Fixed issue with overlay not hiding when set to embed mode
+* **verify sandboxes:** Fix issue with verify sandboxes not catching compilation errors
+
 # 6.2.0 (2020-1-8)
 
 <a name="6.2.0"></a>
