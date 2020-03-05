@@ -14,13 +14,11 @@ fix broken UI.
 
 ## Documentation (<http://www.angularplayground.it/>)
 
-* Angular 6.x and up
 * [CLI quick-start](http://www.angularplayground.it/docs/getting-started/angular-cli)
 
 ## Articles
 
 * [Developing and Running Components in a Sandbox!](https://blog.codewithdan.com/2017/11/21/angular-playground-developing-and-running-components-in-a-sandbox/)
-* [Front-end Workflows: Re-envisioned](https://hackernoon.com/front-end-workflow-re-envisioned-43f800bb01bd)
 
 ## Contributing
 
@@ -37,4 +35,4 @@ Angular Playground is [MIT licensed](./LICENSE).
 
 ## Latest Changes
 
-[Playground Changelog](./packages/angular-playground/CHANGELOG.md)
+[Playground Changelog](./CHANGELOG.md)
