@@ -30,10 +30,11 @@ export class AppComponent implements OnInit {
     commandBarPreview = false;
     totalSandboxes: number;
     filteredSandboxMenuItems: SandboxMenuItem[];
-    selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = { sandboxKey: null, scenarioKey: null };
+    selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys = {sandboxKey: null, scenarioKey: null};
     filter = new FormControl();
     shortcuts = this.getShortcuts();
     activeMiddleware: Middleware;
+    embed = false;
 
     constructor(
         private stateService: StateService,
@@ -42,7 +43,8 @@ export class AppComponent implements OnInit {
         private levenshteinDistance: LevenshteinDistance,
         private changeDetectorRef: ChangeDetectorRef,
         @Inject(MIDDLEWARE) private middleware: Observable<Middleware>,
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         const sandboxMenuItems = SandboxLoader.getSandboxMenuItems();
@@ -50,7 +52,8 @@ export class AppComponent implements OnInit {
         this.middleware
             .subscribe(middleware => this.activeMiddleware = middleware);
 
-        if (this.urlService.embed) {
+        this.embed = this.urlService.embed;
+        if (this.embed) {
             this.selectedSandboxAndScenarioKeys = {
                 sandboxKey: this.urlService.select.sandboxKey,
                 scenarioKey: this.urlService.select.scenarioKey,
@@ -85,13 +88,13 @@ export class AppComponent implements OnInit {
                 debounceTime(300),
                 distinctUntilChanged(),
             )
-            .subscribe(value => {
-                this.stateService.setFilter(value);
-                this.filteredSandboxMenuItems = this.filterSandboxes(sandboxMenuItems, value);
-                if (!value) {
-                    this.selectScenario(null, null);
-                }
-            });
+                .subscribe(value => {
+                    this.stateService.setFilter(value);
+                    this.filteredSandboxMenuItems = this.filterSandboxes(sandboxMenuItems, value);
+                    if (!value) {
+                        this.selectScenario(null, null);
+                    }
+                });
         }
 
         // expose select scenario functionality for visual regression test
@@ -275,7 +278,7 @@ export class AppComponent implements OnInit {
 
     private filterSandboxes(sandboxMenuItems: SandboxMenuItem[], filter: string) {
         if (!filter) {
-            return sandboxMenuItems.map((item, i) => Object.assign({}, item, { tabIndex: i }));
+            return sandboxMenuItems.map((item, i) => Object.assign({}, item, {tabIndex: i}));
         }
 
         let tabIndex = 0;
@@ -287,7 +290,7 @@ export class AppComponent implements OnInit {
                 let indexMatches = fuzzySearch(filterNormalized, searchKeyNormalized);
                 if (indexMatches) {
                     let weight = this.levenshteinDistance.getDistance(filterNormalized, searchKeyNormalized);
-                    return [...accum, Object.assign({}, curr, { weight, indexMatches })];
+                    return [...accum, Object.assign({}, curr, {weight, indexMatches})];
                 } else {
                     return accum;
                 }
@@ -295,14 +298,14 @@ export class AppComponent implements OnInit {
             .sort((a, b) => {
                 return a.weight - b.weight;
             })
-            .map(sandboxMenuItem => Object.assign({}, sandboxMenuItem, { tabIndex: tabIndex++ }));
+            .map(sandboxMenuItem => Object.assign({}, sandboxMenuItem, {tabIndex: tabIndex++}));
     }
 
     private selectScenario(sandboxKey: string, scenarioKey: number) {
         // set flag to check when component is loaded
         (window as any).isPlaygroundComponentLoaded = () => false;
         (window as any).isPlaygroundComponentLoadedWithErrors = () => false;
-        this.selectedSandboxAndScenarioKeys = { sandboxKey, scenarioKey };
+        this.selectedSandboxAndScenarioKeys = {sandboxKey, scenarioKey};
         this.urlService.setSelected(sandboxKey, scenarioKey);
     }
 
