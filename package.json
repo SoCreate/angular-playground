@@ -67,6 +67,9 @@
   },
   "homepage": "http://www.angularplayground.it",
   "schematics": "./dist/schematics/collection.json",
+  "ng-add": {
+    "save": "devDependencies"
+  },
   "peerDependencies": {
     "@angular/common": ">=9.0.0",
     "@angular/compiler": ">=9.0.0",

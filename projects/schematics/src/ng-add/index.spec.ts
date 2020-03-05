@@ -219,7 +219,6 @@ const createAngularJsonForLibrary = (includeTestApp = false) => {
 const createPackageJson = () => `{
   "scripts": {},
   "dependencies": {
-    "angular-playground": "1.2.3"
   },
   "devDependencies": {}
 }`;
@@ -228,8 +227,6 @@ const verifyBasicFiles = (tree: UnitTestTree, options: { sourceRootPath: string,
   // package.json
   const packageJson = getJsonFileAsObject(tree, 'package.json');
   expect(packageJson.scripts.playground).toBe('angular-playground');
-  expect(packageJson.dependencies['angular-playground']).toBeUndefined();
-  expect(packageJson.devDependencies['angular-playground']).toBe('1.2.3');
 
   // angular-playground.json
   const angularPlaygroundJson = getJsonFileAsObject(tree, 'angular-playground.json');

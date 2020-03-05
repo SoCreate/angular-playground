@@ -14,7 +14,6 @@ import {
 } from '@angular-devkit/schematics';
 import { addProjectToWorkspace, getWorkspace, } from '@schematics/angular/utility/config';
 import { addNpmScriptToPackageJson } from '../utils/npm-script';
-import { moveDependencyFromDepsToDevDeps } from '../utils/package';
 import { getProject, getSourceRoot } from '../utils/project';
 import { Builders, ProjectType, WorkspaceProject, WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
@@ -28,7 +27,6 @@ export default function add(options: any): Rule {
 
 export function updateNpmConfig(): Rule {
   return (host: Tree) => {
-    moveDependencyFromDepsToDevDeps(host, 'angular-playground');
     addNpmScriptToPackageJson(host, 'playground', 'angular-playground');
     return host;
   };
