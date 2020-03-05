@@ -44,7 +44,7 @@ async function main(config: Config) {
 
     await waitForNgServe(browser, hostUrl, timeoutAttempts);
 
-    const scenarios = getSandboxMetadata(hostUrl, config.randomScenario);
+    const scenarios = getSandboxMetadata(config, hostUrl, config.randomScenario);
     console.log(`Retrieved ${scenarios.length} scenarios.\n`);
 
     reporter = new ErrorReporter(scenarios, config.reportPath, config.reportType);
@@ -88,41 +88,44 @@ async function openScenario(scenario: ScenarioSummary, page: Page) {
 
 /**
  * Retrieves Sandbox scenario URLs, descriptions, and names
+ * @param config - Configuration
  * @param baseUrl - Base URL of scenario path e.g. http://localhost:4201
  * @param selectRandomScenario - Whether or not to select one random scenario of all availalble scenarios for a component
  */
-function getSandboxMetadata(baseUrl: string, selectRandomScenario: boolean): ScenarioSummary[] {
+function getSandboxMetadata(config: Config, baseUrl: string, selectRandomScenario: boolean): ScenarioSummary[] {
     const scenarios: ScenarioSummary[] = [];
 
     loadSandboxMenuItems().forEach((sandboxItem: SandboxFileInformation) => {
-        if (selectRandomScenario) {
-            const randomItemKey = getRandomKey(sandboxItem.scenarioMenuItems.length);
-            for (const item of sandboxItem.scenarioMenuItems) {
-                if (item.key === randomItemKey) {
-                    scenarios.push(
-                        {
-                            name: sandboxItem.key,
-                            description: item.description,
-                            sandboxKey: sandboxItem.key,
-                            scenarioKey: item.key
-                        }
-                    );
-                    break;
+        if (sandboxItem.key.includes(config.pathToSandboxes)) {
+            if (selectRandomScenario) {
+                const randomItemKey = getRandomKey(sandboxItem.scenarioMenuItems.length);
+                for (const item of sandboxItem.scenarioMenuItems) {
+                    if (item.key === randomItemKey) {
+                        scenarios.push(
+                            {
+                                name: sandboxItem.key,
+                                description: item.description,
+                                sandboxKey: sandboxItem.key,
+                                scenarioKey: item.key
+                            }
+                        );
+                        break;
+                    }
                 }
+            } else {
+                // Grab all scenarios
+                sandboxItem.scenarioMenuItems
+                    .forEach((item) => {
+                        scenarios.push(
+                            {
+                                name: sandboxItem.key,
+                                description: item.description,
+                                sandboxKey: sandboxItem.key,
+                                scenarioKey: item.key
+                            }
+                        );
+                    });
             }
-        } else {
-            // Grab all scenarios
-            sandboxItem.scenarioMenuItems
-                .forEach((item) => {
-                    scenarios.push(
-                        {
-                            name: sandboxItem.key,
-                            description: item.description,
-                            sandboxKey: sandboxItem.key,
-                            scenarioKey: item.key
-                        }
-                    );
-                });
         }
     });
 
