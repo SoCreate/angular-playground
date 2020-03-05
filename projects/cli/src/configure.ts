@@ -29,6 +29,7 @@ export interface Config {
     imageSnapshotConfig: { [key: string]: any};
     visualRegressionIgnore: Array<{ regex: string, flags?: string }>;
     visualRegressionMockDate: number; // date in ms
+    visualRegressionSleepDuration: number;
 
     angularAppName?: string;
     angularCliPath?: string;
@@ -74,6 +75,7 @@ export function configure(argv: any): Config {
         .option('--delete-snapshots', 'Delete stored snapshots', false)
         .option('--path-to-sandboxes <dir>', 'Subdirectory of project in which to target sandbox files', '')
         .option('--visual-regression-mock-date <dateInMs>', 'Date to set in puppeteer (in ms from epoch) for visual regression tests.', Date.now())
+        .option('--visual-regression-sleep-duration <n>', 'Milliseconds to wait for sandbox scenario to load before capturing screenshot.', 100)
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
@@ -121,6 +123,7 @@ export function applyConfigurationFile(program: any): Config {
         imageSnapshotConfig: playgroundConfig.imageSnapshotConfig || {},
         visualRegressionIgnore: playgroundConfig.visualRegressionIgnore || [],
         visualRegressionMockDate: playgroundConfig.visualRegressionMockDate || program.visualRegressionMockDate,
+        visualRegressionSleepDuration: playgroundConfig.visualRegressionSleepDuration || program.visualRegressionSleepDuration,
     };
 
     if (config.verifySandboxes && config.reportType && !config.reportPath) {

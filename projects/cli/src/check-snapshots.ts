@@ -193,7 +193,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
                     test.sandboxKey, test.scenarioKey)
                   await page.waitFor(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors());
                   const sleep = (ms) => new Promise(res => setTimeout(res, ms));
-                  await sleep(100); // sleep for a bit in case page elements are still being rendered
+                  await sleep(${config.visualRegressionSleepDuration}); // sleep for a bit in case page elements are still being rendered
 
                   // take screenshot
                   const image = await page.screenshot({ fullPage: ${!viewportConfig} });
