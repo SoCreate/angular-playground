@@ -40,15 +40,16 @@
     "playground:build": "ng build playground --prod",
     "cli:build": "tsc -p ./projects/cli/tsconfig.json",
     "copy:schemas": "cp projects/schematics/src/sandbox/schema.json dist/schematics/sandbox",
-    "copy:ng-addFiles": "cp -r projects/schematics/src/ng-add/files dist/schematics/ng-add",
+    "copy:schematicFiles": "cd ./projects/schematics/src && cp -r --parent ./**/files/* ../../../dist/schematics && cp -r --parent ./**/**/files/* ../../../dist/schematics",
     "copy:sandboxFiles": "cp -r projects/schematics/src/sandbox/files dist/schematics/sandbox",
     "copy:collection": "cp projects/schematics/src/collection.json dist/schematics/collection.json",
+    "copy:migration": "cp projects/schematics/src/migrations/migrations.json dist/schematics/migrations/migrations.json",
     "schematics:build": "tsc -p ./projects/schematics/tsconfig.json",
     "prepublishOnly": "npm run rebuild",
     "test": "jest",
     "lint": "tslint --project tsconfig.json",
     "copy-jest-files": "rm -f -r dist/jest && cd dist && mkdir jest && cd .. && cp projects/jest/src/* dist/jest",
-    "postbuild": "npm run copy:schemas && npm run copy:ng-addFiles && npm run copy:sandboxFiles && npm run copy:collection"
+    "postbuild": "npm run copy:schemas && npm run copy:sandboxFiles && npm run copy:collection && npm run copy:migration && npm run copy:schematicFiles"
   },
   "repository": {
     "type": "git",
@@ -69,6 +70,9 @@
   "schematics": "./dist/schematics/collection.json",
   "ng-add": {
     "save": "devDependencies"
+  },
+  "ng-update": {
+    "migrations": "./dist/schematics/migrations/migrations.json"
   },
   "peerDependencies": {
     "@angular/common": ">=9.0.0",
@@ -107,7 +111,7 @@
     "@angular/platform-browser-dynamic": "~9.0.2",
     "@angular-devkit/build-angular": "~0.900.3",
     "@angular-devkit/build-ng-packagr": "~0.900.3",
-    "@angular/cli": "~9.0.3",
+    "@angular/cli": "~9.0.2",
     "@angular/compiler-cli": "~9.0.2",
     "@angular/language-service": "~9.0.2",
     "@types/node": "^12.11.1",

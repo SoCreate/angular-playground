@@ -1,5 +1,5 @@
 {
-  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "sandbox": {
       "description": "Creates a sandbox file for component in given path",
@@ -9,6 +9,11 @@
     "ng-add": {
       "description": "Adds Angular Playground to an application",
       "factory": "./ng-add"
+    },
+    "migration-01": {
+      "description": "Upgrade to version 7.0.0",
+      "version": "6.2.0",
+      "factory": "./migrations/7.0.0/index"
     }
   }
 }

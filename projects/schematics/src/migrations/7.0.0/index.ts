@@ -1,9 +1,9 @@
-import { experimental, normalize, strings } from '@angular-devkit/core';
+import { experimental, normalize } from '@angular-devkit/core';
 import {
   apply,
-  branchAndMerge,
   chain,
   filter,
+  forEach,
   mergeWith,
   move,
   Rule,
@@ -12,36 +12,29 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { addProjectToWorkspace, getWorkspace, } from '@schematics/angular/utility/config';
-import { addNpmScriptToPackageJson } from '../utils/npm-script';
-import { getProject, getSourceRoot } from '../utils/project';
+import { getProject, getSourceRoot } from '../../utils/project';
 import { Builders, ProjectType, WorkspaceProject, WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
-import { constructPath } from '../utils/paths';
+import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/config';
+import { constructPath } from '../../utils/paths';
 
-export default function add(options: any): Rule {
+export default function migration(options: any): Rule {
   return chain([
-    updateNpmConfig(),
     configure(options),
-    createNewFiles(options),
+    updateFiles(options),
   ]);
 }
 
-export function updateNpmConfig(): Rule {
-  return (host: Tree) => {
-    addNpmScriptToPackageJson(host, 'playground', 'angular-playground');
-    return host;
-  };
-}
-
-function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: WorkspaceSchema,
-                               project: experimental.workspace.WorkspaceProject, packageName: string): Rule {
+function updateAppInWorkspaceFile(
+  options: { stylesExtension: string },
+  workspace: WorkspaceSchema,
+  project: experimental.workspace.WorkspaceProject, packageName: string): Rule {
 
   const projectRoot = normalize(project.root);
   const projectRootParts = projectRoot.split('/');
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
 
-  const newProject: Partial<experimental.workspace.WorkspaceProject> = {
+  const playgroundProject: Partial<experimental.workspace.WorkspaceProject> = {
     root: projectRoot,
     sourceRoot,
     projectType: ProjectType.Application,
@@ -93,7 +86,8 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
     },
   };
 
-  return addProjectToWorkspace(workspace, packageName, newProject as WorkspaceProject);
+  workspace.projects[packageName] = playgroundProject as WorkspaceProject;
+  return updateWorkspace(workspace);
 }
 
 function configure(options: any): Rule {
@@ -119,36 +113,44 @@ function configure(options: any): Rule {
     }
 
     return chain([
-      addAppToWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
+      updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
     ])(host, context);
   };
 }
 
-function createNewFiles(options: any): Rule {
+function updateFiles(options: any): Rule {
   return (host: Tree, context: SchematicContext) => {
     const project = getProject(host, options);
-
     const sourceRoot = getSourceRoot(project.sourceRoot);
-    const angularPlaygroundJsonTemplateSource = apply(url('./files'), [
-      filter(path => path.endsWith('angular-playground.json')),
-      template({
-        ...strings,
-        sourceRoots: [sourceRoot],
-      }),
-    ]);
     const tsconfigJsonTemplateSource = apply(url('./files'), [
       filter(path => path.endsWith('tsconfig.playground.json')),
       template({}),
+      overwriteIfExists(host),
     ]);
     const playgroundMainTemplateSource = apply(url('./files'), [
       filter(path => path.endsWith('main.playground.ts')),
       template({}),
       move(sourceRoot),
+      overwriteIfExists(host),
     ]);
     return chain([
-      branchAndMerge(mergeWith(angularPlaygroundJsonTemplateSource)),
-      branchAndMerge(mergeWith(tsconfigJsonTemplateSource)),
-      branchAndMerge(mergeWith(playgroundMainTemplateSource)),
+      mergeWith(tsconfigJsonTemplateSource),
+      mergeWith(playgroundMainTemplateSource),
     ])(host, context);
   };
 }
+
+// Add to resolve issue with mergeWith not working when using MergeStrategy.Overwrite
+// When not using this function I get this error:  "Error [file] already exists."
+// https://github.com/angular/angular-cli/issues/11337#issuecomment-516543220
+function overwriteIfExists(host: Tree): Rule {
+  return forEach(fileEntry => {
+    if (host.exists(fileEntry.path)) {
+      host.overwrite(fileEntry.path, fileEntry.content);
+      return null;
+    }
+    return fileEntry;
+  });
+}
+
+
