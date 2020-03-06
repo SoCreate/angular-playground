@@ -1,6 +1,4 @@
 language: node_js
 node_js:
   - "node"
-env:
-  - TEST_DIR=packages/angular-playground
-script: cd $TEST_DIR && npm install && npm test
+script: npm install && npm test
