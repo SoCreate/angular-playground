@@ -1,4 +1,4 @@
-# Contributing to Playground for Angular
+# Contributing to Angular Playground
 
  - [Issues and Bugs](#issue)
  - [Request/Add a Feature](#feature)
@@ -56,13 +56,11 @@ That's it! Thank you for your contribution!
 Install dependencies for angular-playground:
 
 ```
-cd ./packages/angular-playground/
 npm i
 ```
 
 Then install dependencies for the example-app:
 ```
-cd ../../
 cd ./examples/cli-example/
 npm i
 ```
@@ -72,11 +70,17 @@ From `./examples/cli-example`:
 npm run playground:build && npm run playground
 ```
 
-From this point you can work on the Playground `app` and `api` code,
-but you will need to stop the playground from running and re-run it (which will
-handle re-installing the latest changes for the package).
-If you need to work on the `cli.ts` code you will need to 
-run `npm run build` from the project root after your changes.
+From this point you can work on the Playground and make changes to the source code.  You will need to stop the Playground
+from running and build the app again (run `npm run restage` from the source code root after your changes).  Then run `npm run playground`
+in the example app root folder again to see the changes you made to the source code in action.
+
+```
+Ctrl-C (stop playground)
+cd ../../
+npm run restage
+cd examples/cli-example/
+npm run playground
+```
 
 ### Tooling
 To run bash scripts on Windows, add the [Git for Windows](https://git-scm.com/) `/bin/`
