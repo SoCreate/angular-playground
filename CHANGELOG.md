@@ -1,3 +1,10 @@
+# 7.0.2 (2020-3-25)
+
+<a name="7.0.2"></a>
+
+### Bug Fixes
+* **scenario loading:** Fix issue with zone error introduced in 7.0.1
+
 # 7.0.1 (2020-3-25)
 
 <a name="7.0.1"></a>
