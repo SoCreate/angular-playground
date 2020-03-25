@@ -1,6 +1,6 @@
 {
   "name": "angular-playground",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
   "typings": "dist/playground/angular-playground.d.ts",
   "main": "dist/playground/bundles/angular-playground.umd.js",
@@ -37,7 +37,7 @@
     "stage": "npm run build && mkdir _stage && cp package.json _stage && cp -r dist _stage",
     "cleanstage": "rm -f -r _stage/__ivy_ngcc__ && rm -f -r _stage/dist",
     "restage": "npm run build && npm run cleanstage && cp -f package.json _stage && cp -r dist _stage",
-    "playground:build": "ng build playground --prod",
+    "playground:build": "ng build playground --prod && rm dist/playground/package.json",
     "cli:build": "tsc -p ./projects/cli/tsconfig.json",
     "copy:schemas": "cp projects/schematics/src/sandbox/schema.json dist/schematics/sandbox",
     "copy:schematicFiles": "cd ./projects/schematics/src && cp -r --parent ./**/files/* ../../../dist/schematics && cp -r --parent ./**/**/files/* ../../../dist/schematics",
