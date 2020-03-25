@@ -93,20 +93,20 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
                     }
 
                     // Don't bootstrap a new Angular application within an existing zone
-                    // this.zone.runOutsideAngular(() => {
-                    const module = this.createModule(sandbox, scenario);
-                    platformBrowserDynamic().bootstrapModule(module)
-                        .then(app => {
-                            this.activeApps.push(app);
-                            resetCompiledComponents();
-                            (window as any).isPlaygroundComponentLoaded = () => true;
-                        })
-                        .catch(err => {
-                            resetCompiledComponents();
-                            (window as any).isPlaygroundComponentLoadedWithErrors = () => true;
-                            console.error(err);
-                        });
-                    // });
+                    this.zone.runOutsideAngular(() => {
+                        const module = this.createModule(sandbox, scenario);
+                        platformBrowserDynamic().bootstrapModule(module)
+                            .then(app => {
+                                this.activeApps.push(app);
+                                resetCompiledComponents();
+                                (window as any).isPlaygroundComponentLoaded = () => true;
+                            })
+                            .catch(err => {
+                                resetCompiledComponents();
+                                (window as any).isPlaygroundComponentLoadedWithErrors = () => true;
+                                console.error(err);
+                            });
+                    });
                 }
             }
         });
