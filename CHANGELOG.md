@@ -1,3 +1,11 @@
+# 7.0.1 (2020-3-25)
+
+<a name="7.0.1"></a>
+
+### Bug Fixes
+* **package:** Fixed issue when NGCC fails due to multiple "package.json" files
+* **scenario loading:** Fix issue with random scenarios not loading without refreshing browser
+
 # 7.0.0 (2020-3-6)
 
 <a name="7.0.0"></a>
