@@ -46,11 +46,11 @@ export class UrlService {
     private parse(key: string, sandboxMenuItems: SandboxMenuItem[], urlPath: string) {
         const match = new RegExp('[?|&]' + key + '=([^&#]*)').exec(urlPath);
         if (match !== null) {
-            const value = match[1];
-            const firstSlash = value.indexOf('/');
+            const value = decodeURIComponent(match[1]);
+            const lastSlash = value.lastIndexOf('/');
 
-            const sbKey = value.substr(0, firstSlash);
-            let sandboxKey = decodeURIComponent(sbKey);
+            const sbKey = value.substr(0, lastSlash);
+            let sandboxKey = sbKey;
             const sandboxMenuItem = sandboxMenuItems
                 .find(smi => smi.key.toLowerCase() === sandboxKey.toLowerCase()
                     || (smi.uniqueId && smi.uniqueId === sandboxKey));
@@ -58,7 +58,7 @@ export class UrlService {
             if (!sandboxMenuItem) {
                 return { sandboxKey: null, scenarioKey: null };
             }
-            const scenarioDesc = decodeURIComponent(value.substr(firstSlash + 1, value.length).toLowerCase());
+            const scenarioDesc = value.substr(lastSlash + 1, value.length).toLowerCase();
             const scenarioKey = sandboxMenuItem.scenarioMenuItems
                 .findIndex(scenarioMenuItem => scenarioMenuItem.description.toLowerCase() === scenarioDesc) + 1;
             if (scenarioKey <= 0) {
