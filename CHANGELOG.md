@@ -1,3 +1,10 @@
+# 7.0.3 (2020-4-4)
+
+<a name="7.0.3"></a>
+
+### Bug Fixes
+* **scenario loading:** Fix issue with url parsing
+
 # 7.0.2 (2020-3-25)
 
 <a name="7.0.2"></a>
