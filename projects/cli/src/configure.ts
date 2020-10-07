@@ -30,7 +30,7 @@ export interface Config {
     visualRegressionMockDate: number; // date in ms
     visualRegressionSleepDuration: number;
 
-    pathToSandboxes: string;
+    pathToSandboxes: [];
 
     angularAppName?: string;
     angularCliPath?: string;
@@ -40,9 +40,9 @@ export interface Config {
     angularCliMaxBuffer?: number;
 }
 
-const splitCommaSeparatedList = (value) => {
+const splitCommaSeparatedList = (value, defaultValue = []) => {
     if (!value) {
-        return ['./src/'];
+        return defaultValue;
     }
     return value.split(',');
 };
@@ -51,7 +51,7 @@ export function configure(argv: any): Config {
     commander
         .name('angular-playground')
         .option('-C, --config <path>', 'Configuration file', './angular-playground.json')
-        .option('-S, --src <path>', 'Specify component source directories (comma separated list)', splitCommaSeparatedList)
+        .option('-S, --src <path>', 'Specify component source directories (comma separated list)', (v) => splitCommaSeparatedList(v, ['./src/']))
 
         // Build options
         .option('--no-watch', 'Disable sandboxes watch', false)
@@ -78,7 +78,7 @@ export function configure(argv: any): Config {
         .option('--visual-regression-sleep-duration <n>', 'Milliseconds to wait for sandbox scenario to load before capturing screenshot.', 100)
 
         // Sandbox verification and Snapshot tests
-        .option('--path-to-sandboxes <dir>', 'Subdirectory of project in which to target sandbox files', '')
+        .option('--path-to-sandboxes <dir>', 'Subdirectory of project in which to target sandbox files', splitCommaSeparatedList)
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
