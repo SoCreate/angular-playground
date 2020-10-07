@@ -1,3 +1,10 @@
+# 7.1.0 (2020-9-7)
+
+<a name="7.1.0"></a>
+
+### Features
+* **filter:** Add support for path-to-sandboxes filter to support a list of directories
+
 # 7.0.2 (2020-3-25)
 
 <a name="7.0.2"></a>
