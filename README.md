@@ -14,7 +14,7 @@ fix broken UI.
 
 ## Documentation (<http://www.angularplayground.it/>)
 
-* [CLI quick-start](http://www.angularplayground.it/docs/getting-started/angular-cli)
+* [Getting started](http://www.angularplayground.it/docs/getting-started/installation)
 
 ## Articles
 
