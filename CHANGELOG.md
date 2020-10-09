@@ -1,3 +1,10 @@
+# 7.1.1 (2020-9-8)
+
+<a name="7.1.1"></a>
+
+### Bug Fixes
+* **filter:** Fix issue when path-to-sandboxes is not specified
+
 # 7.1.0 (2020-9-7)
 
 <a name="7.1.0"></a>
