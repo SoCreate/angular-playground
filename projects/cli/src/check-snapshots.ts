@@ -108,7 +108,7 @@ function deleteSnapshots(config: Config) {
         let filesDeleted = false;
         items.forEach((item) => {
             item.scenarioMenuItems.forEach((scenarioItem) => {
-                if (config.pathToSandboxes.some(vp => item.key.includes(vp))) {
+                if (!config.pathToSandboxes || config.pathToSandboxes.some(vp => item.key.includes(vp))) {
                     const url = `${encodeURIComponent(item.key)}/${encodeURIComponent(scenarioItem.description)}`;
                     const filePath = `${absoluteSnapshotDirectory}/${buildIdentifier(url)}-snap.png`;
                     if (existsSync(filePath)) {
@@ -135,7 +135,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
         const testPaths = [];
         items.forEach((item) => {
             item.scenarioMenuItems.forEach((scenarioItem) => {
-                if (config.pathToSandboxes.some(vp => item.key.includes(vp))) {
+                if (!config.pathToSandboxes || config.pathToSandboxes.some(vp => item.key.includes(vp))) {
                     testPaths.push({
                         sandboxKey: item.key,
                         scenarioKey: scenarioItem.key,

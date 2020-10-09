@@ -96,7 +96,7 @@ function getSandboxMetadata(config: Config, baseUrl: string, selectRandomScenari
     const scenarios: ScenarioSummary[] = [];
 
     loadSandboxMenuItems().forEach((sandboxItem: SandboxFileInformation) => {
-        if (config.pathToSandboxes.some(vp => sandboxItem.key.includes(vp))) {
+        if (!config.pathToSandboxes || config.pathToSandboxes.some(vp => sandboxItem.key.includes(vp))) {
             if (selectRandomScenario) {
                 const randomItemKey = getRandomKey(sandboxItem.scenarioMenuItems.length);
                 for (const item of sandboxItem.scenarioMenuItems) {
