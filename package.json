@@ -119,7 +119,7 @@
     "@types/puppeteer": "^1.20.0",
     "codelyzer": "^5.1.2",
     "rxjs": "~6.5.4",
-    "ng-packagr": "^9.0.0",
+    "ng-packagr": "^10.1.1",
     "ts-jest": "^24.3.0",
     "tslib": "^1.10.0",
     "tslint": "~5.18.0",
