@@ -1,129 +1,125 @@
 {
-  "name": "angular-playground",
-  "version": "7.1.1",
-  "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
-  "typings": "dist/playground/angular-playground.d.ts",
-  "main": "dist/playground/bundles/angular-playground.umd.js",
-  "module": "dist/playground/fesm5/angular-playground.js",
-  "es2015": "dist/playground/fesm2015/angular-playground.js",
-  "esm5": "dist/playground/esm5/angular-playground.js",
-  "esm2015": "dist/playground/esm2015/angular-playground.js",
-  "fesm5": "dist/playground/fesm5/angular-playground.js",
-  "fesm2015": "dist/playground/fesm2015/angular-playground.js",
-  "metadata": "dist/playground/angular-playground.metadata.json",
-  "sideEffects": false,
-  "bin": {
-    "angular-playground": "dist/bin/index.js"
-  },
-  "files": [
-    "dist"
-  ],
-  "jest": {
-    "transform": {
-      "\\.ts$": "ts-jest"
+    "name": "angular-playground",
+    "version": "7.1.1",
+    "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
+    "typings": "dist/playground/angular-playground.d.ts",
+    "main": "dist/playground/bundles/angular-playground.umd.js",
+    "module": "dist/playground/fesm5/angular-playground.js",
+    "es2015": "dist/playground/fesm2015/angular-playground.js",
+    "esm5": "dist/playground/esm5/angular-playground.js",
+    "esm2015": "dist/playground/esm2015/angular-playground.js",
+    "fesm5": "dist/playground/fesm5/angular-playground.js",
+    "fesm2015": "dist/playground/fesm2015/angular-playground.js",
+    "metadata": "dist/playground/angular-playground.metadata.json",
+    "sideEffects": false,
+    "bin": {
+        "angular-playground": "dist/bin/index.js"
     },
-    "testRegex": ".*\\.spec\\.ts$",
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json"
+    "files": [
+        "dist"
     ],
-    "testURL": "http://localhost"
-  },
-  "scripts": {
-    "build": "npm run playground:build && npm run cli:build && npm run schematics:build && npm run copy-jest-files",
-    "rebuild": "npm run clean && npm run build",
-    "clean": "rm -f -r dist && rm -f -r _stage",
-    "stage": "npm run build && mkdir _stage && cp package.json _stage && cp -r dist _stage",
-    "cleanstage": "rm -f -r _stage/__ivy_ngcc__ && rm -f -r _stage/dist",
-    "restage": "npm run build && npm run cleanstage && cp -f package.json _stage && cp -r dist _stage",
-    "playground:build": "ng build playground --prod && rm dist/playground/package.json",
-    "cli:build": "tsc -p ./projects/cli/tsconfig.json",
-    "copy:schemas": "cp projects/schematics/src/sandbox/schema.json dist/schematics/sandbox",
-    "copy:schematicFiles": "cd ./projects/schematics/src && cp -r --parent ./**/files/* ../../../dist/schematics && cp -r --parent ./**/**/files/* ../../../dist/schematics",
-    "copy:sandboxFiles": "cp -r projects/schematics/src/sandbox/files dist/schematics/sandbox",
-    "copy:collection": "cp projects/schematics/src/collection.json dist/schematics/collection.json",
-    "copy:migration": "cp projects/schematics/src/migrations/migrations.json dist/schematics/migrations/migrations.json",
-    "schematics:build": "tsc -p ./projects/schematics/tsconfig.json",
-    "prepublishOnly": "npm run rebuild",
-    "test": "jest",
-    "lint": "tslint --project tsconfig.json",
-    "copy-jest-files": "rm -f -r dist/jest && cd dist && mkdir jest && cd .. && cp projects/jest/src/* dist/jest",
-    "postbuild": "npm run copy:schemas && npm run copy:sandboxFiles && npm run copy:collection && npm run copy:migration && npm run copy:schematicFiles"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SoCreate/angular-playground.git"
-  },
-  "keywords": [
-    "angular"
-  ],
-  "author": {
-    "name": "SoCreate",
-    "url": "https://SoCreate.it"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/SoCreate/angular-playground/issues"
-  },
-  "homepage": "http://www.angularplayground.it",
-  "schematics": "./dist/schematics/collection.json",
-  "ng-add": {
-    "save": "devDependencies"
-  },
-  "ng-update": {
-    "migrations": "./dist/schematics/migrations/migrations.json"
-  },
-  "peerDependencies": {
-    "@angular/common": ">=9.0.0",
-    "@angular/compiler": ">=9.0.0",
-    "@angular/core": ">=9.0.0",
-    "@angular/forms": ">=9.0.0",
-    "@angular/platform-browser": ">=9.0.0",
-    "@angular/platform-browser-dynamic": ">=9.0.0",
-    "tslib": ">=1.10.0",
-    "rxjs": ">=6.5.4",
-    "zone.js": ">=0.10.2"
-  },
-  "dependencies": {
-    "@angular-devkit/core": "~9.0.2",
-    "@angular-devkit/schematics": "~9.0.2",
-    "@jest/core": "^25.0.0",
-    "@jest/types": "^25.0.0",
-    "@schematics/angular": "~9.0.2",
-    "async": "^3.0.1",
-    "chalk": "^2.4.2",
-    "commander": "^2.20.0",
-    "get-port": "^5.0.0",
-    "jest": "^24.9.0",
-    "jest-image-snapshot": "^2.12.0",
-    "jest-puppeteer": "^4.3.0",
-    "mockdate": "^2.0.5",
-    "node-watch": "^0.6.2",
-    "puppeteer": "^1.20.0"
-  },
-  "devDependencies": {
-    "@angular/common": "~9.0.2",
-    "@angular/compiler": "~9.0.2",
-    "@angular/core": "~9.0.2",
-    "@angular/forms": "~9.0.2",
-    "@angular/platform-browser": "~9.0.2",
-    "@angular/platform-browser-dynamic": "~9.0.2",
-    "@angular-devkit/build-angular": "~0.900.3",
-    "@angular-devkit/build-ng-packagr": "~0.900.3",
-    "@angular/cli": "~9.0.2",
-    "@angular/compiler-cli": "~9.0.2",
-    "@angular/language-service": "~9.0.2",
-    "@types/node": "^12.11.1",
-    "@types/jest": "^24.9.0",
-    "@types/puppeteer": "^1.20.0",
-    "codelyzer": "^5.1.2",
-    "rxjs": "~6.5.4",
-    "ng-packagr": "^9.0.0",
-    "ts-jest": "^24.3.0",
-    "tslib": "^1.10.0",
-    "tslint": "~5.18.0",
-    "typescript": "~3.7.5",
-    "zone.js": "~0.10.2"
-  }
+    "jest": {
+        "transform": {
+            "\\.ts$": "ts-jest"
+        },
+        "testRegex": ".*\\.spec\\.ts$",
+        "moduleFileExtensions": [
+            "ts",
+            "js",
+            "json"
+        ],
+        "testURL": "http://localhost"
+    },
+    "scripts": {
+        "build": "npm run playground:build && npm run cli:build && npm run schematics:build && npm run copy-jest-files",
+        "rebuild": "npm run clean && npm run build",
+        "clean": "rm -f -r dist && rm -f -r _stage",
+        "stage": "npm run build && mkdir _stage && cp package.json _stage && cp -r dist _stage",
+        "cleanstage": "rm -f -r _stage/__ivy_ngcc__ && rm -f -r _stage/dist",
+        "restage": "npm run build && npm run cleanstage && cp -f package.json _stage && cp -r dist _stage",
+        "playground:build": "ng build playground --configuration production && rm dist/playground/package.json",
+        "cli:build": "tsc -p ./projects/cli/tsconfig.json",
+        "copy:schemas": "cp projects/schematics/src/sandbox/schema.json dist/schematics/sandbox",
+        "copy:schematicFiles": "cd ./projects/schematics/src && cp -r --parent ./**/files/* ../../../dist/schematics && cp -r --parent ./**/**/files/* ../../../dist/schematics",
+        "copy:sandboxFiles": "cp -r projects/schematics/src/sandbox/files dist/schematics/sandbox",
+        "copy:collection": "cp projects/schematics/src/collection.json dist/schematics/collection.json",
+        "copy:migration": "cp projects/schematics/src/migrations/migrations.json dist/schematics/migrations/migrations.json",
+        "schematics:build": "tsc -p ./projects/schematics/tsconfig.json",
+        "prepublishOnly": "npm run rebuild",
+        "test": "jest",
+        "copy-jest-files": "rm -f -r dist/jest && cd dist && mkdir jest && cd .. && cp projects/jest/src/* dist/jest",
+        "postbuild": "npm run copy:schemas && npm run copy:sandboxFiles && npm run copy:collection && npm run copy:migration && npm run copy:schematicFiles"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SoCreate/angular-playground.git"
+    },
+    "keywords": [
+        "angular"
+    ],
+    "author": {
+        "name": "SoCreate",
+        "url": "https://SoCreate.it"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/SoCreate/angular-playground/issues"
+    },
+    "homepage": "http://www.angularplayground.it",
+    "schematics": "./dist/schematics/collection.json",
+    "ng-add": {
+        "save": "devDependencies"
+    },
+    "ng-update": {
+        "migrations": "./dist/schematics/migrations/migrations.json"
+    },
+    "peerDependencies": {
+        "@angular/common": ">=12.0.0",
+        "@angular/compiler": ">=12.0.0",
+        "@angular/core": ">=12.0.0",
+        "@angular/forms": ">=12.0.0",
+        "@angular/platform-browser": ">=12.0.0",
+        "@angular/platform-browser-dynamic": ">=12.0.0",
+        "tslib": ">=2.1.0",
+        "rxjs": ">=6.6.0",
+        "zone.js": ">=0.11.4"
+    },
+    "dependencies": {
+        "@angular-devkit/core": "^12.0.0",
+        "@angular-devkit/schematics": "^12.0.0",
+        "@jest/core": "^26.6.3",
+        "@jest/types": "^26.6.2",
+        "@schematics/angular": "^12.0.0",
+        "async": "^3.2.0",
+        "chalk": "^4.1.1",
+        "commander": "^7.2.0",
+        "get-port": "^5.1.1",
+        "jest": "^26.6.3",
+        "jest-image-snapshot": "^4.5.0",
+        "mockdate": "^3.0.5",
+        "node-watch": "^0.7.1",
+        "puppeteer": "^9.1.1"
+    },
+    "devDependencies": {
+        "@angular-devkit/build-angular": "12.0.0",
+        "@angular-devkit/build-ng-packagr": "~0.900.3",
+        "@angular/cli": "12.0.0",
+        "@angular/common": "12.0.0",
+        "@angular/compiler": "12.0.0",
+        "@angular/compiler-cli": "12.0.0",
+        "@angular/core": "12.0.0",
+        "@angular/forms": "12.0.0",
+        "@angular/language-service": "12.0.0",
+        "@angular/platform-browser": "12.0.0",
+        "@angular/platform-browser-dynamic": "12.0.0",
+        "@types/jest": "^26.0.23",
+        "@types/node": "^15.3.0",
+        "@types/puppeteer": "^5.4.3",
+        "ng-packagr": "12.0.0",
+        "rxjs": "~6.6.0",
+        "ts-jest": "^26.5.6",
+        "tslib": "^2.1.0",
+        "typescript": "~4.2.3",
+        "zone.js": "~0.11.4"
+    }
 }
