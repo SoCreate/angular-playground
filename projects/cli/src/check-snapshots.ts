@@ -1,8 +1,6 @@
 import { writeFileSync, unlinkSync, existsSync, readdirSync } from 'fs';
 import { Browser, launch } from 'puppeteer';
 import { resolve as resolvePath, isAbsolute } from 'path';
-import { promisify } from 'util';
-import { exec } from 'child_process';
 import { runCLI } from '@jest/core';
 import { Config as JestConfig } from '@jest/types';
 import { SANDBOX_MENU_ITEMS_FILE, SandboxFileInformation } from './build-sandboxes';
@@ -20,7 +18,7 @@ export interface ViewportOptions {
 
 // Used to tailor the version of headless chromium ran by puppeteer
 const CHROME_ARGS = ['--disable-gpu', '--no-sandbox'];
-const TEST_PATH_BASE = resolvePath(__dirname, '../../dist/jest/test.js');
+const TEST_PATH_BASE = resolvePath('./test-image-snapshots.js');
 
 let browser: Browser;
 
@@ -67,16 +65,13 @@ async function main(config: Config, hostUrl: string, testPath: string, viewportC
 
     const timeoutAttempts = config.timeout;
     await waitForNgServe(browser, hostUrl, timeoutAttempts);
-    const execAsync = promisify(exec);
-    await execAsync('cd node_modules/angular-playground');
-
     const testRegex = viewportConfig
-        ? `test-${formatViewportSize(viewportConfig)}\\.js$`
-        : 'test\\.js';
+        ? `test-image-snapshots-${formatViewportSize(viewportConfig)}\\.js$`
+        : 'test-image-snapshots\\.js';
     const argv = {
         config: 'node_modules/angular-playground/dist/jest/jest-puppeteer.config.js',
         updateSnapshot: !!config.updateSnapshots,
-        testRegex,
+        testRegex
     } as JestConfig.Argv;
     const projectPath = resolvePath('.');
     const projects = [projectPath];
@@ -84,10 +79,9 @@ async function main(config: Config, hostUrl: string, testPath: string, viewportC
 
     await browser.close();
     const exitCode = results.numFailedTests === 0 ? 0 : 1;
+    clearOldTestFiles();
     return exitCode;
 }
-
-
 
 function normalizeResolvePath(directory) {
     const absolutePath = isAbsolute(directory) ? directory : resolvePath('.', directory);
@@ -151,8 +145,12 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
             .join(',');
         const result = `
           // imports
+          const puppeteer = require('puppeteer');
           const chalk = require('chalk');
+          const { toMatchImageSnapshot } = require('jest-image-snapshot');
           // declarations
+          let browser;
+          let page;
           const tests = ${JSON.stringify(testPaths)};
           const buildIdentifier = (url) => {
             return decodeURIComponent(url + '-' + ${JSON.stringify(formatViewportSize(viewportConfig))})
@@ -172,10 +170,13 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
           }
           // set up tests
           beforeAll(async () => {
+            expect.extend({ toMatchImageSnapshot });
+            browser = await puppeteer.launch();
+            page = await browser.newPage();
             ${viewportConfig ? `await page.setViewport(${JSON.stringify(viewportConfig)})` : ''}
             await page.goto('${hostUrl}');
             // mock current time
-            await page.addScriptTag({ path: './node_modules/mockdate/src/mockdate.js' });
+            await page.addScriptTag({ path: './node_modules/mockdate/lib/mockdate.js' });
             await page.addScriptTag({ content: 'MockDate.set(${config.visualRegressionMockDate}, 0);' });
           });
           // run tests
@@ -191,7 +192,7 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
                   // load scenario
                   await page.evaluate((sandboxKey, scenarioKey) => window.loadScenario(sandboxKey, scenarioKey),
                     test.sandboxKey, test.scenarioKey)
-                  await page.waitFor(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors());
+                  await page.waitForFunction(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors());
                   const sleep = (ms) => new Promise(res => setTimeout(res, ms));
                   await sleep(${config.visualRegressionSleepDuration}); // sleep for a bit in case page elements are still being rendered
 
@@ -211,6 +212,9 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
               }, 30000);
             }
           });
+          afterAll(async () => {
+            await browser.close();
+          });
         `;
         clearOldTestFiles();
         writeFileSync(testPath, result, { encoding: 'utf-8' });
@@ -221,9 +225,9 @@ function writeSandboxesToTestFile(config: Config, hostUrl: string, testPath: str
 
 const clearOldTestFiles = () => {
     try {
-        const folderPath = getTestPath().replace('test.js', '');
+        const folderPath = getTestPath().replace('test-image-snapshots.js', '');
         const oldTestFiles = readdirSync(folderPath)
-          .filter(name => /test(-\d+x\d+)\.js$/.test(name));
+          .filter(name => /test-image-snapshots(-\d+x\d+)\.js$/.test(name));
         for (const name of oldTestFiles) {
           unlinkSync(`${folderPath}${name}`);
         }
@@ -233,7 +237,7 @@ const clearOldTestFiles = () => {
 };
 
 const getTestPath = (suffix = '') =>
-    TEST_PATH_BASE.replace('test.js', `test${suffix}.js`);
+    TEST_PATH_BASE.replace('test-image-snapshots.js', `test-image-snapshots${suffix}.js`);
 
 const formatViewportSize = (viewportConfig?: ViewportOptions) =>
     viewportConfig ? `${viewportConfig.width}x${viewportConfig.height}` : '';
