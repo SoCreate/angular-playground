@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "SchematicsPlaygroundSandbox",
+  "$id": "SchematicsPlaygroundSandbox",
   "title": "Angular Playground's Sandbox",
   "type": "object",
   "properties": {

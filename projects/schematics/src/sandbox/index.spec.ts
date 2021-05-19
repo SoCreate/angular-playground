@@ -6,7 +6,7 @@ import * as path from 'path';
 const collectionPath = path.join(__dirname, '../collection.json');
 
 describe('sandbox', () => {
-  it('should work when flat is true', () => {
+  it('should work when flat is true', async () => {
     const tree = Tree.empty();
     const prefix = 'app';
     tree.create('angular.json', createAngularJson({
@@ -24,7 +24,7 @@ describe('sandbox', () => {
       name: 'feature1',
       flat: true,
     };
-    const resultTree = runner.runSchematic('sandbox', generateSandboxOptions, tree);
+    const resultTree = await runner.runSchematicAsync('sandbox', generateSandboxOptions, tree).toPromise();
 
     const newSandbox = resultTree
       .readContent('projects/foo/src/app/feature1/feature1.component.sandbox.ts');
@@ -32,7 +32,7 @@ describe('sandbox', () => {
     expect(newSandbox).toMatch(/export default sandboxOf\(Feature1Component\)/);
     expect(newSandbox).toMatch(/template: `<app-feature1><\/app-feature1>`/);
   });
-  it('should work when flat is false', () => {
+  it('should work when flat is false', async () => {
     const tree = Tree.empty();
     const prefix = 'app';
     tree.create('angular.json', createAngularJson({
@@ -50,7 +50,7 @@ describe('sandbox', () => {
       name: 'sub-feature1',
       flat: false,
     };
-    const resultTree = runner.runSchematic('sandbox', generateSandboxOptions, tree);
+    const resultTree = await runner.runSchematicAsync('sandbox', generateSandboxOptions, tree).toPromise();
 
     const newSandbox = resultTree
       .readContent('src/app/feature1/sub-feature1/sub-feature1/sub-feature1.component.sandbox.ts');
@@ -58,7 +58,7 @@ describe('sandbox', () => {
     expect(newSandbox).toMatch(/export default sandboxOf\(SubFeature1Component\)/);
     expect(newSandbox).toMatch(/template: `<app-sub-feature1><\/app-sub-feature1>`/);
   });
-  it('should work for any prefix', () => {
+  it('should work for any prefix', async () => {
     const tree = Tree.empty();
     const prefix = 'fizzbuzz';
     tree.create('angular.json', createAngularJson({
@@ -76,7 +76,7 @@ describe('sandbox', () => {
       name: 'feature1',
       flat: true,
     };
-    const resultTree = runner.runSchematic('sandbox', generateSandboxOptions, tree);
+    const resultTree = await runner.runSchematicAsync('sandbox', generateSandboxOptions, tree).toPromise();
 
     const newSandbox = resultTree
       .readContent('src/app/feature1/feature1.component.sandbox.ts');
@@ -85,6 +85,8 @@ describe('sandbox', () => {
 });
 
 const createAngularJson = (config: { root: string, sourceRoot: string, prefix: string }) => `{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
   "projects": {
     "foo": {
       "root": "${config.root}",

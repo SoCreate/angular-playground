@@ -155,7 +155,7 @@ describe('ng-add', () => {
   it('should throw if there are no projects', async () => {
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const tree = Tree.empty();
-    tree.create('angular.json', '{ "projects": {} }');
+    tree.create('angular.json', '{ "$schema": "./node_modules/@angular/cli/lib/config/schema.json", "version": 1, "projects": {} }');
     const errorMessage = 'Your app must have at least 1 project to use Playground.';
     const promise = runner.runSchematicAsync('ng-add', {}, tree).toPromise();
     await expect(promise).rejects.toThrowError(errorMessage);
@@ -165,6 +165,8 @@ describe('ng-add', () => {
 const getJsonFileAsObject = (tree: UnitTestTree, filepath: string) => JSON.parse(tree.readContent(filepath));
 
 const createAngularJson = (config: { root: string, sourceRoot: string, stylesExtension: string }) => `{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
   "projects": {
     "foo": {
       "root": "${config.root}",
@@ -211,9 +213,10 @@ const createAngularJsonForLibrary = (includeTestApp = false) => {
       }
     }
   }`;
+  const schema = `"$schema": "./node_modules/@angular/cli/lib/config/schema.json", "version": 1,`;
   return includeTestApp
-    ? `{ "projects": { ${lib}, ${libTestApp} } }`
-    : `{ "projects": { ${lib} } }`;
+    ? `{ ${schema} "projects": { ${lib}, ${libTestApp} } }`
+    : `{ ${schema} "projects": { ${lib} } }`;
 };
 
 const createPackageJson = () => `{
