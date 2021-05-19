@@ -1,6 +1,6 @@
-import fs = require('fs');
-import chalk from 'chalk';
 import { ErrorReporter, REPORT_TYPE } from '../src/error-reporter';
+const chalk = require('chalk');
+const fs = require('fs');
 
 describe('ErrorReporter', () => {
     const mockScenarios = [{
