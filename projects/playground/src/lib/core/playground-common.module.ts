@@ -12,8 +12,6 @@ import { LogoComponent } from './logo/logo.component';
 import { PinComponent } from './pin/pin.component';
 import { DrawerComponent } from './drawer/drawer.component';
 
-declare let require: any;
-
 @NgModule({
     imports: [
         CommonModule,
@@ -34,7 +32,6 @@ declare let require: any;
         LogoComponent,
         PinComponent,
         DrawerComponent,
-    ],
-    exports: [AppComponent],
+    ]
 })
 export class PlaygroundCommonModule {}

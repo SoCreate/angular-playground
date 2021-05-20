@@ -1,12 +1,4 @@
-import {
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Inject,
-    OnInit,
-    QueryList,
-    ViewChildren,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, OnInit, QueryList, ViewChildren, } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EventManager } from '@angular/platform-browser';
 import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from '../lib/app-state';
@@ -14,13 +6,13 @@ import { StateService } from './shared/state.service';
 import { UrlService } from './shared/url.service';
 import { fuzzySearch } from './shared/fuzzy-search.function';
 import { LevenshteinDistance } from './shared/levenshtein-distance';
-import { SandboxLoader } from './shared/sandbox-loader';
 import { Middleware, MIDDLEWARE } from '../lib/middlewares';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Sandboxes } from "./shared/sandboxes";
 
 @Component({
-    selector: 'playground-root',
+    selector: 'playground-app',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
 })
@@ -43,11 +35,12 @@ export class AppComponent implements OnInit {
         private levenshteinDistance: LevenshteinDistance,
         private changeDetectorRef: ChangeDetectorRef,
         @Inject(MIDDLEWARE) private middleware: Observable<Middleware>,
+        private sandboxes: Sandboxes
     ) {
     }
 
     ngOnInit() {
-        const sandboxMenuItems = SandboxLoader.getSandboxMenuItems();
+        const sandboxMenuItems = this.sandboxes.getSandboxMenuItems();
 
         this.middleware
             .subscribe(middleware => this.activeMiddleware = middleware);
