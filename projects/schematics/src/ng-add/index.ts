@@ -184,7 +184,7 @@ function createNewFiles(options: any): Rule {
 
 function createIfNotExists(path: string, content: string): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    if (tree.exists(path)) {
+    if (!tree.exists(path)) {
       tree.create(path, content);
     }
     return tree;

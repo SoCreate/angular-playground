@@ -51,7 +51,7 @@ export function configure(argv: any): Config {
     const program = new Command();
     program
         .name('angular-playground')
-        .option('-C, --config <path>', 'Configuration file', './angular-playground.json')
+        .option('-C, --config <path>', 'Configuration file', './.angular-playground/angular-playground.json')
         .option('-S, --src <path>', 'Specify component source directories (comma separated list)', (v) => splitCommaSeparatedList(v, ['./src/']))
 
         // Build options
