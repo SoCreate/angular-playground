@@ -172,17 +172,21 @@ function createNewFiles(options: any): Rule {
       template({}),
       move(playgroundDir),
     ]);
-    const gitIgnoreTemplateSource = apply(url('./files'), [
-      filter(path => path.endsWith('.gitignore')),
-      template({}),
-      move(playgroundDir),
-    ]);
     return chain([
       branchAndMerge(mergeWith(angularPlaygroundJsonTemplateSource)),
       branchAndMerge(mergeWith(tsconfigJsonTemplateSource)),
       branchAndMerge(mergeWith(playgroundMainTemplateSource)),
       branchAndMerge(mergeWith(sandboxesTemplateSource)),
-      branchAndMerge(mergeWith(gitIgnoreTemplateSource)),
+      branchAndMerge(createIfNotExists(`${playgroundDir}/.gitignore`, 'sandboxes.ts')),
     ]);
+  };
+}
+
+function createIfNotExists(path: string, content: string): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    if (tree.exists(path)) {
+      tree.create(path, content);
+    }
+    return tree;
   };
 }

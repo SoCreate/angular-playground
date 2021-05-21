@@ -4,7 +4,6 @@ import {
   branchAndMerge,
   chain,
   filter,
-  MergeStrategy,
   mergeWith,
   move,
   Rule,
@@ -15,10 +14,9 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { getProject, getSourceRoot } from '../../utils/project';
-import { Builders, ProjectType } from '@schematics/angular/utility/workspace-models';
+import { Builders } from '@schematics/angular/utility/workspace-models';
 import { constructPath } from '../../utils/paths';
 import { getWorkspace, updateWorkspace } from "@schematics/angular/utility/workspace";
-import { TargetDefinitionCollection } from "@angular-devkit/core/src/workspace";
 
 export default function migration(options: any): Rule {
   return chain([
@@ -36,61 +34,64 @@ function updateAppInWorkspaceFile(
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
 
-  workspace.projects.set(name, {
-    root: projectRoot,
-    sourceRoot,
-    extensions: { projectType: ProjectType.Application },
-    targets: new TargetDefinitionCollection({
-      build: {
-        builder: Builders.Browser,
-        options: {
-          outputPath: constructPath(['dist', 'playground']),
-          index: constructPath([...sourceRootParts, 'index.html']),
-          main: constructPath(['.angular-playground', 'main.playground.ts']),
-          polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
-          tsConfig: constructPath(['.angular-playground', `tsconfig.playground.json`]),
-          aot: false,
-          assets: [
-            constructPath([...sourceRootParts, 'favicon.ico']),
-            constructPath([...sourceRootParts, 'assets']),
-          ],
-          styles: [
-            constructPath([...sourceRootParts, `styles.${options.stylesExtension}`]),
-          ],
-          scripts: [],
-        },
-        configurations: {
-          production: {
-            fileReplacements: [
-              {
-                replace: constructPath([...sourceRootParts, 'environments', 'environment.ts']),
-                with: constructPath([...sourceRootParts, 'environments', 'environment.prod.ts']),
-              },
+  workspace.projects.delete(name);
+  workspace.projects.add({
+      name,
+      root: projectRoot,
+      sourceRoot,
+      projectType: 'application',
+      targets: {
+        build: {
+          builder: Builders.Browser,
+          options: {
+            outputPath: constructPath(['dist', 'playground']),
+            index: constructPath([...sourceRootParts, 'index.html']),
+            main: constructPath(['.angular-playground', 'main.playground.ts']),
+            polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
+            tsConfig: constructPath(['.angular-playground', `tsconfig.playground.json`]),
+            aot: false,
+            assets: [
+              constructPath([...sourceRootParts, 'favicon.ico']),
+              constructPath([...sourceRootParts, 'assets']),
             ],
-            buildOptimizer: false,
-            extractLicenses: false,
-            outputHashing: 'all'
+            styles: [
+              constructPath([...sourceRootParts, `styles.${options.stylesExtension}`]),
+            ],
+            scripts: [],
           },
-          development: {
-            buildOptimizer: false,
-            optimization: false,
-            vendorChunk: true,
-            extractLicenses: false,
-            sourceMap: true,
-            namedChunks: true
+          configurations: {
+            production: {
+              fileReplacements: [
+                {
+                  replace: constructPath([...sourceRootParts, 'environments', 'environment.ts']),
+                  with: constructPath([...sourceRootParts, 'environments', 'environment.prod.ts']),
+                },
+              ],
+              buildOptimizer: false,
+              extractLicenses: false,
+              outputHashing: 'all'
+            },
+            development: {
+              buildOptimizer: false,
+              optimization: false,
+              vendorChunk: true,
+              extractLicenses: false,
+              sourceMap: true,
+              namedChunks: true
+            }
+          },
+          defaultConfiguration: 'development'
+        },
+        serve: {
+          builder: Builders.DevServer,
+          options: {
+            browserTarget: 'playground:build',
+            port: 4201
           }
-        },
-        defaultConfiguration: 'development'
-      },
-      serve: {
-        builder: Builders.DevServer,
-        options: {
-          browserTarget: 'playground:build',
-          port: 4201
-        },
+        }
       }
-    })
-  });
+    }
+  );
 
   return updateWorkspace(workspace);
 }
@@ -124,10 +125,7 @@ function configure(options: any): Rule {
     }
 
     return chain([
-      branchAndMerge(
         updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
-        MergeStrategy.Overwrite
-      )
     ]);
   };
 }
@@ -147,27 +145,19 @@ function createNewFiles(options: any): Rule {
         sourceRoots: [sourceRoot],
       }),
       move(playgroundDir),
-      deleteIfExists('angular-playground.json'),
     ]);
     const tsconfigJsonTemplateSource = apply(url('./files'), [
       filter(path => path.endsWith('tsconfig.playground.json')),
       template({}),
       move(playgroundDir),
-      deleteIfExists('tsconfig.playground.json'),
     ]);
     const playgroundMainTemplateSource = apply(url('./files'), [
       filter(path => path.endsWith('main.playground.ts')),
       template({}),
       move(playgroundDir),
-      deleteIfExists(`${sourceRoot}/tsconfig.playground.json`),
     ]);
     const sandboxesTemplateSource = apply(url('./files'), [
       filter(path => path.endsWith('sandboxes.ts')),
-      template({}),
-      move(playgroundDir),
-    ]);
-    const gitIgnoreTemplateSource = apply(url('./files'), [
-      filter(path => path.endsWith('.gitignore')),
       template({}),
       move(playgroundDir),
     ]);
@@ -176,7 +166,10 @@ function createNewFiles(options: any): Rule {
       branchAndMerge(mergeWith(tsconfigJsonTemplateSource)),
       branchAndMerge(mergeWith(playgroundMainTemplateSource)),
       branchAndMerge(mergeWith(sandboxesTemplateSource)),
-      branchAndMerge(mergeWith(gitIgnoreTemplateSource)),
+      branchAndMerge(createIfNotExists(`${playgroundDir}/.gitignore`, 'sandboxes.ts')),
+      branchAndMerge(deleteIfExists('angular-playground.json')),
+      branchAndMerge(deleteIfExists('tsconfig.playground.json')),
+      branchAndMerge(deleteIfExists(`${sourceRoot}/main.playground.json`)),
     ]);
   };
 }
@@ -185,6 +178,15 @@ function deleteIfExists(path: string): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     if (tree.exists(path)) {
       tree.delete(path);
+    }
+    return tree;
+  };
+}
+
+function createIfNotExists(path: string, content: string): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    if (tree.exists(path)) {
+      tree.create(path, content);
     }
     return tree;
   };

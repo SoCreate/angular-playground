@@ -1,11 +1,9 @@
 import { isJsonArray, normalize, workspaces } from '@angular-devkit/core';
 import {
   apply,
-  branchAndMerge,
   chain,
   filter,
   forEach,
-  MergeStrategy,
   mergeWith,
   move,
   Rule,
@@ -15,10 +13,9 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { getProject, getSourceRoot } from '../../utils/project';
-import { Builders, ProjectType } from '@schematics/angular/utility/workspace-models';
+import { Builders } from '@schematics/angular/utility/workspace-models';
 import { constructPath } from '../../utils/paths';
 import { getWorkspace, updateWorkspace } from "@schematics/angular/utility/workspace";
-import { TargetDefinitionCollection } from "@angular-devkit/core/src/workspace";
 
 export default function migration(options: any): Rule {
   return chain([
@@ -37,11 +34,14 @@ function updateAppInWorkspaceFile(
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
 
-  workspace.projects.set(name, {
+  workspace.projects.delete(name);
+  workspace.projects.add({
+    name,
     root: projectRoot,
     sourceRoot,
-    extensions: { projectType: ProjectType.Application },
-    targets: new TargetDefinitionCollection({
+    projectType: 'application',
+    targets:
+      {
       build: {
         builder: Builders.Browser,
         options: {
@@ -86,7 +86,7 @@ function updateAppInWorkspaceFile(
           port: 4201
         },
       }
-    })
+    }
   });
 
   return updateWorkspace(workspace);
@@ -121,10 +121,7 @@ function configure(options: any): Rule {
     }
 
     return chain([
-      branchAndMerge(
         updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
-        MergeStrategy.Overwrite
-      )
     ]);
   };
 }
