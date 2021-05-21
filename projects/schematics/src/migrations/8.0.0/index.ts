@@ -1,5 +1,19 @@
-import { isJsonArray, normalize, workspaces } from '@angular-devkit/core';
-import { chain, Rule, SchematicsException, Tree, } from '@angular-devkit/schematics';
+import { isJsonArray, normalize, strings, workspaces } from '@angular-devkit/core';
+import {
+  apply,
+  branchAndMerge,
+  chain,
+  filter,
+  MergeStrategy,
+  mergeWith,
+  move,
+  Rule,
+  SchematicContext,
+  SchematicsException,
+  template,
+  Tree,
+  url,
+} from '@angular-devkit/schematics';
 import { getProject, getSourceRoot } from '../../utils/project';
 import { Builders, ProjectType } from '@schematics/angular/utility/workspace-models';
 import { constructPath } from '../../utils/paths';
@@ -8,7 +22,8 @@ import { TargetDefinitionCollection } from "@angular-devkit/core/src/workspace";
 
 export default function migration(options: any): Rule {
   return chain([
-    configure(options)
+    configure(options),
+    createNewFiles(options),
   ]);
 }
 
@@ -18,7 +33,6 @@ function updateAppInWorkspaceFile(
   project: workspaces.ProjectDefinition, name: string): Rule {
 
   const projectRoot = normalize(project.root);
-  const projectRootParts = projectRoot.split('/');
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
 
@@ -32,9 +46,9 @@ function updateAppInWorkspaceFile(
         options: {
           outputPath: constructPath(['dist', 'playground']),
           index: constructPath([...sourceRootParts, 'index.html']),
-          main: constructPath([...sourceRootParts, 'main.playground.ts']),
+          main: constructPath(['.angular-playground', 'main.playground.ts']),
           polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
-          tsConfig: constructPath([...projectRootParts, `tsconfig.playground.json`]),
+          tsConfig: constructPath(['.angular-playground', `tsconfig.playground.json`]),
           aot: false,
           assets: [
             constructPath([...sourceRootParts, 'favicon.ico']),
@@ -110,7 +124,68 @@ function configure(options: any): Rule {
     }
 
     return chain([
-      updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
+      branchAndMerge(
+        updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
+        MergeStrategy.Overwrite
+      )
     ]);
+  };
+}
+
+function createNewFiles(options: any): Rule {
+  // @ts-ignore
+  return async (tree: Tree, context: SchematicContext) => {
+    const playgroundDir = '.angular-playground';
+    const workspace = await getWorkspace(tree);
+    const project = getProject(workspace, options);
+
+    const sourceRoot = getSourceRoot(project?.sourceRoot);
+    const angularPlaygroundJsonTemplateSource = apply(url('./files'), [
+      filter(path => path.endsWith('angular-playground.json')),
+      template({
+        ...strings,
+        sourceRoots: [sourceRoot],
+      }),
+      move(playgroundDir),
+      deleteIfExists('angular-playground.json'),
+    ]);
+    const tsconfigJsonTemplateSource = apply(url('./files'), [
+      filter(path => path.endsWith('tsconfig.playground.json')),
+      template({}),
+      move(playgroundDir),
+      deleteIfExists('tsconfig.playground.json'),
+    ]);
+    const playgroundMainTemplateSource = apply(url('./files'), [
+      filter(path => path.endsWith('main.playground.ts')),
+      template({}),
+      move(playgroundDir),
+      deleteIfExists(`${sourceRoot}/tsconfig.playground.json`),
+    ]);
+    const sandboxesTemplateSource = apply(url('./files'), [
+      filter(path => path.endsWith('sandboxes.ts')),
+      template({}),
+      move(playgroundDir),
+    ]);
+    const gitIgnoreTemplateSource = apply(url('./files'), [
+      filter(path => path.endsWith('.gitignore')),
+      template({}),
+      move(playgroundDir),
+    ]);
+    return chain([
+      branchAndMerge(mergeWith(angularPlaygroundJsonTemplateSource)),
+      branchAndMerge(mergeWith(tsconfigJsonTemplateSource)),
+      branchAndMerge(mergeWith(playgroundMainTemplateSource)),
+      branchAndMerge(mergeWith(sandboxesTemplateSource)),
+      branchAndMerge(mergeWith(gitIgnoreTemplateSource)),
+    ]);
+  };
+}
+
+function deleteIfExists(path: string): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    if (tree.exists(path)) {
+      tree.delete(path);
+    }
+    return tree;
   };
 }

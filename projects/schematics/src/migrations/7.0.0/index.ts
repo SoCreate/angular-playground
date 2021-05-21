@@ -1,9 +1,11 @@
 import { isJsonArray, normalize, workspaces } from '@angular-devkit/core';
 import {
   apply,
+  branchAndMerge,
   chain,
   filter,
   forEach,
+  MergeStrategy,
   mergeWith,
   move,
   Rule,
@@ -119,7 +121,10 @@ function configure(options: any): Rule {
     }
 
     return chain([
-      updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
+      branchAndMerge(
+        updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
+        MergeStrategy.Overwrite
+      )
     ]);
   };
 }

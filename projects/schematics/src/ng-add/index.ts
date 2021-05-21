@@ -42,7 +42,6 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
   }
 
   const projectRoot = normalize(project.root);
-  const projectRootParts = projectRoot.split('/');
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
 
@@ -50,15 +49,16 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
       name,
       root: projectRoot,
       sourceRoot,
+      projectType: 'application',
       targets: {
         build: {
           builder: Builders.Browser,
           options: {
             outputPath: constructPath(['dist', 'playground']),
             index: constructPath([...sourceRootParts, 'index.html']),
-            main: constructPath([...sourceRootParts, 'main.playground.ts']),
+            main: constructPath(['.angular-playground', 'main.playground.ts']),
             polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
-            tsConfig: constructPath([...projectRootParts, `tsconfig.playground.json`]),
+            tsConfig: constructPath(['.angular-playground', `tsconfig.playground.json`]),
             aot: false,
             assets: [
               constructPath([...sourceRootParts, 'favicon.ico']),
@@ -144,6 +144,7 @@ function configure(options: any): Rule {
 function createNewFiles(options: any): Rule {
   // @ts-ignore
   return async (tree: Tree, context: SchematicContext) => {
+    const playgroundDir = '.angular-playground';
     const workspace = await getWorkspace(tree);
     const project = getProject(workspace, options);
 
@@ -154,20 +155,34 @@ function createNewFiles(options: any): Rule {
         ...strings,
         sourceRoots: [sourceRoot],
       }),
+      move(playgroundDir),
     ]);
     const tsconfigJsonTemplateSource = apply(url('./files'), [
       filter(path => path.endsWith('tsconfig.playground.json')),
       template({}),
+      move(playgroundDir),
     ]);
     const playgroundMainTemplateSource = apply(url('./files'), [
       filter(path => path.endsWith('main.playground.ts')),
       template({}),
-      move(sourceRoot),
+      move(playgroundDir),
+    ]);
+    const sandboxesTemplateSource = apply(url('./files'), [
+      filter(path => path.endsWith('sandboxes.ts')),
+      template({}),
+      move(playgroundDir),
+    ]);
+    const gitIgnoreTemplateSource = apply(url('./files'), [
+      filter(path => path.endsWith('.gitignore')),
+      template({}),
+      move(playgroundDir),
     ]);
     return chain([
       branchAndMerge(mergeWith(angularPlaygroundJsonTemplateSource)),
       branchAndMerge(mergeWith(tsconfigJsonTemplateSource)),
       branchAndMerge(mergeWith(playgroundMainTemplateSource)),
+      branchAndMerge(mergeWith(sandboxesTemplateSource)),
+      branchAndMerge(mergeWith(gitIgnoreTemplateSource)),
     ]);
   };
 }

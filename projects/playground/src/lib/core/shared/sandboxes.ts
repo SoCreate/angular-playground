@@ -2,7 +2,7 @@
 // Empty functions are the expected initial value.
 
 export abstract class Sandboxes {
-    getSandbox(path: string): any {
+    getSandbox(path: string) {
         /*GET_SANDBOX*/
         /*END_GET_SANDBOX*/
     }
