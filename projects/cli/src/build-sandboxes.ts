@@ -1,4 +1,4 @@
-import { writeFile, readFileSync, existsSync } from 'fs';
+import { writeFile, readFileSync } from 'fs';
 import { join as joinPath, resolve as resolvePath } from 'path';
 import { fromDirMultiple } from './from-dir';
 import { StringBuilder } from './string-builder';
@@ -26,11 +26,7 @@ export async function buildSandboxes(srcPaths: string[], chunk: boolean, makeSan
         await buildSandboxMenuItemFile(sandboxes);
     }
 
-    const rootPaths = [resolvePath(__dirname, '../playground')];
-    const ivyRootPath = resolvePath(__dirname, '../../__ivy_ngcc__');
-    if (existsSync(ivyRootPath)) {
-        rootPaths.push(ivyRootPath);
-    }
+    const rootPaths = [resolvePath('./.angular-playground')];
     return await buildSandboxFileContents(rootPaths, sandboxes, chunkMode, writeSandboxContent).then(results => {
         console.log('Successfully compiled sandbox files.');
         return results;
@@ -96,7 +92,7 @@ export function buildSandboxFileContents(
     chunkMode: string,
     writeContents: (file, contents) => Promise<string>) {
     const promises: Promise<string>[] = [];
-    fromDirMultiple(rootPaths, /angular-playground.*\.js/, (filename) => {
+    fromDirMultiple(rootPaths, /sandboxes.*\.ts/, (filename) => {
             let contents = readFileSync(filename, 'utf8');
 
             if (contents.indexOf('*GET_SANDBOX*') !== -1) {

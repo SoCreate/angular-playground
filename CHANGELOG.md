@@ -1,3 +1,10 @@
+# 8.0.0 (2021-4-21)
+
+<a name="8.0.0"></a>
+
+### Features
+* **angular:** Upgrade to be compatible with Angular version 12
+
 # 7.1.1 (2020-9-8)
 
 <a name="7.1.1"></a>

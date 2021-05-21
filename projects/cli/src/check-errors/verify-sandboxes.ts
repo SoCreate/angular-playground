@@ -80,7 +80,7 @@ async function openScenario(scenario: ScenarioSummary, page: Page) {
     await page.evaluate((sandboxKey, scenarioKey) => window.loadScenario(sandboxKey, scenarioKey),
         scenario.sandboxKey, scenario.scenarioKey);
     // @ts-ignore
-    await page.waitFor(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors());
+    await page.waitForFunction(() => window.isPlaygroundComponentLoaded() || window.isPlaygroundComponentLoadedWithErrors());
 
     const sleep = (ms) => new Promise(res => setTimeout(res, ms));
     await sleep(100); // sleep for a bit in case page elements are still being rendered

@@ -13,38 +13,28 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { addNpmScriptToPackageJson } from '../utils/npm-script';
-import { getProject, getSourceRoot } from '../utils/project';
+import { getProject, getSourceRoot } from '../../utils/project';
 import { Builders } from '@schematics/angular/utility/workspace-models';
-import { constructPath } from '../utils/paths';
+import { constructPath } from '../../utils/paths';
 import { getWorkspace, updateWorkspace } from "@schematics/angular/utility/workspace";
 
-export default function add(options: any): Rule {
+export default function migration(options: any): Rule {
   return chain([
-    updateNpmConfig(),
     configure(options),
     createNewFiles(options),
   ]);
 }
 
-export function updateNpmConfig(): Rule {
-  return (host: Tree) => {
-    addNpmScriptToPackageJson(host, 'playground', 'angular-playground');
-    return host;
-  };
-}
-
-function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: workspaces.WorkspaceDefinition,
-                               project: workspaces.ProjectDefinition, name: string): Rule {
-
-  if (workspace.projects.has(name)) {
-    throw new SchematicsException(`Project '${name}' already exists in workspace.`);
-  }
+function updateAppInWorkspaceFile(
+  options: { stylesExtension: string },
+  workspace: workspaces.WorkspaceDefinition,
+  project: workspaces.ProjectDefinition, name: string): Rule {
 
   const projectRoot = normalize(project.root);
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
 
+  workspace.projects.delete(name);
   workspace.projects.add({
       name,
       root: projectRoot,
@@ -102,13 +92,12 @@ function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: 
       }
     }
   );
+
   return updateWorkspace(workspace);
 }
 
 function configure(options: any): Rule {
-  // @ts-ignore
-  return async (tree: Tree, context: SchematicContext) => {
-
+  return async (tree: Tree) => {
     const workspace = await getWorkspace(tree);
     const project = getProject(workspace, options, 'application');
 
@@ -136,7 +125,7 @@ function configure(options: any): Rule {
     }
 
     return chain([
-      addAppToWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
+        updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
     ]);
   };
 }
@@ -178,7 +167,19 @@ function createNewFiles(options: any): Rule {
       branchAndMerge(mergeWith(playgroundMainTemplateSource)),
       branchAndMerge(mergeWith(sandboxesTemplateSource)),
       branchAndMerge(createIfNotExists(`${playgroundDir}/.gitignore`, 'sandboxes.ts')),
+      branchAndMerge(deleteIfExists('angular-playground.json')),
+      branchAndMerge(deleteIfExists('tsconfig.playground.json')),
+      branchAndMerge(deleteIfExists(`${sourceRoot}/main.playground.json`)),
     ]);
+  };
+}
+
+function deleteIfExists(path: string): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    if (tree.exists(path)) {
+      tree.delete(path);
+    }
+    return tree;
   };
 }
 

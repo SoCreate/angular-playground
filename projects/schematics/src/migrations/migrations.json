@@ -5,6 +5,11 @@
       "description": "Upgrade to version 7.0.0",
       "version": "6.2.0",
       "factory": "./7.0.0/index"
+    },
+    "migration-02": {
+      "description": "Upgrade to version 8.0.0",
+      "version": "7.1.1",
+      "factory": "./8.0.0/index"
     }
   }
 }

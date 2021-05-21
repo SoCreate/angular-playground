@@ -17,17 +17,17 @@ describe('ng-add', () => {
     const resultTree = await runner.runSchematicAsync('ng-add', {}, tree).toPromise();
     verifyBasicFiles(resultTree, {
       sourceRootPath: './src',
-      mainFilePath: 'src/main.playground.ts',
+      mainFilePath: '.angular-playground/main.playground.ts',
     });
 
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
     expect(angularJson.projects.playground.root).toBe('');
-    expect(angularJson.projects.playground.sourceRoot).toBe('src');
+    expect(angularJson.projects.playground.sourceRoot).toBe('');
     expect(angularJson.projects.playground.architect.build.options.outputPath).toBe('dist/playground');
     expect(angularJson.projects.playground.architect.build.options.index).toBe('src/index.html');
-    expect(angularJson.projects.playground.architect.build.options.main).toBe('src/main.playground.ts');
+    expect(angularJson.projects.playground.architect.build.options.main).toBe('.angular-playground/main.playground.ts');
     expect(angularJson.projects.playground.architect.build.options.polyfills).toBe('src/polyfills.ts');
-    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('tsconfig.playground.json');
+    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('.angular-playground/tsconfig.playground.json');
     expect(angularJson.projects.playground.architect.build.options.assets[0]).toBe('src/favicon.ico');
     expect(angularJson.projects.playground.architect.build.options.assets[1]).toBe('src/assets');
     expect(angularJson.projects.playground.architect.build.options.styles[0]).toBe('src/styles.css');
@@ -48,7 +48,7 @@ describe('ng-add', () => {
     const resultTree = await runner.runSchematicAsync('ng-add', {}, tree).toPromise();
     verifyBasicFiles(resultTree, {
       sourceRootPath: './projects/something/src',
-      mainFilePath: 'projects/something/src/main.playground.ts',
+      mainFilePath: '.angular-playground/main.playground.ts',
     });
 
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
@@ -56,9 +56,9 @@ describe('ng-add', () => {
     expect(angularJson.projects.playground.sourceRoot).toBe('projects/something/src');
     expect(angularJson.projects.playground.architect.build.options.outputPath).toBe('dist/playground');
     expect(angularJson.projects.playground.architect.build.options.index).toBe('projects/something/src/index.html');
-    expect(angularJson.projects.playground.architect.build.options.main).toBe('projects/something/src/main.playground.ts');
+    expect(angularJson.projects.playground.architect.build.options.main).toBe('.angular-playground/main.playground.ts');
     expect(angularJson.projects.playground.architect.build.options.polyfills).toBe('projects/something/src/polyfills.ts');
-    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('projects/something/tsconfig.playground.json');
+    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('.angular-playground/tsconfig.playground.json');
     expect(angularJson.projects.playground.architect.build.options.assets[0]).toBe('projects/something/src/favicon.ico');
     expect(angularJson.projects.playground.architect.build.options.assets[1]).toBe('projects/something/src/assets');
     expect(angularJson.projects.playground.architect.build.options.styles[0]).toBe('projects/something/src/styles.css');
@@ -79,7 +79,7 @@ describe('ng-add', () => {
     const resultTree = await runner.runSchematicAsync('ng-add', {}, tree).toPromise();
     verifyBasicFiles(resultTree, {
       sourceRootPath: './src',
-      mainFilePath: 'src/main.playground.ts',
+      mainFilePath: '.angular-playground/main.playground.ts',
     });
 
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
@@ -87,9 +87,9 @@ describe('ng-add', () => {
     expect(angularJson.projects.playground.sourceRoot).toBe('src');
     expect(angularJson.projects.playground.architect.build.options.outputPath).toBe('dist/playground');
     expect(angularJson.projects.playground.architect.build.options.index).toBe('src/index.html');
-    expect(angularJson.projects.playground.architect.build.options.main).toBe('src/main.playground.ts');
+    expect(angularJson.projects.playground.architect.build.options.main).toBe('.angular-playground/main.playground.ts');
     expect(angularJson.projects.playground.architect.build.options.polyfills).toBe('src/polyfills.ts');
-    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('tsconfig.playground.json');
+    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('.angular-playground/tsconfig.playground.json');
     expect(angularJson.projects.playground.architect.build.options.assets[0]).toBe('src/favicon.ico');
     expect(angularJson.projects.playground.architect.build.options.assets[1]).toBe('src/assets');
     expect(angularJson.projects.playground.architect.build.options.styles[0]).toBe('src/styles.scss');
@@ -106,7 +106,7 @@ describe('ng-add', () => {
     const resultTree = await runner.runSchematicAsync('ng-add', {}, tree).toPromise();
     verifyBasicFiles(resultTree, {
       sourceRootPath: './projects/foo-lib/src',
-      mainFilePath: 'projects/foo-lib/src/main.playground.ts',
+      mainFilePath: '.angular-playground/main.playground.ts',
     });
 
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
@@ -114,9 +114,9 @@ describe('ng-add', () => {
     expect(angularJson.projects.playground.sourceRoot).toBe('projects/foo-lib/src');
     expect(angularJson.projects.playground.architect.build.options.outputPath).toBe('dist/playground');
     expect(angularJson.projects.playground.architect.build.options.index).toBe('projects/foo-lib/src/index.html');
-    expect(angularJson.projects.playground.architect.build.options.main).toBe('projects/foo-lib/src/main.playground.ts');
+    expect(angularJson.projects.playground.architect.build.options.main).toBe('.angular-playground/main.playground.ts');
     expect(angularJson.projects.playground.architect.build.options.polyfills).toBe('projects/foo-lib/src/polyfills.ts');
-    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('projects/foo-lib/tsconfig.playground.json');
+    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('.angular-playground/tsconfig.playground.json');
     expect(angularJson.projects.playground.architect.build.options.assets[0]).toBe('projects/foo-lib/src/favicon.ico');
     expect(angularJson.projects.playground.architect.build.options.assets[1]).toBe('projects/foo-lib/src/assets');
     expect(angularJson.projects.playground.architect.build.options.styles[0]).toBe('projects/foo-lib/src/styles.css');
@@ -133,7 +133,7 @@ describe('ng-add', () => {
     const resultTree = await runner.runSchematicAsync('ng-add', {}, tree).toPromise();
     verifyBasicFiles(resultTree, {
       sourceRootPath: './projects/foo-lib-tester/src',
-      mainFilePath: 'projects/foo-lib-tester/src/main.playground.ts',
+      mainFilePath: '.angular-playground/main.playground.ts',
     });
 
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
@@ -141,9 +141,9 @@ describe('ng-add', () => {
     expect(angularJson.projects.playground.sourceRoot).toBe('projects/foo-lib-tester/src');
     expect(angularJson.projects.playground.architect.build.options.outputPath).toBe('dist/playground');
     expect(angularJson.projects.playground.architect.build.options.index).toBe('projects/foo-lib-tester/src/index.html');
-    expect(angularJson.projects.playground.architect.build.options.main).toBe('projects/foo-lib-tester/src/main.playground.ts');
+    expect(angularJson.projects.playground.architect.build.options.main).toBe('.angular-playground/main.playground.ts');
     expect(angularJson.projects.playground.architect.build.options.polyfills).toBe('projects/foo-lib-tester/src/polyfills.ts');
-    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('projects/foo-lib-tester/tsconfig.playground.json');
+    expect(angularJson.projects.playground.architect.build.options.tsConfig).toBe('.angular-playground/tsconfig.playground.json');
     expect(angularJson.projects.playground.architect.build.options.assets[0]).toBe('projects/foo-lib-tester/src/favicon.ico');
     expect(angularJson.projects.playground.architect.build.options.assets[1]).toBe('projects/foo-lib-tester/src/assets');
     expect(angularJson.projects.playground.architect.build.options.styles[0]).toBe('projects/foo-lib-tester/src/styles.scss');
@@ -155,7 +155,7 @@ describe('ng-add', () => {
   it('should throw if there are no projects', async () => {
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const tree = Tree.empty();
-    tree.create('angular.json', '{ "projects": {} }');
+    tree.create('angular.json', '{ "$schema": "./node_modules/@angular/cli/lib/config/schema.json", "version": 1, "projects": {} }');
     const errorMessage = 'Your app must have at least 1 project to use Playground.';
     const promise = runner.runSchematicAsync('ng-add', {}, tree).toPromise();
     await expect(promise).rejects.toThrowError(errorMessage);
@@ -165,6 +165,8 @@ describe('ng-add', () => {
 const getJsonFileAsObject = (tree: UnitTestTree, filepath: string) => JSON.parse(tree.readContent(filepath));
 
 const createAngularJson = (config: { root: string, sourceRoot: string, stylesExtension: string }) => `{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
   "projects": {
     "foo": {
       "root": "${config.root}",
@@ -211,9 +213,10 @@ const createAngularJsonForLibrary = (includeTestApp = false) => {
       }
     }
   }`;
+  const schema = `"$schema": "./node_modules/@angular/cli/lib/config/schema.json", "version": 1,`;
   return includeTestApp
-    ? `{ "projects": { ${lib}, ${libTestApp} } }`
-    : `{ "projects": { ${lib} } }`;
+    ? `{ ${schema} "projects": { ${lib}, ${libTestApp} } }`
+    : `{ ${schema} "projects": { ${lib} } }`;
 };
 
 const createPackageJson = () => `{
@@ -229,7 +232,7 @@ const verifyBasicFiles = (tree: UnitTestTree, options: { sourceRootPath: string,
   expect(packageJson.scripts.playground).toBe('angular-playground');
 
   // angular-playground.json
-  const angularPlaygroundJson = getJsonFileAsObject(tree, 'angular-playground.json');
+  const angularPlaygroundJson = getJsonFileAsObject(tree, '.angular-playground/angular-playground.json');
   expect(angularPlaygroundJson.sourceRoots).toEqual([options.sourceRootPath]);
   expect(angularPlaygroundJson.angularCli.appName).toBe('playground');
 

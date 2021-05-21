@@ -12,12 +12,12 @@ import {
     ɵresetCompiledComponents as resetCompiledComponents
 } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { SandboxLoader } from '../shared/sandbox-loader';
 import { Scenario, SelectedSandboxAndScenarioKeys, Sandbox } from '../../lib/app-state';
 import { BrowserModule } from '@angular/platform-browser';
 import { Middleware, MIDDLEWARE } from '../../lib/middlewares';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Sandboxes } from "../shared/sandboxes";
 
 @Component({
     selector: 'ap-scenario',
@@ -45,7 +45,7 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
      */
     private onDestroy = new Subject<void>();
 
-    constructor(private zone: NgZone, @Inject(MIDDLEWARE) private middleware) {
+    constructor(private zone: NgZone, @Inject(MIDDLEWARE) private middleware, private sanboxes: Sandboxes) {
     }
 
     ngOnInit() {
@@ -81,7 +81,7 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
      * Bootstrap a new Angular application with the sandbox's required dependencies
      */
     private bootstrapSandbox(selectedSandboxAndScenarioKeys: SelectedSandboxAndScenarioKeys) {
-        SandboxLoader.loadSandbox(selectedSandboxAndScenarioKeys.sandboxKey).then(sandbox => {
+        this.sanboxes.getSandbox(selectedSandboxAndScenarioKeys.sandboxKey).then(sandbox => {
             if (sandbox) {
                 const scenario = sandbox.scenarios
                     .find((s: Scenario) => s.key === selectedSandboxAndScenarioKeys.scenarioKey);

@@ -30,7 +30,6 @@ function configureArguments(config: Config): string[] {
     }
     args.push(`--host=${config.angularCliHost}`);
     args.push(`--port=${config.angularCliPort}`);
-    args.push('--progress=false');
     // need to set webpack.devServer.public via ng serve --publicHost flag (https://stackoverflow.com/a/43621275)
     args.push(`--publicHost=${publicHost}`);
 

@@ -1,4 +1,4 @@
-import * as commander from 'commander';
+import { Command } from 'commander';
 import { resolve as resolvePath } from 'path';
 import { existsSync } from 'fs';
 import { REPORT_TYPE } from './error-reporter';
@@ -48,9 +48,10 @@ const splitCommaSeparatedList = (value, defaultValue = []) => {
 };
 
 export function configure(argv: any): Config {
-    commander
+    const program = new Command();
+    program
         .name('angular-playground')
-        .option('-C, --config <path>', 'Configuration file', './angular-playground.json')
+        .option('-C, --config <path>', 'Configuration file', './.angular-playground/angular-playground.json')
         .option('-S, --src <path>', 'Specify component source directories (comma separated list)', (v) => splitCommaSeparatedList(v, ['./src/']))
 
         // Build options
@@ -64,7 +65,7 @@ export function configure(argv: any): Config {
         // Sandbox verification
         .option('--check-errors', 'Check for errors in all scenarios in all sandboxes', false)
         .option('--random-scenario', 'Pick a random scenario from each sandbox to check for errors', false)
-        .option('--timeout <n>', 'Number of attempts for each sandbox', 90)
+        .option('--timeout <n>', 'Number of attempts for each sandbox', '90')
         .option('--report-type <type>', 'Type of report to generate', REPORT_TYPE.LOG)
         .option('--report-path <path>', 'Path of report to generate', '')
 
@@ -74,8 +75,8 @@ export function configure(argv: any): Config {
         .option('--diff-directory <dir>', 'Directory to put diffs in', 'src/__diff_output__')
         .option('--update-snapshots', 'Update stored snapshots', false)
         .option('--delete-snapshots', 'Delete stored snapshots', false)
-        .option('--visual-regression-mock-date <dateInMs>', 'Date to set in puppeteer (in ms from epoch) for visual regression tests.', Date.now())
-        .option('--visual-regression-sleep-duration <n>', 'Milliseconds to wait for sandbox scenario to load before capturing screenshot.', 100)
+        .option('--visual-regression-mock-date <dateInMs>', 'Date to set in puppeteer (in ms from epoch) for visual regression tests.', `${Date.now()}`)
+        .option('--visual-regression-sleep-duration <n>', 'Milliseconds to wait for sandbox scenario to load before capturing screenshot.', '100')
 
         // Sandbox verification and Snapshot tests
         .option('--path-to-sandboxes <dir>', 'Subdirectory of project in which to target sandbox files', splitCommaSeparatedList)
@@ -83,17 +84,17 @@ export function configure(argv: any): Config {
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
         .option('--ng-cli-host <ip>', '@angular/cli serve host ip', '127.0.0.1')
-        .option('--ng-cli-port <n>', '@angular/cli serve port', 4201)
+        .option('--ng-cli-port <n>', '@angular/cli serve port', '4201')
         .option('--ng-cli-cmd <path>', 'Path to @angular/cli executable', 'node_modules/@angular/cli/bin/ng')
         .option('--ng-cli-args <list>', 'Additional @angular/cli arguments')
         .option('--ng-cli-max-buffer <maxBuffer>', 'Specify a max buffer (for large apps)');
 
-    commander.parse(argv);
-    return applyConfigurationFile(commander);
+    program.parse(argv);
+    return applyConfigurationFile(program.opts());
 }
 
-export function applyConfigurationFile(program: any): Config {
-    const playgroundConfig = loadConfig(program.config);
+export function applyConfigurationFile(options: {[key: string]: any}): Config {
+    const playgroundConfig = loadConfig(options.config);
     // TODO: remove this deprecation warning at next major version
     if (playgroundConfig.sourceRoot) {
         console.warn('Using `sourceRoot` is deprecated. Please use `sourceRoots` instead.');
@@ -102,32 +103,32 @@ export function applyConfigurationFile(program: any): Config {
     }
 
     const config: Config = {
-        sourceRoots: playgroundConfig.sourceRoots || program.src,
-        chunk: negate(playgroundConfig.noChunk) || program.chunk,
-        watch: negate(playgroundConfig.noWatch) || program.watch,
-        serve: negate(playgroundConfig.noServe) || program.serve,
-        build: playgroundConfig.build || program.build,
-        buildWithServiceWorker: playgroundConfig.buildWithServiceWorker || program.buildWithServiceWorker,
-        baseHref: playgroundConfig.baseHref || program.baseHref,
+        sourceRoots: playgroundConfig.sourceRoots || options.src,
+        chunk: negate(playgroundConfig.noChunk) || options.chunk,
+        watch: negate(playgroundConfig.noWatch) || options.watch,
+        serve: negate(playgroundConfig.noServe) || options.serve,
+        build: playgroundConfig.build || options.build,
+        buildWithServiceWorker: playgroundConfig.buildWithServiceWorker || options.buildWithServiceWorker,
+        baseHref: playgroundConfig.baseHref || options.baseHref,
 
-        verifySandboxes: playgroundConfig.verifySandboxes || program.checkErrors,
-        randomScenario: playgroundConfig.randomScenario || program.randomScenario,
-        timeout: playgroundConfig.timeout || program.timeout,
-        reportPath: playgroundConfig.reportPath || program.reportPath,
-        reportType: playgroundConfig.reportType || program.reportType,
+        verifySandboxes: playgroundConfig.verifySandboxes || options.checkErrors,
+        randomScenario: playgroundConfig.randomScenario || options.randomScenario,
+        timeout: playgroundConfig.timeout || options.timeout,
+        reportPath: playgroundConfig.reportPath || options.reportPath,
+        reportType: playgroundConfig.reportType || options.reportType,
 
-        checkVisualRegressions: playgroundConfig.checkVisualRegressions || program.checkVisualRegressions,
-        snapshotDirectory: playgroundConfig.snapshotDirectory || program.snapshotDirectory,
-        diffDirectory: playgroundConfig.diffDirectory || program.diffDirectory,
+        checkVisualRegressions: playgroundConfig.checkVisualRegressions || options.checkVisualRegressions,
+        snapshotDirectory: playgroundConfig.snapshotDirectory || options.snapshotDirectory,
+        diffDirectory: playgroundConfig.diffDirectory || options.diffDirectory,
         viewportSizes: playgroundConfig.viewportSizes || [],
-        updateSnapshots: playgroundConfig.updateSnapshots || program.updateSnapshots,
-        deleteSnapshots: playgroundConfig.deleteSnapshots || program.deleteSnapshots,
+        updateSnapshots: playgroundConfig.updateSnapshots || options.updateSnapshots,
+        deleteSnapshots: playgroundConfig.deleteSnapshots || options.deleteSnapshots,
         imageSnapshotConfig: playgroundConfig.imageSnapshotConfig || {},
         visualRegressionIgnore: playgroundConfig.visualRegressionIgnore || [],
-        visualRegressionMockDate: playgroundConfig.visualRegressionMockDate || program.visualRegressionMockDate,
-        visualRegressionSleepDuration: playgroundConfig.visualRegressionSleepDuration || program.visualRegressionSleepDuration,
+        visualRegressionMockDate: playgroundConfig.visualRegressionMockDate || options.visualRegressionMockDate,
+        visualRegressionSleepDuration: playgroundConfig.visualRegressionSleepDuration || options.visualRegressionSleepDuration,
 
-        pathToSandboxes: playgroundConfig.pathToSandboxes || program.pathToSandboxes,
+        pathToSandboxes: playgroundConfig.pathToSandboxes || options.pathToSandboxes,
     };
 
     if (config.verifySandboxes && config.reportType && !config.reportPath) {
@@ -142,12 +143,12 @@ export function applyConfigurationFile(program: any): Config {
     }
 
     if (playgroundConfig.angularCli) {
-        config.angularAppName = playgroundConfig.angularCli.appName || program.ngCliApp;
-        config.angularCliPath = playgroundConfig.angularCli.cmdPath || program.ngCliCmd;
-        config.angularCliHost = playgroundConfig.angularCli.host || program.ngCliHost;
-        config.angularCliPort = playgroundConfig.angularCli.port || program.ngCliPort;
-        config.angularCliAdditionalArgs = playgroundConfig.angularCli.args || program.ngCliArgs;
-        config.angularCliMaxBuffer = playgroundConfig.angularCli.maxBuffer || program.ngCliMaxBuffer;
+        config.angularAppName = playgroundConfig.angularCli.appName || options.ngCliApp;
+        config.angularCliPath = playgroundConfig.angularCli.cmdPath || options.ngCliCmd;
+        config.angularCliHost = playgroundConfig.angularCli.host || options.ngCliHost;
+        config.angularCliPort = playgroundConfig.angularCli.port || options.ngCliPort;
+        config.angularCliAdditionalArgs = playgroundConfig.angularCli.args || options.ngCliArgs;
+        config.angularCliMaxBuffer = playgroundConfig.angularCli.maxBuffer || options.ngCliMaxBuffer;
     }
 
     return config;

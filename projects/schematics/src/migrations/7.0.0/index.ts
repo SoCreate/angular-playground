@@ -1,4 +1,4 @@
-import { experimental, normalize } from '@angular-devkit/core';
+import { isJsonArray, normalize, workspaces } from '@angular-devkit/core';
 import {
   apply,
   chain,
@@ -7,15 +7,15 @@ import {
   mergeWith,
   move,
   Rule,
-  SchematicContext,
+  SchematicsException,
   template,
   Tree,
   url,
 } from '@angular-devkit/schematics';
 import { getProject, getSourceRoot } from '../../utils/project';
-import { Builders, ProjectType, WorkspaceProject, WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
-import { getWorkspace, updateWorkspace } from '@schematics/angular/utility/config';
+import { Builders } from '@schematics/angular/utility/workspace-models';
 import { constructPath } from '../../utils/paths';
+import { getWorkspace, updateWorkspace } from "@schematics/angular/utility/workspace";
 
 export default function migration(options: any): Rule {
   return chain([
@@ -26,19 +26,22 @@ export default function migration(options: any): Rule {
 
 function updateAppInWorkspaceFile(
   options: { stylesExtension: string },
-  workspace: WorkspaceSchema,
-  project: experimental.workspace.WorkspaceProject, packageName: string): Rule {
+  workspace: workspaces.WorkspaceDefinition,
+  project: workspaces.ProjectDefinition, name: string): Rule {
 
   const projectRoot = normalize(project.root);
   const projectRootParts = projectRoot.split('/');
   const sourceRoot = getSourceRoot(project.sourceRoot);
   const sourceRootParts = sourceRoot.split('/');
 
-  const playgroundProject: Partial<experimental.workspace.WorkspaceProject> = {
+  workspace.projects.delete(name);
+  workspace.projects.add({
+    name,
     root: projectRoot,
     sourceRoot,
-    projectType: ProjectType.Application,
-    architect: {
+    projectType: 'application',
+    targets:
+      {
       build: {
         builder: Builders.Browser,
         options: {
@@ -82,71 +85,77 @@ function updateAppInWorkspaceFile(
           browserTarget: 'playground:build',
           port: 4201
         },
-      },
-    },
-  };
+      }
+    }
+  });
 
-  workspace.projects[packageName] = playgroundProject as WorkspaceProject;
   return updateWorkspace(workspace);
 }
 
 function configure(options: any): Rule {
-  return (host: Tree, context: SchematicContext) => {
-    const workspace = getWorkspace(host);
-    const project = getProject(host, options, 'application');
+  return async (tree: Tree) => {
+    const workspace = await getWorkspace(tree);
+    const project = getProject(workspace, options, 'application');
+
+    if (!project) {
+      throw new SchematicsException('Your app must have at least 1 project to use Playground.');
+    }
 
     let stylesExtension = 'css';
+    const buildTarget = project.targets.get('build');
     if (
-      project.architect
-      && project.architect.build
-      && project.architect.build.options
-      && project.architect.build.options.styles
+      buildTarget
+      && buildTarget.options
+      && buildTarget.options.styles
+      && isJsonArray(buildTarget.options.styles)
     ) {
-      const mainStyle = project.architect.build.options.styles
+      const mainStyle = buildTarget.options.styles
         .find((path: string | { input: string }) => typeof path === 'string'
           ? path.includes('/styles.')
           : path.input.includes('/styles.'));
       if (mainStyle) {
+        // @ts-ignore
         const mainStyleString = typeof mainStyle === 'string' ? mainStyle : mainStyle.input;
         stylesExtension = mainStyleString.split('.').pop();
       }
     }
 
     return chain([
-      updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
-    ])(host, context);
+        updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
+    ]);
   };
 }
 
 function updateFiles(options: any): Rule {
-  return (host: Tree, context: SchematicContext) => {
-    const project = getProject(host, options);
-    const sourceRoot = getSourceRoot(project.sourceRoot);
+  return async (tree: Tree) => {
+    const workspace = await getWorkspace(tree);
+    const project = getProject(workspace, options);
+    const sourceRoot = getSourceRoot(project?.sourceRoot);
     const tsconfigJsonTemplateSource = apply(url('./files'), [
       filter(path => path.endsWith('tsconfig.playground.json')),
       template({}),
-      overwriteIfExists(host),
+      overwriteIfExists(tree),
     ]);
     const playgroundMainTemplateSource = apply(url('./files'), [
       filter(path => path.endsWith('main.playground.ts')),
       template({}),
       move(sourceRoot),
-      overwriteIfExists(host),
+      overwriteIfExists(tree),
     ]);
     return chain([
       mergeWith(tsconfigJsonTemplateSource),
       mergeWith(playgroundMainTemplateSource),
-    ])(host, context);
+    ]);
   };
 }
 
 // Add to resolve issue with mergeWith not working when using MergeStrategy.Overwrite
 // When not using this function I get this error:  "Error [file] already exists."
 // https://github.com/angular/angular-cli/issues/11337#issuecomment-516543220
-function overwriteIfExists(host: Tree): Rule {
+function overwriteIfExists(tree: Tree): Rule {
   return forEach(fileEntry => {
-    if (host.exists(fileEntry.path)) {
-      host.overwrite(fileEntry.path, fileEntry.content);
+    if (tree.exists(fileEntry.path)) {
+      tree.overwrite(fileEntry.path, fileEntry.content);
       return null;
     }
     return fileEntry;

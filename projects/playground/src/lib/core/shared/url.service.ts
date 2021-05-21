@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { SandboxMenuItem } from '../../lib/app-state';
-import { SandboxLoader } from './sandbox-loader';
+import { Sandboxes } from "./sandboxes";
 
 @Injectable()
 export class UrlService {
@@ -18,8 +18,9 @@ export class UrlService {
         return this._select;
     }
 
-    constructor(private location: Location) {
-        this.sandboxMenuItems = SandboxLoader.getSandboxMenuItems();
+    constructor(private location: Location,
+                private sandBoxes: Sandboxes) {
+        this.sandboxMenuItems = this.sandBoxes.getSandboxMenuItems();
         const urlPath = location.path();
         this._embed = /[?|&]embed=1/.exec(urlPath) !== null;
         this._select = this.parse('scenario', this.sandboxMenuItems, urlPath);
@@ -49,8 +50,7 @@ export class UrlService {
             const value = decodeURIComponent(match[1]);
             const lastSlash = value.lastIndexOf('/');
 
-            const sbKey = value.substr(0, lastSlash);
-            let sandboxKey = sbKey;
+            let sandboxKey = value.substr(0, lastSlash);
             const sandboxMenuItem = sandboxMenuItems
                 .find(smi => smi.key.toLowerCase() === sandboxKey.toLowerCase()
                     || (smi.uniqueId && smi.uniqueId === sandboxKey));
