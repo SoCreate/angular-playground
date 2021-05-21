@@ -69,7 +69,6 @@ async function main(config: Config, hostUrl: string, testPath: string, viewportC
         ? `test-image-snapshots-${formatViewportSize(viewportConfig)}\\.js$`
         : 'test-image-snapshots\\.js';
     const argv = {
-        config: 'node_modules/angular-playground/dist/jest/jest-puppeteer.config.js',
         updateSnapshot: !!config.updateSnapshots,
         testRegex
     } as JestConfig.Argv;
