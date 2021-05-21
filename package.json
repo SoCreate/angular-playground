@@ -1,6 +1,6 @@
 {
     "name": "angular-playground",
-    "version": "8.0.0-rc.1",
+    "version": "8.0.0-rc.2",
     "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
     "typings": "dist/playground/angular-playground.d.ts",
     "main": "dist/playground/bundles/angular-playground.umd.js",
