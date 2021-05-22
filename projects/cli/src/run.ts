@@ -11,7 +11,7 @@ export async function run() {
     const config: Config = configure(process.argv);
 
     try {
-        await buildSandboxes(config.sourceRoots, config.chunk, config.verifySandboxes || config.checkVisualRegressions);
+        await buildSandboxes(config.sourceRoots, config.chunk, config.verifySandboxes || config.checkVisualRegressions, config.definedSandboxesPath);
     } catch (err) {
         throw err;
     }
@@ -26,7 +26,7 @@ export async function run() {
 
     if ((config.watch && !config.deleteSnapshots) || config.verifySandboxes || (config.checkVisualRegressions && !config.deleteSnapshots)) {
         startWatch(config.sourceRoots, () =>
-            buildSandboxes(config.sourceRoots, config.chunk, config.verifySandboxes || config.checkVisualRegressions));
+            buildSandboxes(config.sourceRoots, config.chunk, config.verifySandboxes || config.checkVisualRegressions, config.definedSandboxesPath));
     }
 
     if ((config.serve && !config.deleteSnapshots) || config.verifySandboxes || (config.checkVisualRegressions && !config.deleteSnapshots)) {

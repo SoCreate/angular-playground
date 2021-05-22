@@ -1,4 +1,4 @@
-import { writeFile, readFileSync } from 'fs';
+import { writeFile, readFileSync, existsSync, writeFileSync, mkdirSync } from 'fs';
 import { join as joinPath, resolve as resolvePath } from 'path';
 import { fromDirMultiple } from './from-dir';
 import { StringBuilder } from './string-builder';
@@ -17,7 +17,7 @@ export interface SandboxFileInformation {
     }[];
 }
 
-export async function buildSandboxes(srcPaths: string[], chunk: boolean, makeSandboxMenuItemFile = false): Promise<string[]> {
+export async function buildSandboxes(srcPaths: string[], chunk: boolean, makeSandboxMenuItemFile: boolean, definedSandboxesPath: string): Promise<string[]> {
     const chunkMode = chunk ? 'lazy' : 'eager';
     const homes = srcPaths.map(srcPath => resolvePath(srcPath));
     const sandboxes = findSandboxes(homes);
@@ -25,9 +25,11 @@ export async function buildSandboxes(srcPaths: string[], chunk: boolean, makeSan
     if (makeSandboxMenuItemFile) {
         await buildSandboxMenuItemFile(sandboxes);
     }
-
-    const rootPaths = [resolvePath('./.angular-playground')];
-    return await buildSandboxFileContents(rootPaths, sandboxes, chunkMode, writeSandboxContent).then(results => {
+    const rootPath = resolvePath(definedSandboxesPath);
+    if (!existsSync(rootPath)) {
+        mkdirSync(rootPath);
+    }
+    return await buildSandboxFileContents(rootPath, sandboxes, chunkMode, writeSandboxContent).then(results => {
         console.log('Successfully compiled sandbox files.');
         return results;
     });
@@ -87,27 +89,50 @@ async function writeSandboxContent(filePath, fileContent): Promise<string> {
 }
 
 export function buildSandboxFileContents(
-    rootPaths: string[],
+    rootPath: string,
     sandboxes: SandboxFileInformation[],
     chunkMode: string,
     writeContents: (file, contents) => Promise<string>) {
     const promises: Promise<string>[] = [];
-    fromDirMultiple(rootPaths, /sandboxes.*\.ts/, (filename) => {
-            let contents = readFileSync(filename, 'utf8');
 
-            if (contents.indexOf('*GET_SANDBOX*') !== -1) {
-                const sandboxMenuItemsMethodBody = buildGetSandboxMenuItemMethodBodyContent(sandboxes);
-                contents = contents.replace(
-                    /(\/\*GET_SANDBOX_MENU_ITEMS\*\/).*?(?=\/\*END_GET_SANDBOX_MENU_ITEMS\*\/)/s,
-                    `$1\n ${sandboxMenuItemsMethodBody} \n`
-                );
-                const sandboxMethodBody = buildGetSandboxMethodBodyContent(sandboxes, chunkMode);
-                contents = contents.replace(/(\/\*GET_SANDBOX\*\/).*?(?=\/\*END_GET_SANDBOX\*\/)/s, `$1\n ${sandboxMethodBody} \n`);
-                promises.push(writeContents(filename, contents));
-            }
-        }
-    );
+    const filename = joinPath(rootPath, 'sandboxes.ts');
+    createSandboxesFileIfNotExists(filename);
+
+    let contents = readFileSync(filename, 'utf8');
+
+    if (contents.indexOf('*GET_SANDBOX*') !== -1) {
+        const sandboxMenuItemsMethodBody = buildGetSandboxMenuItemMethodBodyContent(sandboxes);
+        contents = contents.replace(
+            /(\/\*GET_SANDBOX_MENU_ITEMS\*\/).*?(?=\/\*END_GET_SANDBOX_MENU_ITEMS\*\/)/s,
+            `$1\n ${sandboxMenuItemsMethodBody} \n`
+        );
+        const sandboxMethodBody = buildGetSandboxMethodBodyContent(sandboxes, chunkMode);
+        contents = contents.replace(/(\/\*GET_SANDBOX\*\/).*?(?=\/\*END_GET_SANDBOX\*\/)/s, `$1\n ${sandboxMethodBody} \n`);
+        promises.push(writeContents(filename, contents));
+    }
+
     return Promise.all(promises);
+}
+
+export function createSandboxesFileIfNotExists(filename: string) {
+    if (!existsSync(filename)) {
+        const fileContent = `
+// DO NOT MODIFY.... This file is filled in via the Playground CLI.
+
+export class SandboxesDefined {
+  getSandbox(path: string): any {
+    /*GET_SANDBOX*/
+    /*END_GET_SANDBOX*/
+  }
+  getSandboxMenuItems(): any {
+    /*GET_SANDBOX_MENU_ITEMS*/
+    return [];
+    /*END_GET_SANDBOX_MENU_ITEMS*/
+  }
+}`;
+
+        writeFileSync(filename, fileContent);
+    }
 }
 
 export function buildGetSandboxMethodBodyContent(sandboxes: SandboxFileInformation[], chunkMode: string): string {

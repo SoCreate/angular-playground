@@ -32,6 +32,8 @@ export interface Config {
 
     pathToSandboxes: [];
 
+    definedSandboxesPath: string;
+
     angularAppName?: string;
     angularCliPath?: string;
     angularCliHost?: string;
@@ -53,6 +55,9 @@ export function configure(argv: any): Config {
         .name('angular-playground')
         .option('-C, --config <path>', 'Configuration file', './.angular-playground/angular-playground.json')
         .option('-S, --src <path>', 'Specify component source directories (comma separated list)', (v) => splitCommaSeparatedList(v, ['./src/']))
+
+        // Settings for prebuild
+        .option('--defined-sandboxes-path <path>', 'Defined sandboxes path (file path for CLI to write out sandboxed scenarios)', './.angular-playground')
 
         // Build options
         .option('--no-watch', 'Disable sandboxes watch', false)
@@ -79,7 +84,7 @@ export function configure(argv: any): Config {
         .option('--visual-regression-sleep-duration <n>', 'Milliseconds to wait for sandbox scenario to load before capturing screenshot.', '100')
 
         // Sandbox verification and Snapshot tests
-        .option('--path-to-sandboxes <dir>', 'Subdirectory of project in which to target sandbox files', splitCommaSeparatedList)
+        .option('--path-to-sandboxes <dir>', 'Subdirectory of project in which to target sandbox files', (v) => splitCommaSeparatedList(v, []))
 
         // @angular/cli options
         .option('--ng-cli-app <appName>', '@angular/cli appName')
@@ -129,6 +134,8 @@ export function applyConfigurationFile(options: {[key: string]: any}): Config {
         visualRegressionSleepDuration: playgroundConfig.visualRegressionSleepDuration || options.visualRegressionSleepDuration,
 
         pathToSandboxes: playgroundConfig.pathToSandboxes || options.pathToSandboxes,
+
+        definedSandboxesPath: playgroundConfig.definedSandboxesPath || options.definedSandboxesPath,
     };
 
     if (config.verifySandboxes && config.reportType && !config.reportPath) {
