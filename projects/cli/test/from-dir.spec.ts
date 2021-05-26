@@ -3,10 +3,11 @@ import { fromDirMultiple } from '../src/from-dir';
 describe('fromDir', () => {
     const dir = './projects/cli/test/files/from-dir-test/';
     const dir2 = './projects/cli/test/files/from-dir-test-multiple/';
+    const excludeRegex = /.*node_modules.*/;
 
     it('should throw error when directory does not exist', () => {
         const t = () => {
-            fromDirMultiple(['foo'], /test/, () => {});
+            fromDirMultiple(['foo'], /test/, excludeRegex, () => {});
         };
         expect(t).toThrow();
     });
@@ -15,7 +16,7 @@ describe('fromDir', () => {
         const regex = /\.json$/;
         const mockCb = jest.fn();
 
-        fromDirMultiple([dir], regex, mockCb);
+        fromDirMultiple([dir], regex, excludeRegex, mockCb);
         expect(mockCb.mock.calls.length).toBe(2);
     });
 
@@ -23,7 +24,7 @@ describe('fromDir', () => {
         const regex = /\.spec.ts$/;
         const mockCb = jest.fn();
 
-        fromDirMultiple([dir], regex, mockCb);
+        fromDirMultiple([dir], regex, excludeRegex, mockCb);
         expect(mockCb.mock.calls.length).toBe(0);
     });
 
@@ -31,7 +32,7 @@ describe('fromDir', () => {
         const regex = /\.csv$/;
         const mockCb = jest.fn();
 
-        fromDirMultiple([dir], regex, mockCb);
+        fromDirMultiple([dir], regex, excludeRegex, mockCb);
         expect(mockCb.mock.calls.length).toBe(1);
     });
 
@@ -39,7 +40,7 @@ describe('fromDir', () => {
         const regex = /\.(json|ts)$/;
         const mockCb = jest.fn();
 
-        fromDirMultiple([dir, dir2], regex, mockCb);
+        fromDirMultiple([dir, dir2], regex, excludeRegex, mockCb);
         expect(mockCb.mock.calls.length).toBe(5);
     });
 });

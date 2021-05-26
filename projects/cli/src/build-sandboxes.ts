@@ -38,7 +38,7 @@ export async function buildSandboxes(srcPaths: string[], chunk: boolean, makeSan
 export function findSandboxes(homes: string[]): SandboxFileInformation[] {
     const sandboxes = [];
 
-    fromDirMultiple(homes, /\.sandbox.ts$/, (filename, home) => {
+    fromDirMultiple(homes, /\.sandbox.ts$/, /.*node_modules.*/, (filename, home) => {
         const sandboxPath = filename.replace(home, '.').replace(/.ts$/, '').replace(/\\/g, '/');
         const contents = readFileSync(filename, 'utf8');
 
@@ -139,7 +139,7 @@ export function buildGetSandboxMethodBodyContent(sandboxes: SandboxFileInformati
     const content = new StringBuilder();
     content.addLine(`switch(path) {`);
 
-    sandboxes.forEach(({key, srcPath}, i) => {
+    sandboxes.forEach(({key, srcPath}) => {
         let fullPath = joinPath(srcPath, key);
         // Normalize slash syntax for Windows/Unix filepaths
         fullPath = slash(fullPath);

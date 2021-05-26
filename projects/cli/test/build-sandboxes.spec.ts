@@ -99,7 +99,7 @@ describe('findSandboxes', () => {
 
 describe('buildSandboxFileContents', () => {
     let sandboxes: SandboxFileInformation[] = [];
-    const rootPaths = ['./projects/cli/test/files/sandboxes/'];
+    const rootPath = './projects/cli/test/files/sandboxes/';
     let contents: string;
     const writeContent = (file, content) => contents = content;
 
@@ -153,7 +153,7 @@ describe('buildSandboxFileContents', () => {
 
     describe('getSandbox', () => {
         it('should return the serialized sandbox', async () => {
-            await buildSandboxFileContents(rootPaths, sandboxes, 'lazy', writeContent);
+            await buildSandboxFileContents(rootPath, sandboxes, 'lazy', writeContent);
             expect(contents).toContain('return _.default.serialize(\'cli/test/files/sandboxes/example1.sandbox\')');
             expect(contents).toContain('return _.default.serialize(\'cli/test/files/sandboxes/other.sandbox\')');
         });
@@ -161,13 +161,13 @@ describe('buildSandboxFileContents', () => {
 
     describe('webpack strategy', () => {
         it('should use lazy webpack resolution strategy if lazy is provided as a parameter', async () => {
-            await buildSandboxFileContents(rootPaths, sandboxes, 'lazy', writeContent);
+            await buildSandboxFileContents(rootPath, sandboxes, 'lazy', writeContent);
             expect(contents).toContain('import( /* webpackMode: "lazy" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
             expect(contents).not.toContain('eager');
         });
 
         it('should use eager webpack resolution strategy if lazy is provided as a parameter', async () => {
-            await buildSandboxFileContents(rootPaths, sandboxes, 'eager', writeContent);
+            await buildSandboxFileContents(rootPath, sandboxes, 'eager', writeContent);
             expect(contents).toContain('import( /* webpackMode: "eager" */ \'home/cli/test/files/sandboxes/example1.sandbox\')');
             expect(contents).not.toContain('lazy');
         });
