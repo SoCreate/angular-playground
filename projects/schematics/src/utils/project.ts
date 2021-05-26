@@ -1,5 +1,6 @@
 import { normalize, workspaces } from '@angular-devkit/core';
 import { SchematicsException } from '@angular-devkit/schematics';
+import { ProjectDefinitionCollection } from "@angular-devkit/core/src/workspace/definitions";
 
 export function getProjectPath(
   workspace: workspaces.WorkspaceDefinition,
@@ -35,21 +36,29 @@ export function getProject(
       throw new SchematicsException('Your app must have at least 1 project to use Playground.');
     }
     // if type filter is not set, use first project
-    let firstFilteredProject = workspace.projects.keys().next().value;
+    let firstFilteredProjectName = getFirstProjectName(workspace.projects);
     if (typeFilter) {
       // apply filter
-      workspace.projects.forEach((project, key) => {
+      for (const [projectName, project] of workspace.projects.entries()) {
         if (project.extensions.projectType === typeFilter) {
-          firstFilteredProject = key;
-          return;
+          firstFilteredProjectName = projectName;
+          break;
         }
-      });
+      }
     }
-    options.project = firstFilteredProject;
+    options.project = firstFilteredProjectName;
   }
-
   return workspace.projects.get(options.project || '');
 }
 
 export const getSourceRoot = (sourceRoot: string | undefined) =>
   sourceRoot === undefined ? 'src' : normalize(sourceRoot);
+
+const getFirstProjectName = (projects: ProjectDefinitionCollection): string | undefined => {
+  let firstProject: string | undefined = undefined;
+  for (const projectName of projects.keys()) {
+    firstProject = projectName;
+    break;
+  }
+  return firstProject;
+};

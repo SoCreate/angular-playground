@@ -22,7 +22,7 @@ describe('ng-add', () => {
 
     const angularJson = getJsonFileAsObject(resultTree, 'angular.json');
     expect(angularJson.projects.playground.root).toBe('');
-    expect(angularJson.projects.playground.sourceRoot).toBe('');
+    expect(angularJson.projects.playground.sourceRoot).toBe('src');
     expect(angularJson.projects.playground.architect.build.options.outputPath).toBe('dist/playground');
     expect(angularJson.projects.playground.architect.build.options.index).toBe('src/index.html');
     expect(angularJson.projects.playground.architect.build.options.main).toBe('.angular-playground/main.playground.ts');
@@ -179,6 +179,19 @@ const createAngularJson = (config: { root: string, sourceRoot: string, stylesExt
             "styles": [
               "src/styles.${config.stylesExtension}"
             ]
+          }
+        }
+      }
+    },
+    "foo2": {
+      "root": "",
+      "sourceRoot": "",
+      "projectType": "application",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "options": {
+            "styles": []
           }
         }
       }
