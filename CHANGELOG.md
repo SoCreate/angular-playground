@@ -1,11 +1,19 @@
-# 8.1.0 (2021-4-21)
+# 8.1.1 (2021-5-26)
+
+<a name="8.1.1"></a>
+
+### Bug Fixes
+* **schematic:** Fix issue with schematic not getting the first application project settings
+* **build:** Fix issue with node_modules not being filtered out the build sandboxes list
+
+# 8.1.0 (2021-5-21)
 
 <a name="8.1.0"></a>
 
 ### Features
 * **configuration:** Add configuration to defined where the sandboxes defined file is located
 
-# 8.0.0 (2021-4-21)
+# 8.0.0 (2021-5-21)
 
 <a name="8.0.0"></a>
 
