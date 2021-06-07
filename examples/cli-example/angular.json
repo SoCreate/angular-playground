@@ -143,9 +143,9 @@
           "options": {
             "outputPath": "dist/playground",
             "index": "src/index.html",
-            "main": "src/main.playground.ts",
+            "main": ".angular-playground/main.playground.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.playground.json",
+            "tsConfig": ".angular-playground/tsconfig.playground.json",
             "aot": false,
             "assets": [
               "src/favicon.ico",
@@ -165,7 +165,7 @@
                 }
               ],
               "buildOptimizer": false,
-              "extractLicenses": true,
+              "extractLicenses": false,
               "outputHashing": "all"
             },
             "development": {
