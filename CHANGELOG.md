@@ -1,3 +1,10 @@
+# 8.1.2 (2021-6-8)
+
+<a name="8.1.2"></a>
+
+### Bug Fixes
+* **verify sandboxes:** Update to the latest version of Puppeteer
+
 # 8.1.1 (2021-5-26)
 
 <a name="8.1.1"></a>
