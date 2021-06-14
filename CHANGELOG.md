@@ -1,3 +1,10 @@
+# 8.1.3 (2021-6-14)
+
+<a name="8.1.3"></a>
+
+### Bug Fixes
+* **verify sandboxes:** Fix issue with error reporting when page error exist in sandbox scenario
+
 # 8.1.2 (2021-6-8)
 
 <a name="8.1.2"></a>
