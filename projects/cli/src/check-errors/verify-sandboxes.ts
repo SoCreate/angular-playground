@@ -4,6 +4,7 @@ import { SANDBOX_MENU_ITEMS_FILE, SandboxFileInformation } from '../build-sandbo
 import { ErrorReporter, REPORT_TYPE } from '../error-reporter';
 import { Config } from '../configure';
 import { waitForNgServe } from '../utils';
+
 const chalk = require('chalk');
 
 // Used to tailor the version of headless chromium ran by puppeteer
@@ -24,7 +25,9 @@ let reporter: ErrorReporter;
 
 // Ensure Chromium instances are destroyed on error
 process.on('unhandledRejection', async () => {
-    if (browser) { await browser.close(); }
+    if (browser) {
+        await browser.close();
+    }
 });
 
 export async function verifySandboxes(config: Config) {
@@ -68,7 +71,8 @@ async function main(config: Config) {
 async function setupPageAndErrorHandling(hostUrl): Promise<Page> {
     const page = await browser.newPage();
     page.on('console', (msg: ConsoleMessage) => onConsoleErr(msg));
-    await page.goto(hostUrl);
+    console.log(`Navigating to ${hostUrl}`);
+    await page.goto(hostUrl, {waitUntil: 'load', timeout: 60000});
     return page;
 }
 
@@ -94,40 +98,43 @@ async function openScenario(scenario: ScenarioSummary, page: Page) {
  */
 function getSandboxMetadata(config: Config, baseUrl: string, selectRandomScenario: boolean): ScenarioSummary[] {
     const scenarios: ScenarioSummary[] = [];
-
-    loadSandboxMenuItems().forEach((sandboxItem: SandboxFileInformation) => {
-        if (!config.pathToSandboxes || config.pathToSandboxes.some(vp => sandboxItem.key.includes(vp))) {
-            if (selectRandomScenario) {
-                const randomItemKey = getRandomKey(sandboxItem.scenarioMenuItems.length);
-                for (const item of sandboxItem.scenarioMenuItems) {
-                    if (item.key === randomItemKey) {
-                        scenarios.push(
-                            {
-                                name: sandboxItem.key,
-                                description: item.description,
-                                sandboxKey: sandboxItem.key,
-                                scenarioKey: item.key
-                            }
-                        );
-                        break;
+    try {
+        loadSandboxMenuItems().forEach((sandboxItem: SandboxFileInformation) => {
+            if (!config.pathToSandboxes || config.pathToSandboxes.some(vp => sandboxItem.key.includes(vp))) {
+                if (selectRandomScenario) {
+                    const randomItemKey = getRandomKey(sandboxItem.scenarioMenuItems.length);
+                    for (const item of sandboxItem.scenarioMenuItems) {
+                        if (item.key === randomItemKey) {
+                            scenarios.push(
+                                {
+                                    name: sandboxItem.key,
+                                    description: item.description,
+                                    sandboxKey: sandboxItem.key,
+                                    scenarioKey: item.key
+                                }
+                            );
+                            break;
+                        }
                     }
+                } else {
+                    // Grab all scenarios
+                    sandboxItem.scenarioMenuItems
+                        .forEach((item) => {
+                            scenarios.push(
+                                {
+                                    name: sandboxItem.key,
+                                    description: item.description,
+                                    sandboxKey: sandboxItem.key,
+                                    scenarioKey: item.key
+                                }
+                            );
+                        });
                 }
-            } else {
-                // Grab all scenarios
-                sandboxItem.scenarioMenuItems
-                    .forEach((item) => {
-                        scenarios.push(
-                            {
-                                name: sandboxItem.key,
-                                description: item.description,
-                                sandboxKey: sandboxItem.key,
-                                scenarioKey: item.key
-                            }
-                        );
-                    });
             }
-        }
-    });
+        });
+    } catch (err) {
+        throw new Error(`Error getting sandbox metadata: ${err}`);
+    }
 
     return scenarios;
 }
@@ -147,19 +154,24 @@ function loadSandboxMenuItems(): SandboxFileInformation[] {
  * Callback when Chromium page encounters a console error
  */
 function onConsoleErr(msg: ConsoleMessage) {
-    if (msg.type() === 'error') {
-        console.error(chalk.red(`Error in ${currentScenario} (${currentScenarioDescription}):`));
-        const getErrors = (type: string, getValue: (_: any) => string) => msg.args()
-            .map(a => (a as any)._remoteObject)
-            .filter(o => o.type === type)
-            .map(getValue);
-        const stackTrace = getErrors('object', o => o.description);
-        const errorMessage = getErrors('string', o => o.value);
-        const description = stackTrace.length ? stackTrace : errorMessage;
-        description.map(d => console.error(d));
-        if (description.length) {
-            reporter.addError(description, currentScenario, currentScenarioDescription);
+    try {
+        if (msg.type() === 'error') {
+            console.error(chalk.red(`Error in ${currentScenario} (${currentScenarioDescription}):`));
+            const getErrors = (type: string, getValue: (_: any) => string) => msg.args()
+                .map(a => (a as any)._remoteObject)
+                .filter(o => o.type === type)
+                .map(getValue);
+            const stackTrace = getErrors('object', o => o.description);
+            const errorMessage = getErrors('string', o => o.value);
+            let description = stackTrace.length ? stackTrace : errorMessage;
+            description = description.length ? description : [msg.text()];
+            description.map(d => console.error(d));
+            if (description.length) {
+                reporter.addError(description, currentScenario, currentScenarioDescription);
+            }
         }
+    } catch (err) {
+        console.error(`Error handling console errors: ${err}`);
     }
 }
 
