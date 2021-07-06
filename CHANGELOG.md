@@ -1,3 +1,10 @@
+# 8.1.4 (2021-7-6)
+
+<a name="8.1.4"></a>
+
+### Bug Fixes
+* **verify sandboxes:** Add additional error checking for console error messages
+
 # 8.1.3 (2021-6-14)
 
 <a name="8.1.3"></a>
