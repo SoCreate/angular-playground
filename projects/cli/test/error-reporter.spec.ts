@@ -29,8 +29,8 @@ describe('ErrorReporter', () => {
     });
 
     it('should console.log on compileReport if report type is log', () => {
-        const errorSpy = spyOn(console, 'error');
-        const consoleSpy = spyOn(console, 'log');
+        const errorSpy = jest.spyOn(console, 'error').mockImplementation(() =>{});
+        const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() =>{});
         reporter.addError('LOG Error', 'http://localhost:4201/textbox');
         reporter.addError('Read Error', 'http://localhost:4201/textbox');
         reporter.compileReport();
@@ -39,7 +39,7 @@ describe('ErrorReporter', () => {
     });
 
     it('should write to file if report type is json', () => {
-        const writeFileSpy = spyOn(fs, 'writeFileSync');
+        const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation(() =>{});
         reporter.type = REPORT_TYPE.JSON;
         reporter.addError('LOG Error', 'http://localhost:4201/textbox');
         reporter.addError('Read Error', 'http://localhost:4201/textbox');
@@ -48,7 +48,7 @@ describe('ErrorReporter', () => {
     });
 
     it('should write to file if report type is xml', () => {
-        const writeFileSpy = spyOn(fs, 'writeFileSync');
+        const writeFileSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation(() =>{});
         reporter.type = REPORT_TYPE.XML;
         reporter.addError('LOG Error', 'http://localhost:4201/textbox');
         reporter.addError('Read Error', 'http://localhost:4201/textbox');
