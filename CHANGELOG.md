@@ -1,3 +1,10 @@
+# 8.2.0 (2021-8-2)
+
+<a name="8.2.0"></a>
+
+### Features
+* **dependencies:** Update dependencies to use Jest version 27
+
 # 8.1.4 (2021-7-6)
 
 <a name="8.1.4"></a>
