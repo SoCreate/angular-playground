@@ -1,3 +1,10 @@
+# 9.0.0 (2022-1-26)
+
+<a name="9.0.0"></a>
+
+### Features
+* **dependencies:** Update dependencies to use Angular 13
+
 # 8.2.0 (2021-8-2)
 
 <a name="8.2.0"></a>
