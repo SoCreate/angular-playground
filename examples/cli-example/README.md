@@ -4,14 +4,39 @@
 
 Install dependencies:
 ```
-cd examples/cli-example/
 npm i
 ```
-
-Run `npm run playground:build` to replace the installed angular-playground with the development version.
-
-`npm run playground` accesses the local version of angular-playground, so changes
-within the CLI will require `npm run playground:build` to be run before changes will appear.
+Build angular-playground package and link it globally
 ```
-npm run playground:build && npm run playground
+npm run clean
+npm run build
+npm link
+```
+
+Install dependencies in example project
+```
+cd examples/cli-example/
+npm i
+npm link angular-playground
+```
+
+Run the example App
+```
+npm run playground
+```
+#
+
+To make changes to angular playground source code and see the change you must stop the playground
+from running and rebuild the angular-playground then run the example app again.
+#
+
+Rebuild Playground
+```
+cd ../..
+npm run rebuild
+```
+
+Run the example App
+```
+npm run playground
 ```
