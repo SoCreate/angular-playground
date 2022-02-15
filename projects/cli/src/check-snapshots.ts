@@ -1,5 +1,5 @@
 import { writeFileSync, unlinkSync, existsSync, readdirSync } from 'fs';
-import { Browser, launch } from 'puppeteer';
+import * as puppeteer from 'puppeteer';
 import { resolve as resolvePath, isAbsolute } from 'path';
 import { runCLI } from '@jest/core';
 import { Config as JestConfig } from '@jest/types';
@@ -20,7 +20,7 @@ export interface ViewportOptions {
 const CHROME_ARGS = ['--disable-gpu', '--no-sandbox'];
 const TEST_PATH_BASE = resolvePath('./test-image-snapshots.js');
 
-let browser: Browser;
+let browser: puppeteer.Browser;
 
 // Ensure Chromium instances are destroyed on error
 process.on('unhandledRejection', async () => {
@@ -57,7 +57,7 @@ async function main(config: Config, hostUrl: string, testPath: string, viewportC
     writeSandboxesToTestFile(config, hostUrl, testPath, viewportConfig);
 
     // launch puppeteer headless browser to render scenarios
-    browser = await launch({
+    browser = await puppeteer.launch({
         headless: true,
         handleSIGINT: false,
         args: CHROME_ARGS,
