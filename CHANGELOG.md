@@ -1,3 +1,10 @@
+# 9.0.1 (2022-2-16)
+
+<a name="9.0.1"></a>
+
+### Bug Fixes
+* **visual regressions:** Fix issue with visual regression tests not running
+
 # 9.0.0 (2022-1-26)
 
 <a name="9.0.0"></a>
