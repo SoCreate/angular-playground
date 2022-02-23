@@ -40,7 +40,7 @@ export class PlaygroundModule {
 
     static configure(configuration: Configuration) {
         PlaygroundModule.setSandboxDefinitions(configuration.sandboxesDefined);
-        initializePlayground(configuration.selector);
+        initializePlayground(configuration.selector, configuration.htmlTitle);
         _middleware.next({..._middleware.value, ...configuration});
         return this;
     }

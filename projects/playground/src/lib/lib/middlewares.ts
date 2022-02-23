@@ -6,6 +6,7 @@ export interface Configuration {
     modules?: any[];
     overlay?: boolean;
     sandboxesDefined: Type<Sandboxes>;
+    htmlTitle: string;
 }
 
 export interface Middleware {
