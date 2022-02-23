@@ -1,6 +1,6 @@
 
-export const initializePlayground = (elementNameToReplace?: string) => {
-    document.getElementsByTagName('title')[0].innerHTML = 'Playground';
+export const initializePlayground = (elementNameToReplace?: string, htmlTitle: string = 'Playground') => {
+    document.getElementsByTagName('title')[0].innerHTML = htmlTitle;
     if (elementNameToReplace && elementNameToReplace.length > 0) {
         let appNode = document.getElementsByTagName(elementNameToReplace)[0];
         if (!appNode) {
