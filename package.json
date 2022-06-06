@@ -2,13 +2,25 @@
     "name": "angular-playground",
     "version": "10.0.0",
     "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
-    "typings": "dist/playground/angular-playground.d.ts",
     "module": "dist/playground/fesm2015/angular-playground.mjs",
-    "es2015": "dist/playground/fesm2015/angular-playground.mjs",
-    "fesm2015": "dist/playground/fesm2015/angular-playground.mjs",
-    "fesm2020": "dist/playground/fesm2020/angular-playground.mjs",
-    "esm2020": "dist/playground/esm2020/angular-playground.mjs",
     "es2020": "dist/playground/fesm2020/angular-playground.mjs",
+    "esm2020": "dist/playground/esm2020/angular-playground.mjs",
+    "fesm2020": "dist/playground/fesm2020/angular-playground.mjs",
+    "fesm2015": "dist/playground/fesm2015/angular-playground.mjs",
+    "typings": "dist/playground/index.d.ts",
+    "exports": {
+        "./package.json": {
+            "default": "./package.json"
+        },
+        ".": {
+            "types": "./dist/playground/index.d.ts",
+            "esm2020": "./dist/playground/esm2020/angular-playground.mjs",
+            "es2020": "./dist/playground/fesm2020/angular-playground.mjs",
+            "es2015": "./dist/playground/fesm2015/angular-playground.mjs",
+            "node": "./dist/playground/fesm2015/angular-playground.mjs",
+            "default": "./dist/playground/fesm2020/angular-playground.mjs"
+        }
+    },
     "sideEffects": false,
     "bin": {
         "angular-playground": "dist/bin/index.js"
