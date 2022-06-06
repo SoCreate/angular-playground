@@ -1,3 +1,10 @@
+# 10.0.0 (2022-6-6)
+
+<a name="10.0.0"></a>
+
+### Features
+* **angular:** Upgrade to be compatible with Angular version 14
+
 # 9.0.1 (2022-2-16)
 
 <a name="9.0.1"></a>
