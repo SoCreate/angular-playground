@@ -13,7 +13,7 @@ export async function buildAngularCli(appName: string, enableServiceWorker: bool
     const options = Number.isInteger(+maxBuffer) ? { maxBuffer: +maxBuffer } : {};
     // Cannot build w/ AOT due to runtime compiler dependency
     const flags = [
-        '--prod',
+        `-c=production`,
         '--aot=false',
         `--base-href=${baseHref}`,
         `--service-worker=${enableServiceWorker}`,

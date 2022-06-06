@@ -25,71 +25,72 @@ export default function migration(options: any): Rule {
 }
 
 function updateAppInWorkspaceFile(
-  options: { stylesExtension: string },
-  workspace: workspaces.WorkspaceDefinition,
+  options: {stylesExtension: string},
   project: workspaces.ProjectDefinition, name: string): Rule {
 
-  const projectRoot = normalize(project.root);
-  const projectRootParts = projectRoot.split('/');
-  const sourceRoot = getSourceRoot(project.sourceRoot);
-  const sourceRootParts = sourceRoot.split('/');
+  return updateWorkspace((workspace) => {
+    const projectRoot = normalize(project.root);
+    const projectRootParts = projectRoot.split('/');
+    const sourceRoot = getSourceRoot(project.sourceRoot);
+    const sourceRootParts = sourceRoot.split('/');
 
-  workspace.projects.delete(name);
-  workspace.projects.add({
-    name,
-    root: projectRoot,
-    sourceRoot,
-    projectType: 'application',
-    targets:
-      {
-      build: {
-        builder: Builders.Browser,
-        options: {
-          outputPath: constructPath(['dist', 'playground']),
-          index: constructPath([...sourceRootParts, 'index.html']),
-          main: constructPath([...sourceRootParts, 'main.playground.ts']),
-          polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
-          tsConfig: constructPath([...projectRootParts, `tsconfig.playground.json`]),
-          aot: false,
-          assets: [
-            constructPath([...sourceRootParts, 'favicon.ico']),
-            constructPath([...sourceRootParts, 'assets']),
-          ],
-          styles: [
-            constructPath([...sourceRootParts, `styles.${options.stylesExtension}`]),
-          ],
-          scripts: [],
-        },
-        configurations: {
-          production: {
-            fileReplacements: [
-              {
-                replace: constructPath([...sourceRootParts, 'environments', 'environment.ts']),
-                with: constructPath([...sourceRootParts, 'environments', 'environment.prod.ts']),
+    workspace.projects.delete(name);
+    workspace.projects.add({
+      name,
+      root: projectRoot,
+      sourceRoot,
+      projectType: 'application',
+      targets:
+        {
+          build: {
+            builder: Builders.Browser,
+            options: {
+              outputPath: constructPath(['dist', 'playground']),
+              index: constructPath([...sourceRootParts, 'index.html']),
+              main: constructPath([...sourceRootParts, 'main.playground.ts']),
+              polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
+              tsConfig: constructPath([...projectRootParts, `tsconfig.playground.json`]),
+              aot: false,
+              assets: [
+                constructPath([...sourceRootParts, 'favicon.ico']),
+                constructPath([...sourceRootParts, 'assets']),
+              ],
+              styles: [
+                constructPath([...sourceRootParts, `styles.${options.stylesExtension}`]),
+              ],
+              scripts: [],
+            },
+            configurations: {
+              production: {
+                fileReplacements: [
+                  {
+                    replace: constructPath([...sourceRootParts, 'environments', 'environment.ts']),
+                    with: constructPath([...sourceRootParts, 'environments', 'environment.prod.ts']),
+                  },
+                ],
+                optimization: true,
+                outputHashing: 'all',
+                sourceMap: false,
+                extractCss: true,
+                namedChunks: false,
+                extractLicenses: true,
+                vendorChunk: false,
+                buildOptimizer: true,
               },
-            ],
-            optimization: true,
-            outputHashing: 'all',
-            sourceMap: false,
-            extractCss: true,
-            namedChunks: false,
-            extractLicenses: true,
-            vendorChunk: false,
-            buildOptimizer: true,
+            },
           },
-        },
-      },
-      serve: {
-        builder: Builders.DevServer,
-        options: {
-          browserTarget: 'playground:build',
-          port: 4201
-        },
-      }
-    }
+          serve: {
+            builder: Builders.DevServer,
+            options: {
+              browserTarget: 'playground:build',
+              port: 4201
+            },
+          }
+        }
+    });
+
   });
 
-  return updateWorkspace(workspace);
 }
 
 function configure(options: any): Rule {
@@ -110,7 +111,7 @@ function configure(options: any): Rule {
       && isJsonArray(buildTarget.options.styles)
     ) {
       const mainStyle = buildTarget.options.styles
-        .find((path: string | { input: string }) => typeof path === 'string'
+        .find((path: string | {input: string}) => typeof path === 'string'
           ? path.includes('/styles.')
           : path.input.includes('/styles.'));
       if (mainStyle) {
@@ -121,7 +122,7 @@ function configure(options: any): Rule {
     }
 
     return chain([
-        updateAppInWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
+      updateAppInWorkspaceFile({stylesExtension}, project, 'playground'),
     ]);
   };
 }

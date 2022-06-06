@@ -34,75 +34,77 @@ export function updateNpmConfig(): Rule {
   };
 }
 
-function addAppToWorkspaceFile(options: { stylesExtension: string }, workspace: workspaces.WorkspaceDefinition,
+function addAppToWorkspaceFile(options: {stylesExtension: string},
                                project: workspaces.ProjectDefinition, name: string): Rule {
 
-  if (workspace.projects.has(name)) {
-    throw new SchematicsException(`Project '${name}' already exists in workspace.`);
-  }
+  return updateWorkspace((workspace) => {
+    if (workspace.projects.has(name)) {
+      throw new SchematicsException(`Project '${name}' already exists in workspace.`);
+    }
 
-  const projectRoot = normalize(project.root);
-  const sourceRoot = getSourceRoot(project.sourceRoot);
-  const sourceRootParts = sourceRoot.split('/');
+    const projectRoot = normalize(project.root);
+    const sourceRoot = getSourceRoot(project.sourceRoot);
+    const sourceRootParts = sourceRoot.split('/');
 
-  workspace.projects.add({
-      name,
-      root: projectRoot,
-      sourceRoot,
-      projectType: 'application',
-      targets: {
-        build: {
-          builder: Builders.Browser,
-          options: {
-            outputPath: constructPath(['dist', 'playground']),
-            index: constructPath([...sourceRootParts, 'index.html']),
-            main: constructPath(['.angular-playground', 'main.playground.ts']),
-            polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
-            tsConfig: constructPath(['.angular-playground', `tsconfig.playground.json`]),
-            aot: false,
-            assets: [
-              constructPath([...sourceRootParts, 'favicon.ico']),
-              constructPath([...sourceRootParts, 'assets']),
-            ],
-            styles: [
-              constructPath([...sourceRootParts, `styles.${options.stylesExtension}`]),
-            ],
-            scripts: [],
-          },
-          configurations: {
-            production: {
-              fileReplacements: [
-                {
-                  replace: constructPath([...sourceRootParts, 'environments', 'environment.ts']),
-                  with: constructPath([...sourceRootParts, 'environments', 'environment.prod.ts']),
-                },
+    workspace.projects.add({
+        name,
+        root: projectRoot,
+        sourceRoot,
+        projectType: 'application',
+        targets: {
+          build: {
+            builder: Builders.Browser,
+            options: {
+              outputPath: constructPath(['dist', 'playground']),
+              index: constructPath([...sourceRootParts, 'index.html']),
+              main: constructPath(['.angular-playground', 'main.playground.ts']),
+              polyfills: constructPath([...sourceRootParts, 'polyfills.ts']),
+              tsConfig: constructPath(['.angular-playground', `tsconfig.playground.json`]),
+              aot: false,
+              assets: [
+                constructPath([...sourceRootParts, 'favicon.ico']),
+                constructPath([...sourceRootParts, 'assets']),
               ],
-              buildOptimizer: false,
-              extractLicenses: false,
-              outputHashing: 'all'
+              styles: [
+                constructPath([...sourceRootParts, `styles.${options.stylesExtension}`]),
+              ],
+              scripts: [],
             },
-            development: {
-              buildOptimizer: false,
-              optimization: false,
-              vendorChunk: true,
-              extractLicenses: false,
-              sourceMap: true,
-              namedChunks: true
-            }
+            configurations: {
+              production: {
+                fileReplacements: [
+                  {
+                    replace: constructPath([...sourceRootParts, 'environments', 'environment.ts']),
+                    with: constructPath([...sourceRootParts, 'environments', 'environment.prod.ts']),
+                  },
+                ],
+                buildOptimizer: false,
+                extractLicenses: false,
+                outputHashing: 'all'
+              },
+              development: {
+                buildOptimizer: false,
+                optimization: false,
+                vendorChunk: true,
+                extractLicenses: false,
+                sourceMap: true,
+                namedChunks: true
+              }
+            },
+            defaultConfiguration: 'development'
           },
-          defaultConfiguration: 'development'
-        },
-        serve: {
-          builder: Builders.DevServer,
-          options: {
-            browserTarget: 'playground:build',
-            port: 4201
+          serve: {
+            builder: Builders.DevServer,
+            options: {
+              browserTarget: 'playground:build',
+              port: 4201
+            }
           }
         }
       }
-    }
-  );
-  return updateWorkspace(workspace);
+    );
+
+  });
 }
 
 function configure(options: any): Rule {
@@ -125,7 +127,7 @@ function configure(options: any): Rule {
       && isJsonArray(buildTarget.options.styles)
     ) {
       const mainStyle = buildTarget.options.styles
-        .find((path: string | { input: string }) => typeof path === 'string'
+        .find((path: string | {input: string}) => typeof path === 'string'
           ? path.includes('/styles.')
           : path.input.includes('/styles.'));
       if (mainStyle) {
@@ -136,7 +138,7 @@ function configure(options: any): Rule {
     }
 
     return chain([
-      addAppToWorkspaceFile({stylesExtension}, workspace, project, 'playground'),
+      addAppToWorkspaceFile({stylesExtension}, project, 'playground'),
     ]);
   };
 }
