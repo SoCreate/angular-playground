@@ -1,6 +1,6 @@
 {
     "name": "angular-playground",
-    "version": "10.0.0",
+    "version": "10.0.1",
     "description": "A drop in app module for working on Angular components in isolation (aka Scenario Driven Development).",
     "module": "dist/playground/fesm2015/angular-playground.mjs",
     "es2020": "dist/playground/fesm2020/angular-playground.mjs",
