@@ -79,7 +79,7 @@ npm run playground
 ```
 
 From this point you can work on the Playground and make changes to the source code.  You will need to stop the Playground
-from running and build the app again (run `npm run restage` from the source code root after your changes).  Then run `npm run playground`
+from running and build the app again (run `npm run rebuild` from the source code root after your changes).  Then run `npm run playground`
 in the example app root folder again to see the changes you made to the source code in action.
 
 Rebuild Playground
