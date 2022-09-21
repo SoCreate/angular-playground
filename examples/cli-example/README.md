@@ -32,6 +32,7 @@ from running and rebuild the angular-playground then run the example app again.
 
 Rebuild Playground
 ```
+Ctrl-C (stop playground)
 cd ../..
 npm run rebuild
 ```

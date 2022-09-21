@@ -13,7 +13,6 @@
     "playground:prod": "angular-playground --build",
     "playground:prod-service-worker": "angular-playground --build-with-service-worker",
     "playground:check-errors": "angular-playground --check-errors",
-    "playground:build": "(cd ../../ && sh ./scripts/build.sh)",
     "verify-sandboxes": "angular-playground --config .angular-playground/angular-playground.json --check-errors --report-path ./result.xml --report-type xml",
     "check-snapshots": "angular-playground --config .angular-playground/angular-playground.json --check-visual-regressions --visual-regression-mock-date 1577865600000",
     "update-snapshots": "angular-playground --config .angular-playground/angular-playground.json --check-visual-regressions --update-snapshots --path-to-sandboxes app/feature1",

@@ -59,25 +59,38 @@ Install dependencies for angular-playground:
 npm i
 ```
 
+Build angular-playground package and link it globally
+```
+npm run clean
+npm run build
+npm link
+```
+
 Then install dependencies for the example-app:
 ```
 cd ./examples/cli-example/
 npm i
+npm link angular-playground
 ```
 ### Running the example app
 From `./examples/cli-example`:
 ```
-npm run playground:build && npm run playground
+npm run playground
 ```
 
 From this point you can work on the Playground and make changes to the source code.  You will need to stop the Playground
 from running and build the app again (run `npm run restage` from the source code root after your changes).  Then run `npm run playground`
 in the example app root folder again to see the changes you made to the source code in action.
 
+Rebuild Playground
 ```
 Ctrl-C (stop playground)
 cd ../../
-npm run restage
+npm run rebuild
+```
+
+Run the example App
+```
 cd examples/cli-example/
 npm run playground
 ```
