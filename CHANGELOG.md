@@ -1,3 +1,10 @@
+# 10.1.0 (2022-10-1)
+
+<a name="10.1.0"></a>
+
+### Bug Fixes
+* **dependencies:** Update dependencies to use Jest version 28
+
 # 10.0.1 (2022-6-6)
 
 <a name="10.0.1"></a>
