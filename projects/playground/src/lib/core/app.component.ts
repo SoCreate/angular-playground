@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, OnInit, QueryList, ViewChildren, } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, OnInit, QueryList, ViewChildren, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { EventManager } from '@angular/platform-browser';
 import { SandboxMenuItem, SelectedSandboxAndScenarioKeys } from '../lib/app-state';
 import { StateService } from './shared/state.service';
 import { UrlService } from './shared/url.service';
@@ -31,7 +30,7 @@ export class AppComponent implements OnInit {
     constructor(
         private stateService: StateService,
         private urlService: UrlService,
-        private eventManager: EventManager,
+        private renderer: Renderer2,
         private levenshteinDistance: LevenshteinDistance,
         private changeDetectorRef: ChangeDetectorRef,
         @Inject(MIDDLEWARE) private middleware: Observable<Middleware>,
@@ -59,15 +58,15 @@ export class AppComponent implements OnInit {
                 };
             }
 
-            this.eventManager.addGlobalEventListener('window', 'keydown.control.p', this.blockEvent);
-            this.eventManager.addGlobalEventListener('window', 'keydown.F2', this.blockEvent);
+            this.renderer.listen('window', 'keydown.control.p', this.blockEvent);
+            this.renderer.listen('window', 'keydown.F2', this.blockEvent);
 
-            this.eventManager.addGlobalEventListener('window', 'keyup.control.p', (event: KeyboardEvent) => {
+            this.renderer.listen('window', 'keyup.control.p', (event: KeyboardEvent) => {
                 this.blockEvent(event);
                 this.toggleCommandBar();
             });
 
-            this.eventManager.addGlobalEventListener('window', 'keyup.F2', (event: KeyboardEvent) => {
+            this.renderer.listen('window', 'keyup.F2', (event: KeyboardEvent) => {
                 this.blockEvent(event);
                 this.toggleCommandBar();
             });
