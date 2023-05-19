@@ -1,3 +1,10 @@
+# 11.0.0 (2023-5-19)
+
+<a name="11.0.0"></a>
+
+### Features
+* **angular:** Upgrade to be compatible with Angular version 16
+
 # 10.1.0 (2022-10-1)
 
 <a name="10.1.0"></a>
