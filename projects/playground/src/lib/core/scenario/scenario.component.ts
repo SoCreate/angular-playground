@@ -141,7 +141,6 @@ export class ScenarioComponent implements OnInit, OnChanges, OnDestroy {
                 ...sandboxMeta.declarations,
             ],
             providers: [...sandboxMeta.providers],
-            entryComponents: [hostComp, ...sandboxMeta.entryComponents],
             schemas: [...sandboxMeta.schemas],
         })(DynamicModule);
     }
