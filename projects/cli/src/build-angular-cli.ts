@@ -16,7 +16,6 @@ export async function buildAngularCli(appName: string, enableServiceWorker: bool
         `-c=production`,
         '--aot=false',
         `--base-href=${baseHref}`,
-        `--service-worker=${enableServiceWorker}`,
     ];
     exec(`ng build ${appName} ${flags.join(' ')}`,
         options,
