@@ -14,6 +14,7 @@ import { Sandboxes } from "./shared/sandboxes";
     selector: 'playground-app',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
+    standalone: false,
 })
 export class AppComponent implements OnInit {
     @ViewChildren('scenarioElement') scenarioLinkElements: QueryList<ElementRef>;
